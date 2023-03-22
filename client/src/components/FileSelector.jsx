@@ -36,7 +36,7 @@ function FileSelector(props) {
 
   const handleFileUpload = (e) => {
 
-    
+    console.log(e.target.files)
 
     //remove duplicates
     for (var i=0; i < e.target.files.length; i++){

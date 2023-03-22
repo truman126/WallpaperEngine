@@ -6,18 +6,16 @@ const api = axios.create({
 })
 
 
-export const insertMovie = payload => api.post(`/movie`, payload)
-export const getAllMovies = () => api.get(`/movies`)
-export const updateMovieById = (id, payload) => api.put(`/movie/${id}`, payload)
-export const deleteMovieById = id => api.delete(`/movie/${id}`)
-export const getMovieById = id => api.get(`/movie/${id}`)
+export const insertWallpaper = payload => api.post(`/wallpaper`, payload)
+export const getWallpapers = () => api.get(`/wallpaper`)
+export const updateWallpaperById = (id, payload) => api.put(`/wallpaper/${id}`, payload)
+export const deleteWallpaperById = id => api.delete(`/wallpaper/${id}`)
 
 
 const apis = {
-    insertMovie,
-    getAllMovies,
-    updateMovieById,
-    deleteMovieById,
-    getMovieById,
+    insertWallpaper,
+    getWallpapers,
+    updateWallpaperById,
+    deleteWallpaperById,
 }
 export default apis

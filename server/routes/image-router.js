@@ -1,17 +1,16 @@
 const express = require('express')
 
 
-const MovieCtrl = require('../controllers/movie-ctrl')
+const ImageCtrl = require('../controllers/image-ctrl')
 
 
 const router = express.Router()
 
 
-router.post('/movie', MovieCtrl.createMovie)
-router.put('/movie/:id', MovieCtrl.updateMovie)
-router.delete('/movie/:id', MovieCtrl.deleteMovie)
-router.get('/movie/:id', MovieCtrl.getMovieById)
-router.get('/movies', MovieCtrl.getMovies)
+router.post('/images', ImageCtrl.createWallpaper) //creates a wallpaper
+router.put('/images/:id', ImageCtrl.editWallpaper) //edit the wallpaper like the name or the colour
+router.delete('/images/:id', ImageCtrl.deleteWallpaper) //remove the wallpaper from the list
+router.get('/images', ImageCtrl.getWallpapers) //returns list of all wallpapers
 
 
 module.exports = router
