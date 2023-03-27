@@ -41,7 +41,6 @@ const requestUpload = async (file) => {
   const payload = { name, color };
 
   await api.insertWallpaper(payload).then((res) => {});
-
 };
 
 const removeItem = async (fileID) => {
@@ -49,51 +48,49 @@ const removeItem = async (fileID) => {
   console.log("attemping to remove");
 
   await api.deleteWallpaperById(fileID).then((res) => {});
-  
 };
+
 
 
 function FileSelector(props) {
   const [imageData, setImageData] = useState([]);
 
-  const handleFileUpload = (e) => {
+  async function handleFileUpload(e){
     //check
     for (var i = 0; i < e.target.files.length; i++) {
       requestUpload(e.target.files[i]);
     }
-    refreshData();
+    getData();
   };
-  
- 
+
+  async function getData() {
+    const result = await api.getWallpapers();
+    setImageData(result.data.data);
+    console.log('getting data')
+  }
+
+
+
 
   //for refreshing the list of images
   useEffect(() => {
-
-      async function getData() {
-        const result = await api.getWallpapers();
-        console.log(result)
-
-        setImageData(result.data.data);
-      }
-      getData();
-    
-  });
-
+    getData();
+  }, []);
+  console.log(imageData)
   return (
     <Wrapper>
       <TitleBar text="File Selector" />
       <FileContainer>
         <ul>
           {imageData.map((file) => (
-            <li>
+            <li key={file._id}>
               {file.name}
               <RemoveButton
                 id={file}
+                
                 className="close"
                 type="button"
-                onClick={() => 
-                  removeItem({ file }.file._id)
-                }
+                onClick={() => {removeItem({file}.file._id); getData();}}
               >
                 &#x2715;
               </RemoveButton>
@@ -106,9 +103,7 @@ function FileSelector(props) {
           type="file"
           accept="image/*"
           multiple="multiple"
-          onChange={(e) =>
-            handleFileUpload(e)
-          }
+          onChange={(e) => handleFileUpload(e)}
         />
       </ActionBar>
     </Wrapper>
