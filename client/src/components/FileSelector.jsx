@@ -37,17 +37,12 @@ const RemoveButton = styled.button`
 `;
 
 const requestUpload = async (file) => {
-  const { name, color } = { name: file.name, color: "#123456" };
-  const payload = { name, color };
 
-  await api.insertWallpaper(payload).then((res) => {});
 };
 
-const removeItem = async (fileID) => {
-  console.log(fileID);
-  console.log("attemping to remove");
-
-  await api.deleteWallpaperById(fileID).then((res) => {});
+const removeItem = async (id) => {
+  
+  
 };
 
 
@@ -55,28 +50,39 @@ const removeItem = async (fileID) => {
 function FileSelector(props) {
   const [imageData, setImageData] = useState([]);
 
+  async function getData() {
+    console.log("getting data")
+    await api.getWallpapers().then((result) => setImageData(result.data.data));
+    
+  };
+
   async function handleFileUpload(e){
     //check
     for (var i = 0; i < e.target.files.length; i++) {
-      requestUpload(e.target.files[i]);
+      const { name, color } = { name: e.target.files[i].name, color: "#123456" };
+      const payload = { name, color };
+    
+      await api.insertWallpaper(payload).then(() => getData());
     }
-    getData();
+
+
+    
   };
 
-  async function getData() {
-    const result = await api.getWallpapers();
-    setImageData(result.data.data);
-    console.log('getting data')
-  }
+  async function handleRemoveButtonClick(id){
+    await api.deleteWallpaperById(id).then(() => getData());
+  };
 
 
 
 
-  //for refreshing the list of images
+  //used for the initial setting of the list
   useEffect(() => {
-    getData();
+    getData()
   }, []);
-  console.log(imageData)
+
+
+
   return (
     <Wrapper>
       <TitleBar text="File Selector" />
@@ -90,7 +96,7 @@ function FileSelector(props) {
                 
                 className="close"
                 type="button"
-                onClick={() => {removeItem({file}.file._id); getData();}}
+                onClick={() => {handleRemoveButtonClick({file}.file._id); getData();}}
               >
                 &#x2715;
               </RemoveButton>

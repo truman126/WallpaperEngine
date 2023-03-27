@@ -81,17 +81,17 @@ editWallpaper = async (req, res) => {
 deleteWallpaper = async (req, res) => {
 
 
-    const d = await Image.findOneAndDelete({ _id: req.params.id });
+    let d = await Image.findOneAndDelete({ _id: req.params.id });
     
-    res.status(200)({
+    res.status(200).json({
         success: true,
         data:d
     })
-    res.status(404)({
+    res.status(404).json({
         success: false,
         error: `Image not found`
     })
-    res.status(400)({
+    res.status(400).json({
         success: false,
         error: 'error?'
     })

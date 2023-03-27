@@ -6,10 +6,10 @@ const api = axios.create({
 })
 
 
-export const insertWallpaper = payload => api.post(`/images`, payload)
+export const insertWallpaper = (payload) => api.post(`/images`, payload)
 export const getWallpapers = () => api.get(`/images`)
 export const updateWallpaperById = (id, payload) => api.put(`/images/${id}`, payload)
-export const deleteWallpaperById = id => api.delete(`/images/${id}`)
+export const deleteWallpaperById = (id) => api.delete(`/images/${id}`)
 
 
 const apis = {

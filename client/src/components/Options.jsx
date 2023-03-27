@@ -97,7 +97,7 @@ function Options() {
 
         <div>
           <OptionHeading>Aspect Ratio</OptionHeading>
-          <p>Image to Wallpaper aspect ratio</p>
+          <small>Image to Wallpaper aspect ratio</small>
 
           <select onChange={(e) => setAspectRatio(e.target.value)}>
             <option value={4} >1:4</option>
