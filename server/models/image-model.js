@@ -16,4 +16,4 @@ const image = new Schema(
 )
 	
 
-module.exports = mongoose.model('users', images)
+module.exports = mongoose.model('users', image)

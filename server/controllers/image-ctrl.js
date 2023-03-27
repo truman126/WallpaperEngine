@@ -79,41 +79,47 @@ editWallpaper = async (req, res) => {
 
 
 deleteWallpaper = async (req, res) => {
-    await Image.findOneAndDelete({ _id: req.params.id }, (err, image) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
 
 
-        if (!image) {
-            return res
-                .status(404)
-                .json({ success: false, error: `image not found` })
-        }
-
-
-        return res.status(200).json({ success: true, data: image })
-    }).catch(err => console.log(err))
+    const d = await Image.findOneAndDelete({ _id: req.params.id });
+    
+    res.status(200)({
+        success: true,
+        data:d
+    })
+    res.status(404)({
+        success: false,
+        error: `Image not found`
+    })
+    res.status(400)({
+        success: false,
+        error: 'error?'
+    })
 }
 
 getWallpapers = async (req, res) => {
-    await images.find({}, (err, images) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-        if (!images.length) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Images not found` })
-        }
-        return res.status(200).json({ success: true, data: images })
-    }).catch(err => console.log(err))
+
+    const allImages = await Image.find()
+
+    res.status(200).send({
+        success: true,
+        data: allImages
+    })
+    res.status(404).send({
+        success:false, 
+        error: `Images not found.`
+    })
+    res.status(400).send({
+        success: false,
+        error: `Error: 404`
+    })
 }
+
 
 
 module.exports = {
     createWallpaper,
-    editWallpapers,
+    editWallpaper,
     deleteWallpaper,
     getWallpapers,
 }

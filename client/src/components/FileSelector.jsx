@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TitleBar from "./TitleBar";
+import api from "../api";
 
 const Wrapper = styled.div`
   background-color: #f8f9fa;
@@ -8,10 +9,15 @@ const Wrapper = styled.div`
   height: 500px;
   position: relative;
   outline: solid;
-  margin:0;
+  margin: 0;
 `;
 const FileContainer = styled.div`
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  > ul {
+    max-height: 380px;
+  }
 `;
 
 const ActionBar = styled.div`
@@ -23,52 +29,76 @@ const ActionBar = styled.div`
     padding 7px;
 `;
 const RemoveButton = styled.button`
-
-  background-color:crimson;
-  text-fill-color:white;
-  color:white;
-  margin-left:7px;
-  margin-right:7px;
+  background-color: crimson;
+  text-fill-color: white;
+  color: white;
+  margin-left: 7px;
+  margin-right: 7px;
 `;
 
+const requestUpload = async (file) => {
+  const { name, color } = { name: file.name, color: "#123456" };
+  const payload = { name, color };
+
+  await api.insertWallpaper(payload).then((res) => {});
+
+};
+
+const removeItem = async (fileID) => {
+  console.log(fileID);
+  console.log("attemping to remove");
+
+  await api.deleteWallpaperById(fileID).then((res) => {});
+  
+};
+
+
 function FileSelector(props) {
-  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [imageData, setImageData] = useState([]);
 
   const handleFileUpload = (e) => {
-
-    console.log(e.target.files)
-
-    //remove duplicates
-    for (var i=0; i < e.target.files.length; i++){
-      for (var j=0; j < uploadedFiles.length; j++){
-        if (e.target.files[i].name==uploadedFiles[j].name) {
-          e.target.files.remove(i)
-        }
-      }
+    //check
+    for (var i = 0; i < e.target.files.length; i++) {
+      requestUpload(e.target.files[i]);
     }
-
-
-    //concat the incoming files and the current list
-    const fileList = uploadedFiles.concat(...e.target.files);
-
-
-    setUploadedFiles(fileList);
-
+    refreshData();
   };
-
   
+ 
+
+  //for refreshing the list of images
+  useEffect(() => {
+
+      async function getData() {
+        const result = await api.getWallpapers();
+        console.log(result)
+
+        setImageData(result.data.data);
+      }
+      getData();
+    
+  });
 
   return (
     <Wrapper>
       <TitleBar text="File Selector" />
       <FileContainer>
         <ul>
-          {uploadedFiles.map((file) => (
-            <li>{file.name}<RemoveButton class="close" type="button">&#x2715;</RemoveButton></li>
-            
-            
+          {imageData.map((file) => (
+            <li>
+              {file.name}
+              <RemoveButton
+                id={file}
+                className="close"
+                type="button"
+                onClick={() => 
+                  removeItem({ file }.file._id)
+                }
+              >
+                &#x2715;
+              </RemoveButton>
+            </li>
           ))}
-          
         </ul>
       </FileContainer>
       <ActionBar>
@@ -76,7 +106,9 @@ function FileSelector(props) {
           type="file"
           accept="image/*"
           multiple="multiple"
-          onChange={(e) => handleFileUpload(e)}
+          onChange={(e) =>
+            handleFileUpload(e)
+          }
         />
       </ActionBar>
     </Wrapper>
