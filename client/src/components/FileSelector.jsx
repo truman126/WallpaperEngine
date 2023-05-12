@@ -18,6 +18,9 @@ const FileContainer = styled.div`
   > ul {
     max-height: 380px;
   }
+  > ul > li:hover {
+    background-color: lightgrey;
+  }
 `;
 
 const ActionBar = styled.div`
@@ -36,81 +39,79 @@ const RemoveButton = styled.button`
   margin-right: 7px;
 `;
 
-const requestUpload = async (file) => {
-
-};
-
-const removeItem = async (id) => {
-  
-  
-};
-
-
-
 function FileSelector(props) {
   const [imageData, setImageData] = useState([]);
 
   async function getData() {
-    console.log("getting data")
-    await api.getWallpapers().then((result) => setImageData(result.data.data));
-    
-  };
+    await api.fetchImages().then((res) => {
+      setImageData(res.data.data);
+    });
+  }
 
-  async function handleFileUpload(e){
-    //check
-    for (var i = 0; i < e.target.files.length; i++) {
-      const { name, color } = { name: e.target.files[i].name, color: "#123456" };
-      const payload = { name, color };
-    
-      await api.insertWallpaper(payload).then(() => getData());
-    }
+  async function handleFileUpload(e) {
+    const payload = {
+      files: e.target.files,
+    };
 
+    var formData = new FormData();
 
-    
-  };
+    formData.append("image", e.target.files[0]);
 
-  async function handleRemoveButtonClick(id){
-    await api.deleteWallpaperById(id).then(() => getData());
-  };
+    await api.uploadImage(formData).then(() => getData());
+  }
 
-
-
+  async function handleRemoveButtonClick(id) {
+    await api.deleteWallpaperById(id);
+  }
 
   //used for the initial setting of the list
   useEffect(() => {
-    getData()
+    getData();
   }, []);
-
-
 
   return (
     <Wrapper>
       <TitleBar text="File Selector" />
       <FileContainer>
         <ul>
-          {imageData.map((file) => (
-            <li key={file._id}>
-              {file.name}
-              <RemoveButton
-                id={file}
-                
-                className="close"
-                type="button"
-                onClick={() => {handleRemoveButtonClick({file}.file._id); getData();}}
-              >
-                &#x2715;
-              </RemoveButton>
-            </li>
-          ))}
+          {imageData != null ? (
+            imageData.map((image) => (
+              <li>
+                {image.key}
+                <img
+                  src={`http://localhost:8000/images/${image.key}`}
+                  style={{ width: "150px" }}
+                />
+                <RemoveButton
+                  id={image.key}
+                  className="close"
+                  type="button"
+                  onClick={() => {
+                    handleRemoveButtonClick(image._id);
+                    getData();
+                  }}
+                >
+                  &#x2715;
+                </RemoveButton>
+              </li>
+            ))
+          ) : (
+            <p>no image</p>
+          )}
         </ul>
       </FileContainer>
       <ActionBar>
-        <input
-          type="file"
-          accept="image/*"
-          multiple="multiple"
-          onChange={(e) => handleFileUpload(e)}
-        />
+        <form>
+          <input
+            type="file"
+            accept="image/*"
+            multiple="multiple"
+            onChange={(e) => {
+              handleFileUpload(e);
+              getData();
+            }}
+          />
+        </form>
       </ActionBar>
     </Wrapper>
   );
