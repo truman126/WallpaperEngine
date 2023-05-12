@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TitleBar from "./TitleBar";
+import api from "../api";
+
 
 const Wrapper = styled.div`
   background-color: #f8f9fa;
@@ -13,28 +15,72 @@ const OptionHeading = styled.h5``;
 
 const Form = styled.form``;
 
-function Options() {
-  const [colour, setColour] = useState("avg");
-  const [showColourPicker, showColourPickerToggle] = useState(false);
-
-  const [size, setSize] = useState("preset");
-  const [showCustomSize, showCustomSizeToggle] = useState(false);
-
+function Options(props) {
+  const [customColour, setCustomColourPicker] = useState(false);
+  const [customSize, setCustomSizeToggle] = useState(false);
   const [aspectRatio, setAspectRatio] = useState("none");
+  const [config, setConfig] = useState({ 
+    colour: "average", 
+    size: 
+    {
+      width: 1920,
+      height: 1080
+    }})
+
+  const commonResolutions = [
+    [1920, 1080],
+    [3840, 2160],
+    [2560, 1440],
+    [1366, 768],
+    [1440, 900],
+    [1536, 864],
+    [1280, 720],
+  ];
+
+  function changeInput(e){
+
+    if (e.target.name=="size"){
+      setConfig({...config, 
+        [e.target.name]: {
+          ...config.size, 
+          ["width"]:commonResolutions[e.target.value][0] , ["height"]:commonResolutions[e.target.value][1]
+  
+        }});
+    console.log(config.size)
+
+    }
+    else{
+    
+        setConfig({...config, [e.target.name]: [e.target.value]});
+    
+    }
+  };
+
+
+  function handleSubmit(e){
+    // e.preventDefault()
+
+      const { colour, size } = { colour: config.colour, size: config.size };
+      const payload = { colour, size };
+      api.generateWallpapers(payload).then();
+  };
 
   return (
     <Wrapper>
       <TitleBar text="Options" />
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <div>
           <OptionHeading>Background Colour</OptionHeading>
 
           <label>
             <input
+              name="colour"
+              value="average"
               type="radio"
-              value="avg"
-              checked={colour === "avg"}
-              onClick={() => {setColour("avg"); showColourPickerToggle(false);}}
+              checked={!customColour}
+              onChange={(e) => {
+                setCustomColourPicker(false); changeInput(e);
+              }}
             />
             Average Colour
           </label>
@@ -42,13 +88,15 @@ function Options() {
           <label>
             <input
               type="radio"
-              value="custom"
-              checked={colour === "custom"}
-              onClick={() => {setColour("custom"); showColourPickerToggle(true);}}
+              checked={customColour}
+              onChange={() => {{
+                setCustomColourPicker(true); 
+              }
+              }}
             />
             Custom
           </label>
-          {showColourPicker ? <input type="color" /> : null}
+          {customColour ? <input name="colour" type="color" value={config.colour} onChange={(e) => changeInput(e)}/> : null}
         </div>
 
         <div>
@@ -57,58 +105,62 @@ function Options() {
           <label>
             <input
               type="radio"
-              value="preset"
-              checked={showCustomSize === false}
-              onClick={() => {setSize("preset"); showCustomSizeToggle(false);}}
+              checked={!customSize}
+              onChange={(e) => setCustomSizeToggle(false)}
             />
             Preset
           </label>
           <label>
             <input
               type="radio"
-              value="custom"
-              checked={showCustomSize === true}
-              onClick={() => {setSize("custom"); showCustomSizeToggle(true);}}
+              checked={customSize}
+              onChange={() => setCustomSizeToggle(true)}
             />
             Custom
           </label>
+          <br></br>
 
-          {
-            showCustomSize ?
+          {customSize ? (
             <label>
-             
-            <input
-              type="number" 
-              onChange={(e) => {setSize(e.target); console.log(e.target.value);}}
-              
+              <input onChange={(e) => changeInput(e)}
+                type="number"
+                name="width"
               />
-              <input
-              type="number" 
-              onChange={(e) => {setSize(e.target); console.log(e.target.value);}}
-              
-              />
-              
-            
-          </label>
-          :null
-}
+              <input onChange={(e) => changeInput(e)}
+                type="number"
+                name="height"
 
+                
+              />
+            </label>
+          ) : (
+            <select name={"size"} onChange={(e) => changeInput(e)}>
+              {commonResolutions.map(([w,h],index) => (
+               
+                <option name={["width", "height"]} value={index}>
+
+                  {w} x {h}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
 
-        <div>
+        <div style={{display:"none"}}>
           <OptionHeading>Aspect Ratio</OptionHeading>
           <small>Image to Wallpaper aspect ratio</small>
 
-          <select onChange={(e) => setAspectRatio(e.target.value)}>
-            <option value={4} >1:4</option>
+          <select onChange={(e) => setAspectRatio(e)}>
+            <option value={4}>1:4</option>
             <option value={8}>1:8</option>
             <option value={16}>1:16</option>
             <option value={32}>1:32</option>
-
           </select>
 
           <img />
         </div>
+
+        <button type="submit" value="submit">Submit</button>
       </Form>
     </Wrapper>
   );
