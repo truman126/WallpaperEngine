@@ -4,7 +4,9 @@ const fs = require("fs");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 
-
+const AWS_S3_BUCKET_NAME = "wallpaperengineimages";
+const AWS_S3_ACCESS_KEY_ID = "***REMOVED***";
+const AWS_S3_SECRET_ACCESS_KEY = "***REMOVED***";
 makeWallpapers = async (req, res) => {
   const body = req.body;
 
