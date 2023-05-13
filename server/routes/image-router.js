@@ -1,6 +1,6 @@
 const express = require("express");
 const ImageCtrl = require("../controllers/image-ctrl");
-const WallpaperMaker = require("../controllers/image-ctrl");
+const WallpaperMaker = require("../controllers/WallpaperMaker");
 
 const router = express.Router();
 
