@@ -6,23 +6,23 @@ const {
   getImageData,
   setFillColor,
 } = require("canvas");
+
 const fs = require("fs");
 
-const average = (arr) => arr.reduce((p, c) => p + c, 0) / arr.length;
+
 function rgbToHex(r, g, b) {
   return "#" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
 }
-
-const sizeDown = 2;
 
 async function generateWallpapers(req, res) {
 
   //these should be set in req.body
   const canvasWidth = req.body.size.width;
   const canvasHeight = req.body.size.height;
+  const sizeDown = req.body.ratio;
+
   try {
     const keys = await ImageKey.find();
-
 
     for (let i = 0; i < keys.length; i++) {
 
@@ -33,27 +33,36 @@ async function generateWallpapers(req, res) {
         return image;
       });
 
+         const landscape = image.width > image.height ? true : false; // true if the image is landscape, false if it is a portrait image. used to calculate the border size
+
         const imageWidth = image.width;
         const imageHeight = image.height;
+        const aspectRatio = imageWidth / imageHeight
+
+
+        const translatedImageSize = {
+          w: landscape ? canvasWidth / sizeDown :  canvasHeight / sizeDown,  //(image.width / image.height) * (canvasHeight / sizeDown),
+          h: landscape ? (image.height / image.width) * (canvasWidth / sizeDown) : (image.height / image.width) * (canvasHeight / sizeDown) //  canvasHeight / sizeDown ,
+        };
+        const { w, h } = translatedImageSize;
 
         const imagePosition = {
-          w: imageWidth / sizeDown,
-          h: imageHeight / sizeDown,
-          x: canvasWidth / 2 - imageWidth / sizeDown / 2,
-          y: canvasHeight / 2 - imageHeight / sizeDown / 2,
-        };
-        const { w, h, x, y } = imagePosition;
+          x: canvasWidth / 2 - w / 2 ,
+          y: canvasHeight / 2  - h / 2 ,
+        }
+        const { x, y } = imagePosition;
 
-        /**
+      if (req.body.colour == 'average'){     
+       /**
          *
          * Find the average Colour of the image
          */
 
         //in memory canvas to get the image data
-        const dataCanvas = createCanvas(canvasWidth, canvasHeight);
+        const dataCanvas = createCanvas(imageWidth, imageHeight);
         var imgDataContext = dataCanvas.getContext("2d");
         imgDataContext.drawImage(image, 0, 0);
-        var imageData = imgDataContext.getImageData(0, 0, w, h);
+        var imageData = imgDataContext.getImageData(0, 0, imageWidth, imageHeight);
         var pix = imageData.data;
 
         // Loop over each pixel and invert the color.
@@ -76,12 +85,17 @@ async function generateWallpapers(req, res) {
         rgb.a = ~~(rgb.b / count);
 
         context.fillStyle = rgbToHex(rgb.r, rgb.g, rgb.b);
+      }
+        else {
+        context.fillStyle = req.body.colour[0];
+      }
+    
         context.fillRect(0, 0, canvasWidth, canvasHeight);
 
         context.drawImage(image, x, y, w, h);
 
-        const buffer = canvas.toBuffer("image/jpeg");
-        fs.writeFileSync("./data/wallpapers/" + keys[i].key, buffer);
+        const buffer = req.body.filetype == 'jpeg' ? canvas.toBuffer('image/jpeg') : canvas.toBuffer('image/png')
+        fs.writeFileSync("./data/wallpapers/" + keys[i].key.replace(/\.[^/.]+$/, ".") + req.body.filetype, buffer);
       
     }
     res.status(200);

@@ -80,7 +80,7 @@ function FileSelector(props) {
                 {image.key}
                 <img
                   src={`http://localhost:8000/images/${image.key}`}
-                  style={{ width: "150px" }}
+                  style={{ height: "100px" }}
                 />
                 <RemoveButton
                   id={image.key}
