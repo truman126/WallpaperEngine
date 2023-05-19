@@ -1,6 +1,8 @@
 const express = require("express");
 const ImageCtrl = require("../controllers/image-ctrl");
 const WallpaperMaker = require("../controllers/WallpaperMaker");
+const Downloader = require("../controllers/Downloader");
+
 
 const router = express.Router();
 
@@ -14,6 +16,8 @@ router.post("/create", WallpaperMaker.generateWallpapers); //executes the creati
 router.get("/allimages", ImageCtrl.getAllImages);
 
 router.post("/upload", ImageCtrl.uploadLocal.array("image", 1), ImageCtrl.uploadImage);
+
+router.get("/download", Downloader.getDownload);
 
 
 
