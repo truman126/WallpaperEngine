@@ -1,4 +1,8 @@
 const ImageKey = require("../models/image-model");
+const path = require("path");
+const fs = require("fs");
+
+
 const {
   createCanvas,
   loadImage,
@@ -7,14 +11,13 @@ const {
   setFillColor,
 } = require("canvas");
 
-const fs = require("fs");
 
 
 function rgbToHex(r, g, b) {
   return "#" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
 }
 
-async function generateWallpapers(req, res) {
+generateWallpapers = async (req, res) => {
 
   //these should be set in req.body
   const canvasWidth = req.body.size.width;
@@ -22,6 +25,20 @@ async function generateWallpapers(req, res) {
   const sizeDown = req.body.ratio;
 
   try {
+
+    //delete all files in the wallpaper folder
+    const directory = "./data/wallpapers/";
+    
+    fs.readdir(directory, (err, files) => {
+      if (err) console.log(err);
+      for (const file of files) {
+          fs.unlink(path.join(directory, file), err => {
+              if (err) console.log(err);
+          });
+      }
+  });
+
+
     const keys = await ImageKey.find();
 
     for (let i = 0; i < keys.length; i++) {
@@ -98,7 +115,10 @@ async function generateWallpapers(req, res) {
         fs.writeFileSync("./data/wallpapers/" + keys[i].key.replace(/\.[^/.]+$/, ".") + req.body.filetype, buffer);
       
     }
-    res.status(200);
+    
+    res.status(200).json({
+      success: true
+    });
   } catch (e) {
     console.log(e);
     res.status(400);

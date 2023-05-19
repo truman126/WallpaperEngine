@@ -15,6 +15,7 @@ const OptionHeading = styled.h5``;
 const Form = styled.form``;
 
 function Options(props) {
+  const [downloadReady, setDownloadReady] = useState(false)
   const [customColour, setCustomColourPicker] = useState(false);
   const [customSize, setCustomSizeToggle] = useState(false);
   const [borderRatio, setRatio] = useState(4);
@@ -36,6 +37,8 @@ function Options(props) {
     [1536, 864],
     [1280, 720],
   ];
+
+
 
   function changeInput(e) {
     if (e.target.name == "size") {
@@ -62,7 +65,11 @@ function Options(props) {
       filetype: outputFiletype
     };
     const payload = { colour, size, ratio, filetype};
-    api.generateWallpapers(payload).then();
+    api.generateWallpapers(payload).then(() => setDownloadReady(true));
+  }
+  function handleDownload(){
+    api.getDownload().then((res) => (console.log(res)));
+    
   }
 
   return (
@@ -164,7 +171,7 @@ function Options(props) {
               max="5"
               step="0.5"
               value={borderRatio}
-              class="slider"
+              className="slider"
               id="myRange"
             />
             <img src={`http://localhost:8000/examples/${borderRatio}.png`} style={{ height: "100px" }}/>
@@ -195,7 +202,11 @@ function Options(props) {
         <button type="submit" value="submit">
           Submit
         </button>
+        
       </Form>
+      <button disabled={downloadReady} onClick={handleDownload}>
+          Download
+        </button>
     </Wrapper>
   );
 }

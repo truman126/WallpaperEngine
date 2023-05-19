@@ -1,6 +1,8 @@
 const ImageKey = require("../models/image-model");
 const { GetObjectCommand, S3Client } = require("@aws-sdk/client-s3");
 const fs = require("fs");
+const path = require("path");
+
 const multer = require("multer");
 const multerS3 = require("multer-s3");
 
@@ -106,19 +108,26 @@ editWallpaper = async (req, res) => {
 
 deleteWallpaper = async (req, res) => {
   try {
+    // delete the key from the mongo database
     let d = await ImageKey.findOneAndDelete({ _id: req.params.id });
 
+    //delete the file from the directory
+    await fs.unlink(path.join("./data/images/", d.key), (err) => {
+      if (err) console.log(err);
+    });
+
+    //send response
     if (!d) {
       res.status(404).json({
         success: false,
         error: `Image not found`,
       });
+    } else {
+      res.status(200).json({
+        success: true,
+        data: d,
+      });
     }
-    else
-    {res.status(200).json({
-      success: true,
-      data: d,
-    });}
   } catch (err) {
     res.status(400).json({
       success: false,
@@ -174,9 +183,7 @@ async function postImageKey(key, res) {
     let newKey = new ImageKey({
       key,
     });
-    console.log("attempting to save to mongo");
     newKey = await newKey.save();
-    console.log("uploaded");
     return;
   } catch (err) {
     console.log("error");
@@ -210,21 +217,20 @@ const s3 = new S3Client({
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'data/images/')
+    cb(null, "data/images/");
   },
-  filename: function(req, file, cb) {
+  filename: function (req, file, cb) {
     console.log(file);
-    cb(null,file.originalname);
+    cb(null, file.originalname);
   },
   key: function (req, file, cb) {
     cb(null, file.originalname);
   },
-})
-const uploadLocal = multer({ storage: storage});
+});
+const uploadLocal = multer({ storage: storage });
 
 uploadImage = (req, res) => {
-  
-  try{
+  try {
     postImageKey(req.files[0].originalname, res);
     res
       .status(200)
@@ -233,11 +239,8 @@ uploadImage = (req, res) => {
           req.files.length +
           " files! The keys have been saved in mongo. "
       );
-  }
-
-
-  catch(err) {
-    res.status(404)
+  } catch (err) {
+    res.status(404);
   }
 };
 module.exports = {
@@ -248,5 +251,5 @@ module.exports = {
   getAllImages,
   uploadImage,
   uploadLocal,
-  storage
+  storage,
 };
