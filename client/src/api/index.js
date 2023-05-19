@@ -2,7 +2,7 @@ import axios from 'axios'
 
 
 const api = axios.create({
-    baseURL: 'http://localhost:3000/api',
+    baseURL: 'http://localhost:3000/api/',
 
 })
 
@@ -13,6 +13,7 @@ export const updateWallpaperById = (id, payload) => api.put(`/images/${id}`, pay
 export const deleteWallpaperById = (id) => api.delete(`/images/${id}`)
 export const generateWallpapers = (payload) => api.post(`/create`, payload)
 export const uploadImage = (payload) => api.post(`/upload`, payload, {headers: {'Content-Type' : 'multipart/form-data'} })
+export const getDownload = () => api.get(`/download`)
 
 
 const apis = {
@@ -20,6 +21,7 @@ const apis = {
     updateWallpaperById,
     deleteWallpaperById,
     generateWallpapers,
-    uploadImage
+    uploadImage,
+    getDownload
 }
 export default apis
