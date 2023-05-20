@@ -15,11 +15,11 @@ const OptionHeading = styled.h5``;
 const Form = styled.form``;
 
 function Options(props) {
-  const [downloadReady, setDownloadReady] = useState(false)
+  const [downloadReady, setDownloadReady] = useState(false);
   const [customColour, setCustomColourPicker] = useState(false);
   const [customSize, setCustomSizeToggle] = useState(false);
   const [borderRatio, setRatio] = useState(4);
-  const [outputFiletype, setFileType] = useState('jpeg')
+  const [outputFiletype, setFileType] = useState("jpeg");
   const [config, setConfig] = useState({
     colour: "average",
     size: {
@@ -38,9 +38,8 @@ function Options(props) {
     [1280, 720],
   ];
 
-
-
   function changeInput(e) {
+    console.log(e.target.name)
     if (e.target.name == "size") {
       setConfig({
         ...config,
@@ -50,13 +49,29 @@ function Options(props) {
           ["height"]: commonResolutions[e.target.value][1],
         },
       });
-    }else if(e.target.name == "width" || e.target.name == "height" ){
-      setConfig({})
-    }
-    else {
+    } else if (e.target.name == "width") {
+      setConfig({
+        ...config,
+        ["size"]: {
+          ...config.size,
+          ["width"]: e.target.value,
+          ...config.size.height,
+        },
+      });
+     
+    } else if (e.target.name == "height") {
+      setConfig({
+        ...config,
+        ["size"]: {
+          ...config.size,
+          ...config.size.width,
+          ["height"]: [e.target.value],
+        },
+      });
+    } else {
       setConfig({ ...config, [e.target.name]: [e.target.value] });
     }
-    console.log(config.size)
+    console.log(config);
   }
 
   function handleSubmit(e) {
@@ -66,26 +81,24 @@ function Options(props) {
       colour: config.colour,
       size: config.size,
       ratio: borderRatio,
-      filetype: outputFiletype
+      filetype: outputFiletype,
     };
-    const payload = { colour, size, ratio, filetype};
+    const payload = { colour, size, ratio, filetype };
     api.generateWallpapers(payload).then(() => setDownloadReady(true));
   }
-  async function handleDownload(){
+  async function handleDownload() {
     const response = await api.getDownload().then((res) => {
-      return res
+      return res;
     });
 
-    var blob = new Blob([response.data], {type: "application/zip"});
-    var link = document.createElement('a');
+    var blob = new Blob([response.data], { type: "application/zip" });
+    var link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
     var fileName = "wallpapers.zip";
     link.download = fileName;
 
     // Start download
     link.click();
-
-    
   }
 
   return (
@@ -179,50 +192,50 @@ function Options(props) {
         <div>
           <OptionHeading>Border to Image Ratio</OptionHeading>
 
-        
-            <input
-              onChange={(e) => setRatio(e.target.value)}
-              type="range"
-              min="1"
-              max="5"
-              step="0.5"
-              value={borderRatio}
-              className="slider"
-              id="myRange"
-            />
-            <img src={`http://localhost:8000/examples/${borderRatio}.png`} style={{ height: "100px" }}/>
+          <input
+            onChange={(e) => setRatio(e.target.value)}
+            type="range"
+            min="1"
+            max="5"
+            step="0.5"
+            value={borderRatio}
+            className="slider"
+            id="myRange"
+          />
+          <img
+            src={`http://localhost:8000/examples/${borderRatio}.png`}
+            style={{ height: "100px" }}
+          />
         </div>
 
         <div>
-        <OptionHeading>Output Filetype</OptionHeading>
+          <OptionHeading>Output Filetype</OptionHeading>
 
-        <label>
+          <label>
             <input
               type="radio"
-              checked={outputFiletype == 'jpeg'}
-              onChange={(e) => setFileType('jpeg')}
+              checked={outputFiletype == "jpeg"}
+              onChange={(e) => setFileType("jpeg")}
             />
             JPEG
           </label>
           <label>
             <input
               type="radio"
-              checked={outputFiletype == 'png'}
-              onChange={() => setFileType('png')}
+              checked={outputFiletype == "png"}
+              onChange={() => setFileType("png")}
             />
             PNG
           </label>
-
         </div>
 
         <button type="submit" value="submit">
           Submit
         </button>
-        
       </Form>
       <button disabled={downloadReady} onClick={handleDownload}>
-          Download
-        </button>
+        Download
+      </button>
     </Wrapper>
   );
 }
