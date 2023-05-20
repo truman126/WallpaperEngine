@@ -24,6 +24,8 @@ generateWallpapers = async (req, res) => {
   const canvasHeight = req.body.size.height;
   const sizeDown = req.body.ratio;
 
+  console.log(req.body)
+
   try {
 
     //delete all files in the wallpaper folder

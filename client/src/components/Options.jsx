@@ -50,9 +50,13 @@ function Options(props) {
           ["height"]: commonResolutions[e.target.value][1],
         },
       });
-    } else {
+    }else if(e.target.name == "width" || e.target.name == "height" ){
+      setConfig({})
+    }
+    else {
       setConfig({ ...config, [e.target.name]: [e.target.value] });
     }
+    console.log(config.size)
   }
 
   function handleSubmit(e) {
@@ -67,8 +71,20 @@ function Options(props) {
     const payload = { colour, size, ratio, filetype};
     api.generateWallpapers(payload).then(() => setDownloadReady(true));
   }
-  function handleDownload(){
-    api.getDownload().then((res) => (console.log(res)));
+  async function handleDownload(){
+    const response = await api.getDownload().then((res) => {
+      return res
+    });
+
+    var blob = new Blob([response.data], {type: "application/zip"});
+    var link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    var fileName = "wallpapers.zip";
+    link.download = fileName;
+
+    // Start download
+    link.click();
+
     
   }
 
@@ -150,9 +166,9 @@ function Options(props) {
               />
             </label>
           ) : (
-            <select name={"size"} onChange={(e) => changeInput(e)}>
+            <select name="size" onChange={(e) => changeInput(e)}>
               {commonResolutions.map(([w, h], index) => (
-                <option name={["width", "height"]} value={index}>
+                <option name="size" value={index}>
                   {w} x {h}
                 </option>
               ))}
