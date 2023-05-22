@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TitleBar from "./TitleBar";
+import File from "./File";
+
 import api from "../api";
 
 const Wrapper = styled.div`
@@ -31,13 +33,6 @@ const ActionBar = styled.div`
     border-top: solid;
     padding 7px;
 `;
-const RemoveButton = styled.button`
-  background-color: crimson;
-  text-fill-color: white;
-  color: white;
-  margin-left: 7px;
-  margin-right: 7px;
-`;
 
 function FileSelector(props) {
   const [imageData, setImageData] = useState([]);
@@ -61,7 +56,7 @@ function FileSelector(props) {
   }
 
   async function handleRemoveButtonClick(id) {
-    await api.deleteWallpaperById(id);
+    await api.deleteImage(id);
   }
 
   //used for the initial setting of the list
@@ -74,30 +69,13 @@ function FileSelector(props) {
       <TitleBar text="File Selector" />
       <FileContainer>
         <ul>
-          {imageData != null ? (
-            imageData.map((image) => (
-              <li>
-                {image.key}
-                <img
-                  src={`http://localhost:8000/images/${image.key}`}
-                  style={{ height: "100px" }}
-                />
-                <RemoveButton
-                  id={image.key}
-                  className="close"
-                  type="button"
-                  onClick={() => {
-                    handleRemoveButtonClick(image._id);
-                    getData();
-                  }}
-                >
-                  &#x2715;
-                </RemoveButton>
-              </li>
-            ))
-          ) : (
-            <p>no image</p>
-          )}
+          {imageData.map((image) => (
+            <File
+              image={image}
+              getData={getData}
+              remove={handleRemoveButtonClick}
+            />
+          ))}
         </ul>
       </FileContainer>
       <ActionBar>

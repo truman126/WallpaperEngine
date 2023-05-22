@@ -147,38 +147,6 @@ function Options(props) {
         <div>
           <OptionHeading>Image Size</OptionHeading>
 
-          <label>
-            <input
-              type="radio"
-              checked={!customSize}
-              onChange={(e) => setCustomSizeToggle(false)}
-            />
-            Preset
-          </label>
-          <label>
-            <input
-              type="radio"
-              checked={customSize}
-              onChange={() => setCustomSizeToggle(true)}
-            />
-            Custom
-          </label>
-          <br></br>
-
-          {customSize ? (
-            <label>
-              <input
-                onChange={(e) => changeInput(e)}
-                type="number"
-                name="width"
-              />
-              <input
-                onChange={(e) => changeInput(e)}
-                type="number"
-                name="height"
-              />
-            </label>
-          ) : (
             <select name="size" onChange={(e) => changeInput(e)}>
               {commonResolutions.map(([w, h], index) => (
                 <option name="size" value={index}>
@@ -186,7 +154,7 @@ function Options(props) {
                 </option>
               ))}
             </select>
-          )}
+          
         </div>
 
         <div>
