@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { FileSelector, Options } from '../components'
+import { FileSelector, Options, UserBar } from '../components'
 import styled from "styled-components";
 
 
@@ -15,11 +15,16 @@ function App() {
 
 
     return (
+        <>
+        <UserBar />
+        
         <Container>
+
         <FileSelector />
         <Options />
         
         </Container>
+        </>
     )
 }
 export default App

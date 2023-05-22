@@ -9,8 +9,7 @@ const api = axios.create({
 
 
 export const fetchImages = () => api.get(`/allimages`)
-export const updateWallpaperById = (id, payload) => api.put(`/images/${id}`, payload)
-export const deleteWallpaperById = (id) => api.delete(`/images/${id}`)
+export const deleteImage = (id) => api.delete(`/images/${id}`)
 export const generateWallpapers = (payload) => api.post(`/create`, payload)
 export const uploadImage = (payload) => api.post(`/upload`, payload, {headers: {'Content-Type' : 'multipart/form-data'} })
 export const getDownload = () => api.get(`/download`, {responseType: 'arraybuffer'})
