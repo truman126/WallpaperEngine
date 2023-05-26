@@ -4,6 +4,7 @@ import TitleBar from "./TitleBar";
 import File from "./File";
 
 import api from "../api";
+import {useFilesContext} from "../hooks/useFilesContext"
 
 const Wrapper = styled.div`
   background-color: #f8f9fa;
@@ -35,15 +36,10 @@ const ActionBar = styled.div`
 `;
 
 function FileSelector(props) {
-  const [imageData, setImageData] = useState([]);
-
-  async function getData() {
-    await api.fetchImages().then((res) => {
-      setImageData(res.data.data);
-    });
-  }
+  const {files, dispatch} = useFilesContext();
 
   async function handleFileUpload(e) {
+    
     const payload = {
       files: e.target.files,
     };
@@ -52,15 +48,26 @@ function FileSelector(props) {
 
     formData.append("image", e.target.files[0]);
 
-    await api.uploadImage(formData).then(() => getData());
-  }
+    const response = await api.uploadImage(formData);
+    const json = await response.data.data;
 
-  async function handleRemoveButtonClick(id) {
-    await api.deleteImage(id);
+    if (response.data.ok){
+      dispatch({type: 'CREATE_FILES', payload:json})
+    }
+
   }
 
   //used for the initial setting of the list
   useEffect(() => {
+    console.log('refreshing')
+    const getData = async () => {
+      const response = await api.fetchImages();
+      const json = await response.data.data
+
+      if (response.data.ok){
+        dispatch({type: 'SET_FILES', payload: json});
+      }
+    }
     getData();
   }, []);
 
@@ -69,11 +76,9 @@ function FileSelector(props) {
       <TitleBar text="File Selector" />
       <FileContainer>
         <ul>
-          {imageData.map((image) => (
+          {files && files.map((image) => (
             <File
               image={image}
-              getData={getData}
-              remove={handleRemoveButtonClick}
             />
           ))}
         </ul>
@@ -86,7 +91,6 @@ function FileSelector(props) {
             multiple="multiple"
             onChange={(e) => {
               handleFileUpload(e);
-              getData();
             }}
           />
         </form>

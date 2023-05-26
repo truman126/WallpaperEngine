@@ -2,16 +2,13 @@ const ImageKey = require("../models/image-model");
 const { GetObjectCommand, S3Client } = require("@aws-sdk/client-s3");
 const fs = require("fs");
 const path = require("path");
-
+ 
 const multer = require("multer");
 
 deleteImage = async (req, res) => {
+  console.log('attempting to delete from server side')
   const { id } = req.params;
 
-  //check if the key is valid
-  if (!Mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(404).json({ error: "Image was not found" });
-  }
   // delete the key from the mongo database
   const key = await ImageKey.findOneAndDelete({ _id: id });
 
@@ -20,36 +17,20 @@ deleteImage = async (req, res) => {
   }
 
   //delete the file from the directory
-  await fs.unlink(path.join("./data/images/", d.key), (err) => {
-    if (err) return res.status(404).json({ error: "Image was not found" });
+  await fs.unlink(path.join("./data/images/", key.key), (err) => {
+    if (err) console.log(err);
   });
 
   //send response
 
   res.status(200).json({
-    success: true,
-    data: d,
+    ok: true,
+    data: key,
   });
 };
 getAllImages = async (req, res) => {
-  try {
-    const keys = await ImageKey.find();
-    if (!keys) {
-      res.status(404).send({
-        success: false,
-        error: `Images not found.`,
-      });
-    }
-    res.status(200).send({
-      success: true,
-      data: keys,
-    });
-  } catch {
-    res.status(400).send({
-      success: false,
-      error: `Error: 404`,
-    });
-  }
+  const images = await ImageKey.find();
+  res.status(200).json({ok:true, data: images})
 };
 
 async function postImageKey(key, res) {
@@ -62,7 +43,7 @@ async function postImageKey(key, res) {
       key,
     });
     newKey = await newKey.save();
-    return;
+    return newKey;
   } catch (err) {
     console.log("error");
     res.status(500).send({ error: err.message });
@@ -75,7 +56,6 @@ const storage = multer.diskStorage({
     cb(null, "data/images/");
   },
   filename: function (req, file, cb) {
-    console.log(file);
     cb(null, file.originalname);
   },
   key: function (req, file, cb) {
@@ -84,15 +64,15 @@ const storage = multer.diskStorage({
 });
 const uploadLocal = multer({ storage: storage });
 
-uploadImage = (req, res) => {
+uploadImage = async (req, res) => {
   try {
-    postImageKey(req.files[0].originalname, res);
+    const response = await postImageKey(req.files[0].originalname, res);
     res
       .status(200)
-      .send(
-        "Successfully uploaded " +
-          req.files.length +
-          " files! The keys have been saved in mongo. "
+      .json(
+        {ok:true,
+        data: response
+      }
       );
   } catch (err) {
     res.status(404);
