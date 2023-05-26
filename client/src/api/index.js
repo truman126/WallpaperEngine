@@ -17,10 +17,9 @@ export const getDownload = () => api.get(`/download`, {responseType: 'arraybuffe
 
 const apis = {
     fetchImages,
-    updateWallpaperById,
-    deleteWallpaperById,
     generateWallpapers,
     uploadImage,
-    getDownload
+    getDownload,
+    deleteImage
 }
 export default apis
