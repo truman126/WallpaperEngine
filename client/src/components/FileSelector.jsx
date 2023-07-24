@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TitleBar from "./TitleBar";
 import File from "./File";
-
 import api from "../api";
 import {useFilesContext} from "../hooks/useFilesContext"
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const Wrapper = styled.div`
   background-color: #f8f9fa;
@@ -36,49 +36,69 @@ const ActionBar = styled.div`
 `;
 
 function FileSelector(props) {
+  const [error, setError] = useState();
   const {files, dispatch} = useFilesContext();
+  const {user} = useAuthContext();
 
   async function handleFileUpload(e) {
+
+    e.preventDefault()
+
+    if (!user){
+      setError("You must be logged in.")
+      return
+    }
     
-    const payload = {
-      files: e.target.files,
-    };
 
     var formData = new FormData();
 
-    formData.append("image", e.target.files[0]);
+    const images = e.target.files;
 
-    const response = await api.uploadImage(formData);
+    let tempImages  = [];
+
+
+    for (const image of images){
+      formData.append('images', image);
+      tempImages.push({"key": image.name})
+    }
+    dispatch({type: 'CREATE_FILES', payload:tempImages})   
+    
+    
+    const response = await api.uploadImage(formData , user);
     const json = await response.data.data;
 
     if (response.data.ok){
-      dispatch({type: 'CREATE_FILES', payload:json})
+      dispatch({type: 'DELETE_FILES', payload:tempImages})   
+      dispatch({type: 'CREATE_FILES', payload:json})   
     }
 
   }
 
   //used for the initial setting of the list
   useEffect(() => {
-    console.log('refreshing')
     const getData = async () => {
-      const response = await api.fetchImages();
+
+      const response = await api.fetchImages(user);
       const json = await response.data.data
 
       if (response.data.ok){
         dispatch({type: 'SET_FILES', payload: json});
       }
     }
-    getData();
-  }, []);
+    if (user)
+    {
+      getData();
+    }
+  }, [dispatch, user]);
 
   return (
     <Wrapper>
       <TitleBar text="File Selector" />
       <FileContainer>
         <ul>
-          {files && files.map((image) => (
+          {files && files.map((file) => (
             <File
-              image={image}
+              image={file}
             />
           ))}
         </ul>
@@ -88,7 +108,8 @@ function FileSelector(props) {
           <input
             type="file"
             accept="image/*"
-            multiple="multiple"
+            multiple="true"
+            // multiple="multiple"
             onChange={(e) => {
               handleFileUpload(e);
             }}

@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import TitleBar from "./TitleBar";
 import api from "../api";
+import { useAuthContext } from "../hooks/useAuthContext";
+
 
 const Wrapper = styled.div`
   background-color: #f8f9fa;
@@ -27,6 +29,8 @@ function Options(props) {
       height: 1080,
     },
   });
+  const {user} = useAuthContext()
+
 
   const commonResolutions = [
     [1920, 1080],
@@ -74,8 +78,8 @@ function Options(props) {
     console.log(config);
   }
 
-  function handleSubmit(e) {
-    // e.preventDefault()
+  async function handleSubmit(e) {
+    e.preventDefault()
 
     const { colour, size, ratio, filetype } = {
       colour: config.colour,
@@ -83,14 +87,11 @@ function Options(props) {
       ratio: borderRatio,
       filetype: outputFiletype,
     };
+    
     const payload = { colour, size, ratio, filetype };
-    api.generateWallpapers(payload).then(() => setDownloadReady(true));
-  }
-  async function handleDownload() {
-    const response = await api.getDownload().then((res) => {
-      return res;
-    });
-
+    console.log(payload)
+    const response = await api.generateWallpapers(payload, user);
+    console.log(response.data)
     var blob = new Blob([response.data], { type: "application/zip" });
     var link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
@@ -100,6 +101,7 @@ function Options(props) {
     // Start download
     link.click();
   }
+ 
 
   return (
     <Wrapper>
@@ -198,12 +200,9 @@ function Options(props) {
         </div>
 
         <button type="submit" value="submit">
-          Submit
+          Create Wallpapers
         </button>
       </Form>
-      <button disabled={downloadReady} onClick={handleDownload}>
-        Download
-      </button>
     </Wrapper>
   );
 }

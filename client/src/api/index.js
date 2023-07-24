@@ -3,23 +3,27 @@ import axios from 'axios'
 
 const api = axios.create({
     baseURL: 'http://localhost:3000/api/'
-    
 })
 
 
 
-export const fetchImages = () => api.get(`/allimages`)
-export const deleteImage = (id) => api.delete(`/images/${id}`)
-export const generateWallpapers = (payload) => api.post(`/create`, payload)
-export const uploadImage = (payload) => api.post(`/upload`, payload, {headers: {'Content-Type' : 'multipart/form-data'} })
-export const getDownload = () => api.get(`/download`, {responseType: 'arraybuffer'})
+export const fetchImages = (user) => api.get(`/allimages`, {headers : {'Authorization' : `Bearer ${user.token}`}} )
+export const deleteImage = (id, user) => api.delete(`/images/${id}`, {headers : {'Authorization' : `Bearer ${user.token}`}})
+export const generateWallpapers = (payload, user) => api.post(`/submit`,payload , {headers : {responseType: 'arraybuffer', 'Authorization' : `Bearer ${user.token}`}})
+export const uploadImage = (payload, user) => api.post(`/upload`, payload, {headers: {'Content-Type' : 'multipart/form-data' , 'Authorization' : `Bearer ${user.token}`}})
+
+export const signup = (payload) => api.post(`/user/signup`, payload)
+export const login = (payload) => api.post(`/user/login`, payload)
+
 
 
 const apis = {
     fetchImages,
     generateWallpapers,
     uploadImage,
-    getDownload,
-    deleteImage
+    deleteImage,
+    signup,
+    login
+    
 }
 export default apis

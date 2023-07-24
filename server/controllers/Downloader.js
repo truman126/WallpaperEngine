@@ -3,21 +3,28 @@ const path = require("path");
 const fs = require("fs");
 const admz = require("adm-zip");
 
-getDownload = async (req, res) => {
+sendDownload = async (req, res) => {
+  console.log("starting to make download")
+  const user_id = req.user._id;
+  const wallpaperDirectory = `./data/${user_id}/wallpapers/`
   try {
-    var to_zip = fs.readdirSync("./data/wallpapers/");
+    var to_zip = fs.readdirSync(wallpaperDirectory);
 
-    res.sendFile(__dirname + "/" + "index.html");
-
+    console.log(to_zip)
     const zp = new admz();
 
     for (let k = 0; k < to_zip.length; k++) {
-      zp.addLocalFile("./data/wallpapers/" + to_zip[k]);
+      zp.addLocalFile(wallpaperDirectory + to_zip[k]);
     }
 
     const file_after_download = "downloaded_file.zip";
 
+    await zp.writeZip(file_after_download)
     const data = zp.toBuffer();
+
+
+    
+
 
     res.set("Content-Type", "application/octect-stream");
     res.set(
@@ -26,11 +33,13 @@ getDownload = async (req, res) => {
     );
     res.set("Content-Length", data.length);
     res.send(data);
+
+
   } catch (e) {
     console.log(e);
   }
 };
 
 module.exports = {
-  getDownload,
+  sendDownload,
 };

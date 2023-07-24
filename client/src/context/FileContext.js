@@ -10,7 +10,7 @@ export const filesReducer = (state, action) => {
       };
     case "CREATE_FILES":
       return {
-        files: [action.payload, ...state.files],
+        files: [...state.files,...action.payload],
       };
     case "DELETE_FILES":
       return {
