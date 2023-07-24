@@ -9,14 +9,16 @@ const imageKey = new Schema(
       type: String,
       required: true
     },
+    user_id: {
+      type: String,
+      required: true
+    },
+    url:{
+      type: String,
+      required: false
+    }
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("users", imageKey);
-// name: { type: String, required: true },
-//     color: {
-//       type: String,
-//       validator: [colorValidator, "Invalid color"],
-//       required: true,
-//     },
+module.exports = mongoose.model("ImageKey", imageKey);

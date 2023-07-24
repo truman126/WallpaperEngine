@@ -1,13 +1,18 @@
 const express = require("express");
+
 const FileController = require("../controllers/FileController");
 const WallpaperMaker = require("../controllers/WallpaperMaker");
 const Downloader = require("../controllers/Downloader");
 
-
+const requireAuth = require("../middleware/requireAuth")
 const router = express.Router(); 
+ 
+//require auth for all routes
+router.use(requireAuth)
+
 
 //CREATE image key and stores image on server
-router.post("/upload", FileController.uploadLocal.array("image", 1), FileController.uploadImage);
+router.post("/upload", FileController.upload.array("images"), FileController.uploadImageKey);
 
 //REMOVE image and its image key
 router.delete("/images/:id", FileController.deleteImage); //remove the wallpaper from the list
@@ -16,11 +21,12 @@ router.delete("/images/:id", FileController.deleteImage); //remove the wallpaper
 router.get("/allimages", FileController.getAllImages);
 
 //submits the form to create the wallpapers
-router.post("/create", WallpaperMaker.generateWallpapers); //executes the creation of wallpapers
+router.post("/submit", FileController.directoryCheck, FileController.downloadImages, WallpaperMaker.generateWallpapers, Downloader.sendDownload); //WallpaperMaker.generateWallpapers, Downloader.sendDownload); //executes the creation of wallpapers
 
 //creates the zip for download and sends it to the client
-router.get("/download", Downloader.getDownload);
+// router.get("/download", Downloader.getDownload);
 
+router.get("/images/:id", FileController.getImage);
 
 
 module.exports = router;

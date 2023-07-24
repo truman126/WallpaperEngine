@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import TitleBar from "./TitleBar";
 import api from "../api";
+import loader from "../1488.gif"
 import { useFilesContext } from "../hooks/useFilesContext";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const RemoveButton = styled.button`
   background-color: crimson;
@@ -14,16 +16,15 @@ const RemoveButton = styled.button`
 
 function File(props) {
   const { files, dispatch } = useFilesContext();
-
-  console.log(props.image)
+  const { user } = useAuthContext();
 
   async function handleDelete(id) {
-    
-    const response = await api.deleteImage(id);
+    if (!user){
+      return
+    }
+    const response = await api.deleteImage(id, user);
 
     const json = await response.data.data;
-
-    console.log(json)
 
     if (response.data.ok) {
       dispatch({ type: "DELETE_FILES", payload: json });
@@ -32,9 +33,11 @@ function File(props) {
   return (
     <li>
       <img
-        src={`http://localhost:8000/images/${props.image.key}`}
-        style={{ height: "100px" }}
+        src={!props.image.url ?
+        loader : props.image.url}
+        style={{ height: "50px" }}
       />
+      {props.image.key}
       <RemoveButton
         id={props.image.key}
         className="close"

@@ -13,39 +13,57 @@ const {
 function rgbToHex(r, g, b) {
   return "#" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
 }
+function emptyDirectory(directory) {
 
-generateWallpapers = async (req, res) => {
+  if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory);
+    return;
+  }
+
+  fs.readdir(directory, (err, files) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+
+    if (!files) {
+      return;
+    }
+
+    for (const file of files) {
+      fs.unlink(path.join(directory, file), (err) => {
+        if (err) console.log(err);
+      });
+    }
+    return;
+  });
+}
+generateWallpapers = async (req, res, next) => {
+  console.log("generating wallpapers")
   //these should be set in req.body
   const canvasWidth = req.body.size.width;
   const canvasHeight = req.body.size.height;
   const sizeDown = req.body.ratio;
 
-  console.log(req.body);
+  const user_id = req.user._id;
 
   try {
+    // ADD AT THE END WHEN CLEARING WALLPAPER AND IMAGE FOLDER
     //delete all files in the wallpaper folder
-    const directory = "./data/wallpapers/";
+    const directory = `./data/${user_id}/`;
 
-    fs.readdir(directory, (err, files) => {
-      if (err) console.log(err);
-      for (const file of files) {
-        fs.unlink(path.join(directory, file), (err) => {
-          if (err) console.log(err);
-        });
-      }
-    });
 
-    const keys = await ImageKey.find();
+    const keys = await ImageKey.find({ user_id });
 
     for (let i = 0; i < keys.length; i++) {
       const canvas = createCanvas(canvasWidth, canvasHeight);
       const context = canvas.getContext("2d");
 
-      let image = await loadImage("./data/images/" + keys[i].key).then(
-        (image) => {
-          return image;
-        }
-      );
+      let image = await loadImage(
+        directory + keys[i].key
+      ).then((image) => {
+        return image;
+      });
 
       const landscape = image.width > image.height ? true : false; // true if the image is landscape, false if it is a portrait image. used to calculate the border size
 
@@ -117,16 +135,12 @@ generateWallpapers = async (req, res) => {
           ? canvas.toBuffer("image/jpeg")
           : canvas.toBuffer("image/png");
       fs.writeFileSync(
-        "./data/wallpapers/" +
-          keys[i].key.replace(/\.[^/.]+$/, ".") +
-          req.body.filetype,
+        directory + "/wallpapers/" + keys[i].key.replace(/\.[^/.]+$/, ".") + req.body.filetype,
         buffer
       );
     }
-
-    res.status(200).json({
-      success: true,
-    });
+    console.log("generated wallpapers")
+    next()
   } catch (e) {
     console.log(e);
     res.status(400);
