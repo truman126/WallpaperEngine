@@ -1,36 +1,23 @@
 import React, { useState } from "react";
-import styled from "styled-components";
-import TitleBar from "./TitleBar";
 import api from "../api";
 import { useAuthContext } from "../hooks/useAuthContext";
 
 
-const Wrapper = styled.div`
-  background-color: #f8f9fa;
-  width: 450px;
-  height: 500px;
-  outline: solid;
-  display: inline-block;
-`;
-const OptionHeading = styled.h5``;
-
-const Form = styled.form``;
 
 function Options(props) {
-  const [downloadReady, setDownloadReady] = useState(false);
-  const [customColour, setCustomColourPicker] = useState(false);
+  const [customColourPicker, setCustomColourPicker] = useState(false);
+  const [customColour, setCustomColour] = useState('#afe3b2')
   const [customSize, setCustomSizeToggle] = useState(false);
   const [borderRatio, setRatio] = useState(4);
   const [outputFiletype, setFileType] = useState("jpeg");
   const [config, setConfig] = useState({
-    colour: "average",
+    colour: 'average',
     size: {
       width: 1920,
       height: 1080,
     },
   });
-  const {user} = useAuthContext()
-
+  const { user } = useAuthContext();
 
   const commonResolutions = [
     [1920, 1080],
@@ -42,8 +29,7 @@ function Options(props) {
     [1280, 720],
   ];
 
-  function changeInput(e) {
-    console.log(e.target.name)
+  function changeSizeInput(e) {
     if (e.target.name == "size") {
       setConfig({
         ...config,
@@ -62,7 +48,6 @@ function Options(props) {
           ...config.size.height,
         },
       });
-     
     } else if (e.target.name == "height") {
       setConfig({
         ...config,
@@ -72,63 +57,64 @@ function Options(props) {
           ["height"]: [e.target.value],
         },
       });
-    } else {
-      setConfig({ ...config, [e.target.name]: [e.target.value] });
     }
-    console.log(config);
+  }
+  function changeInput(e){
+    setConfig({ ...config, [e.target.name]: [e.target.value] });
+
   }
 
   async function handleSubmit(e) {
-    e.preventDefault()
+    e.preventDefault();
+    console.log(customColourPicker)
 
     const { colour, size, ratio, filetype } = {
-      colour: config.colour,
+      colour: customColourPicker ? customColour : 'average',
       size: config.size,
       ratio: borderRatio,
       filetype: outputFiletype,
     };
-    
+
     const payload = { colour, size, ratio, filetype };
-    console.log(payload)
+    console.log(payload);
     const response = await api.generateWallpapers(payload, user);
-    console.log(response.data)
+
     var blob = new Blob([response.data], { type: "application/zip" });
     var link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
     var fileName = "wallpapers.zip";
     link.download = fileName;
 
-    // Start download
     link.click();
   }
- 
 
   return (
-    <Wrapper>
-      <TitleBar text="Options" />
-      <Form onSubmit={handleSubmit}>
+    <div className="wallpaper-options">
+      <form onSubmit={handleSubmit}>
+        <h3>Options</h3>
         <div>
-          <OptionHeading>Background Colour</OptionHeading>
+          <h4>Background Colour</h4>
 
           <label>
             <input
               name="colour"
               value="average"
+              className="radio"
               type="radio"
-              checked={!customColour}
+              checked={!customColourPicker}
               onChange={(e) => {
                 setCustomColourPicker(false);
-                changeInput(e);
               }}
             />
-            Average Colour
+            Use Image Colour
           </label>
 
           <label>
             <input
+              className="radio"
               type="radio"
-              checked={customColour}
-              onChange={() => {
+              checked={customColourPicker}
+              onChange={(e) => {
                 {
                   setCustomColourPicker(true);
                 }
@@ -136,31 +122,30 @@ function Options(props) {
             />
             Custom
           </label>
-          {customColour ? (
+          {customColourPicker ? (
             <input
               name="colour"
               type="color"
-              value={config.colour}
-              onChange={(e) => changeInput(e)}
+              value={customColour}
+              onChange={(e) => setCustomColour(e.target.value)}
             />
           ) : null}
         </div>
 
         <div>
-          <OptionHeading>Image Size</OptionHeading>
+          <h4>Image Size</h4>
 
-            <select name="size" onChange={(e) => changeInput(e)}>
-              {commonResolutions.map(([w, h], index) => (
-                <option name="size" value={index}>
-                  {w} x {h}
-                </option>
-              ))}
-            </select>
-          
+          <select name="size" onChange={(e) => changeSizeInput(e)}>
+            {commonResolutions.map(([w, h], index) => (
+              <option name="size" value={index}>
+                {w} x {h}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>
-          <OptionHeading>Border to Image Ratio</OptionHeading>
+          <h4>Border to Image Ratio</h4>
 
           <input
             onChange={(e) => setRatio(e.target.value)}
@@ -179,10 +164,11 @@ function Options(props) {
         </div>
 
         <div>
-          <OptionHeading>Output Filetype</OptionHeading>
+          <h4>Output Filetype</h4>
 
           <label>
             <input
+              className="radio"
               type="radio"
               checked={outputFiletype == "jpeg"}
               onChange={(e) => setFileType("jpeg")}
@@ -191,6 +177,7 @@ function Options(props) {
           </label>
           <label>
             <input
+              className="radio"
               type="radio"
               checked={outputFiletype == "png"}
               onChange={() => setFileType("png")}
@@ -202,8 +189,9 @@ function Options(props) {
         <button type="submit" value="submit">
           Create Wallpapers
         </button>
-      </Form>
-    </Wrapper>
+      </form>
+      </div>
+    
   );
 }
 

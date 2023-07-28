@@ -1,31 +1,22 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
 /* google font */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap');
 
 /* layout */
 :root {
-  --primary: #3b94a3;
+  --primary: #1aa5ac;
+  --primary-hover:#12796d;
   --error: #e7195a;
+  --error-hover:#b31345; 
 }
 body {
-  background: #f1f1f1;
   margin: 0;
   font-family: "Poppins";
 }
-header {
-  background: #fff;
+header{
+  padding:20px;
+}
+header span{
+  margin: 0 20px 0 20px;
 }
 header .container {
   max-width: 1400px;
@@ -41,8 +32,11 @@ header a {
 }
 .pages{
   max-width: 1400px;
-  padding: 20px;
+  padding: 40px;
   margin: 0 auto;
+  background-color: #f1f1f1;
+  border-radius: 12px;
+
 }
 
 /* homepage */
@@ -50,69 +44,146 @@ header a {
   display: grid;
   grid-template-columns: 3fr 1fr;
   gap: 100px;
+  min-width:500px;
+
+
 }
-.workout-details {
+.home div{
+  min-width:500px;
+  overflow-x:hidden;
+
+}
+.home h3{
+  
+}
+.home h4{
+  margin: 0 0 10px 0;
+}
+.home label, .home input {
+  display: inline;
+}
+.files{
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px;
+
+
+}
+.file-list{
+  overflow-y: scroll;
+  max-height: 65vh;
+  margin: 20px 0 20px 0;
+  
+}
+.file-details {
   background: #fff;
   border-radius: 4px;
-  margin: 20px auto;
+  margin: 5px auto;
   padding: 20px;
   position: relative;
   box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
 }
-.workout-details h4 {
-  margin: 0 0 10px 0;
-  font-size: 1.2em;
-  color: var(--primary);
-}
-.workout-details p {
-  margin: 0;
-  font-size: 0.9em;
+
+.file-details p {
+  margin: 0 20px 0 20px;
+  display:inline;
+  font-size: 1.1em;
   color: #555;
 }
-.workout-details span {
+.file-details img{
+  height: "75px"
+}
+.file-details button {
   position: absolute;
   top: 20px;
   right: 20px;
-  cursor: pointer;
-  background: #f1f1f1;
   padding: 6px;
-  border-radius: 50%;
-  color: #333;
 }
 
-/* new workout form */
-label, input {
+.wallpaper-options{
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  
+}
+.wallpaper-options div {
+  padding: 20px 20px 20px 20px;
+}
+.wallpaper-options h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.2em;
+
+}
+.wallpaper-options p, .wallpaper-options label {
+  display:inline;
+  font-size: 1.1em;
+  color: #555;
+}
+.wallpaper-options .radio{
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width:20px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+.wallpaper-options input { 
+  margin:15px;
+}
+.wallpaper-options img{
   display: block;
 }
-/* input {
-  padding: 10px;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-sizing: border-box;
-} */
-/* form button {
-  background: var(--primary);
-  border: 0;
+.wallpaper-options button{
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+}
+/* new image form */
+
+.upload-button{
+    display: inline-block;
+    cursor: pointer;
+    background: var(--primary);
   color: #fff;
+  border:0;
   padding: 10px;
   font-family: "Poppins";
   border-radius: 4px;
-  cursor: pointer;
-} */
+}
+.upload-button:hover{
+  background: var(--primary-hover)
+
+}
+.upload-button:active{
+  box-shadow: inset 0px 0px 5px #f5f5f5;
+}
+input[type="file"] {
+  display: none;
+}
 body button {
   background: var(--primary);
-  border: 0;
   color: #fff;
+  border:0;
   padding: 10px;
   font-family: "Poppins";
   border-radius: 4px;
   cursor: pointer;
-  margin: 3px;
-  border-collapse: separate; 
+}
+button:active {
+  box-shadow: inset 0px 0px 5px #f5f5f5;
+}
+button:hover{
+  background: var(--primary-hover)
 
-  
+}
+button.delete:hover{
+  background: var(--error-hover)
+}
+button.delete{
+  padding: 5px 15px 5px 15px;
+  background-color:var(--error);
 }
 div.error {
   padding: 10px;
@@ -124,4 +195,25 @@ div.error {
 }
 input.error {
   border: 1px solid var(--error);
+}
+
+/* navbar */
+nav {
+  display: flex;
+  align-items: center;
+}
+nav a {
+  margin-left: 10px;
+}
+
+/* auth forms */
+Form.signup, Form.login {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 4px;
+}
+Form.signup label, Form.login label,Form.signup button, Form.login button{
+  margin:20px 0 0 0;
 }

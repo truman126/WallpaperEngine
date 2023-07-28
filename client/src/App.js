@@ -13,10 +13,11 @@ function App() {
 
   return (
     <div className="App">
+
       <BrowserRouter>
         <UserBar />
 
-        <div className="Routes">
+        <div className="pages">
           <Routes>
             <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
 
