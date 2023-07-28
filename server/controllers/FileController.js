@@ -30,7 +30,47 @@ const s3_resized = new S3Client({
   },
   endpoint: `http://s3.us-east-2.amazonaws.com`
 });
+emptyDirectory = async (req, res, next) => {
+  const user_id = req.user._id
+  const directory = `./data/${user_id}/`
+  const wallpaper_dir = directory + 'wallpapers'
 
+  if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory);
+    return;
+  }
+
+  fs.readdir(directory, (err, files) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+
+    for (const file of files) {
+      fs.unlink(path.join(directory, file), (err) => {
+        if (err) console.log(err);
+      });
+    }
+    
+  });
+  fs.readdir(wallpaper_dir, (err, files) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+
+    if (!files) {
+      return;
+    }
+
+    for (const file of files) {
+      fs.unlink(path.join(wallpaper_dir, file), (err) => {
+        if (err) console.log(err);
+      });
+    }
+    next()
+  });
+}
 directoryCheck = async (req,res,next) => {
   const user_id = req.user._id
   const directory = `./data/${user_id}`
@@ -125,7 +165,7 @@ uploadImageKey = async (req, res) => {
       
       //get the head data to ensure the object exists before requesting the thumbnail
       const head = new HeadObjectCommand(bucketParams);
-      const exists = await s3_resized.send(head);
+      const exists = await s3_resized.send(head).catch((err) => (console.log(err)));
 
       
       const url = await getSignedUrl(s3_resized, new GetObjectCommand(bucketParams), { expiresIn: 90000 });
@@ -151,6 +191,7 @@ uploadImageKey = async (req, res) => {
 
 downloadImages = async (req, res,next ) => {
   console.log('downloading images ')
+  console.log(req.body)
     const user_id = req.user._id
 
     const images = await ImageKey.find({user_id});
@@ -229,5 +270,6 @@ module.exports = {
   storage,
   directoryCheck,
   getImage,
-  upload
+  upload,
+  emptyDirectory
 };

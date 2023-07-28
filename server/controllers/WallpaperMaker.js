@@ -13,33 +13,9 @@ const {
 function rgbToHex(r, g, b) {
   return "#" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
 }
-function emptyDirectory(directory) {
 
-  if (!fs.existsSync(directory)) {
-    fs.mkdirSync(directory);
-    return;
-  }
-
-  fs.readdir(directory, (err, files) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
-
-    if (!files) {
-      return;
-    }
-
-    for (const file of files) {
-      fs.unlink(path.join(directory, file), (err) => {
-        if (err) console.log(err);
-      });
-    }
-    return;
-  });
-}
 generateWallpapers = async (req, res, next) => {
-  console.log("generating wallpapers")
+
   //these should be set in req.body
   const canvasWidth = req.body.size.width;
   const canvasHeight = req.body.size.height;
@@ -52,16 +28,13 @@ generateWallpapers = async (req, res, next) => {
     //delete all files in the wallpaper folder
     const directory = `./data/${user_id}/`;
 
-
     const keys = await ImageKey.find({ user_id });
 
     for (let i = 0; i < keys.length; i++) {
       const canvas = createCanvas(canvasWidth, canvasHeight);
       const context = canvas.getContext("2d");
 
-      let image = await loadImage(
-        directory + keys[i].key
-      ).then((image) => {
+      let image = await loadImage(directory + keys[i].key).then((image) => {
         return image;
       });
 
@@ -86,61 +59,65 @@ generateWallpapers = async (req, res, next) => {
       const { x, y } = imagePosition;
 
       if (req.body.colour != "average") {
-        context.fillStyle = req.body.colour[0];
+        context.fillStyle = req.body.colour;
+      } else {
+        /**
+         *
+         * Find the average Colour of the image
+         */
+
+        //in memory canvas to get the image data
+        const dataCanvas = createCanvas(imageWidth, imageHeight);
+        var imgDataContext = dataCanvas.getContext("2d");
+        await imgDataContext.drawImage(image, 0, 0);
+        var imageData = imgDataContext.getImageData(
+          0,
+          0,
+          imageWidth,
+          imageHeight
+        );
+        var pix = imageData.data;
+
+        // Loop over each pixel and invert the color.
+        let rgb = { r: 0, g: 0, b: 0, a: 0 };
+        let count = 0;
+
+        for (var j = 0, n = pix.length; j < n; j += 4) {
+          count++;
+          rgb.r += pix[j]; //red
+          rgb.g += pix[j + 1]; // green
+          rgb.b += pix[j + 2]; // blue
+          rgb.a += pix[j + 3]; // blue
+
+          // i+3 is alpha (the fourth element)
+        }
+
+        rgb.r = ~~(rgb.r / count);
+        rgb.g = ~~(rgb.g / count);
+        rgb.b = ~~(rgb.b / count);
+        rgb.a = ~~(rgb.b / count);
+        context.fillStyle = rgbToHex(rgb.r, rgb.g, rgb.b);
+
       }
-      /**
-       *
-       * Find the average Colour of the image
-       */
 
-      //in memory canvas to get the image data
-      const dataCanvas = createCanvas(imageWidth, imageHeight);
-      var imgDataContext = dataCanvas.getContext("2d");
-      imgDataContext.drawImage(image, 0, 0);
-      var imageData = imgDataContext.getImageData(
-        0,
-        0,
-        imageWidth,
-        imageHeight
-      );
-      var pix = imageData.data;
-
-      // Loop over each pixel and invert the color.
-      let rgb = { r: 0, g: 0, b: 0, a: 0 };
-      let count = 0;
-
-      for (var j = 0, n = pix.length; j < n; j += 4) {
-        count++;
-        rgb.r += pix[j]; //red
-        rgb.g += pix[j + 1]; // green
-        rgb.b += pix[j + 2]; // blue
-        rgb.a += pix[j + 3]; // blue
-
-        // i+3 is alpha (the fourth element)
-      }
-
-      rgb.r = ~~(rgb.r / count);
-      rgb.g = ~~(rgb.g / count);
-      rgb.b = ~~(rgb.b / count);
-      rgb.a = ~~(rgb.b / count);
-
-      context.fillStyle = rgbToHex(rgb.r, rgb.g, rgb.b);
 
       context.fillRect(0, 0, canvasWidth, canvasHeight);
 
-      context.drawImage(image, x, y, w, h);
+      await context.drawImage(image, x, y, w, h);
 
       const buffer =
         req.body.filetype == "jpeg"
           ? canvas.toBuffer("image/jpeg")
           : canvas.toBuffer("image/png");
       fs.writeFileSync(
-        directory + "/wallpapers/" + keys[i].key.replace(/\.[^/.]+$/, ".") + req.body.filetype,
+        directory +
+          "/wallpapers/" +
+          keys[i].key.replace(/\.[^/.]+$/, ".") +
+          req.body.filetype,
         buffer
       );
     }
-    console.log("generated wallpapers")
-    next()
+    next();
   } catch (e) {
     console.log(e);
     res.status(400);

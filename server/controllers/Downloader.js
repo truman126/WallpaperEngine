@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const admz = require("adm-zip");
 
-sendDownload = async (req, res) => {
+sendDownload = async (req, res, next) => {
   console.log("starting to make download")
   const user_id = req.user._id;
   const wallpaperDirectory = `./data/${user_id}/wallpapers/`
@@ -23,7 +23,7 @@ sendDownload = async (req, res) => {
     const data = zp.toBuffer();
 
 
-    
+    console.log("getting ready to send")
 
 
     res.set("Content-Type", "application/octect-stream");
@@ -32,11 +32,15 @@ sendDownload = async (req, res) => {
       `attachment; filename=${file_after_download}`
     );
     res.set("Content-Length", data.length);
+    console.log("sending")
     res.send(data);
+    res.status(200)
+    next()
 
 
   } catch (e) {
     console.log(e);
+    res.status(401)
   }
 };
 

@@ -1,18 +1,15 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import TitleBar from "./TitleBar";
 import File from "./File";
 import api from "../api";
 import {useFilesContext} from "../hooks/useFilesContext"
 import { useAuthContext } from "../hooks/useAuthContext";
+import ListGroup from 'react-bootstrap/ListGroup';
 
 const Wrapper = styled.div`
-  background-color: #f8f9fa;
   width: 450px;
   height: 500px;
   position: relative;
-  outline: solid;
-  margin: 0;
 `;
 const FileContainer = styled.div`
   overflow-y: scroll;
@@ -24,15 +21,6 @@ const FileContainer = styled.div`
   > ul > li:hover {
     background-color: lightgrey;
   }
-`;
-
-const ActionBar = styled.div`
-    bottom:0px;
-    position: absolute;
-    background-color:white;
-    width:100%;
-    border-top: solid;
-    padding 7px;
 `;
 
 function FileSelector(props) {
@@ -49,6 +37,7 @@ function FileSelector(props) {
       return
     }
     
+    
 
     var formData = new FormData();
 
@@ -58,6 +47,10 @@ function FileSelector(props) {
 
 
     for (const image of images){
+      if(image.size > 20000000){
+        setError("Only files sizes under 20MB are allowed.")
+        return
+      }
       formData.append('images', image);
       tempImages.push({"key": image.name})
     }
@@ -92,31 +85,32 @@ function FileSelector(props) {
   }, [dispatch, user]);
 
   return (
-    <Wrapper>
-      <TitleBar text="File Selector" />
-      <FileContainer>
-        <ul>
+    <div className="files">
+      <h3>Files</h3>
+      <div className="file-list" >
           {files && files.map((file) => (
             <File
               image={file}
             />
+            
           ))}
-        </ul>
-      </FileContainer>
-      <ActionBar>
+          
+      </div>
         <form>
+          <label className="upload-button">
+            Upload Files
           <input
             type="file"
             accept="image/*"
             multiple="true"
-            // multiple="multiple"
             onChange={(e) => {
               handleFileUpload(e);
             }}
           />
+          </label>
         </form>
-      </ActionBar>
-    </Wrapper>
+      
+    </div>
   );
 }
 

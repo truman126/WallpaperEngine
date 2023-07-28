@@ -1,18 +1,14 @@
-import { FileSelector, Options} from "../components";
-import styled from "styled-components";
-
-
-const Container = styled.div`
-    display:flex;
-
-`;
+import { FileSelector, Options } from "../components";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import Container from "react-bootstrap/Container";
 
 const Home = () => {
   return (
-       <Container>
-        <FileSelector />
-        <Options />
-      </Container>
+    <div className="home">
+      <FileSelector />
+      <Options />
+    </div>
   );
 };
 

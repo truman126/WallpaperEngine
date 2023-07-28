@@ -21,10 +21,8 @@ router.delete("/images/:id", FileController.deleteImage); //remove the wallpaper
 router.get("/allimages", FileController.getAllImages);
 
 //submits the form to create the wallpapers
-router.post("/submit", FileController.directoryCheck, FileController.downloadImages, WallpaperMaker.generateWallpapers, Downloader.sendDownload); //WallpaperMaker.generateWallpapers, Downloader.sendDownload); //executes the creation of wallpapers
+router.post("/submit", FileController.emptyDirectory, FileController.directoryCheck, FileController.downloadImages, WallpaperMaker.generateWallpapers, Downloader.sendDownload, FileController.emptyDirectory); //WallpaperMaker.generateWallpapers, Downloader.sendDownload); //executes the creation of wallpapers
 
-//creates the zip for download and sends it to the client
-// router.get("/download", Downloader.getDownload);
 
 router.get("/images/:id", FileController.getImage);
 

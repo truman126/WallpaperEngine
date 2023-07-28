@@ -1,18 +1,9 @@
 import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import TitleBar from "./TitleBar";
 import api from "../api";
-import loader from "../1488.gif"
 import { useFilesContext } from "../hooks/useFilesContext";
 import { useAuthContext } from "../hooks/useAuthContext";
+import Spinner from 'react-bootstrap/Spinner';
 
-const RemoveButton = styled.button`
-  background-color: crimson;
-  text-fill-color: white;
-  color: white;
-  margin-left: 7px;
-  margin-right: 7px;
-`;
 
 function File(props) {
   const { files, dispatch } = useFilesContext();
@@ -31,24 +22,28 @@ function File(props) {
     }
   }
   return (
-    <li>
+    <div className="file-details">
+      {!props.image.url ? 
+      <Spinner animation="border" variant="primary" /> :
+
+    
       <img
-        src={!props.image.url ?
-        loader : props.image.url}
-        style={{ height: "50px" }}
+        src={props.image.url}
       />
-      {props.image.key}
-      <RemoveButton
+}
+      <p>{props.image.key}</p>
+      <button
+        variant="danger"
         id={props.image.key}
-        className="close"
+        className="delete"
         type="button"
         onClick={() => {
           handleDelete(props.image._id);
         }}
       >
         &#x2715;
-      </RemoveButton>
-    </li>
+      </button>
+    </div>
   );
 }
 export default File;
