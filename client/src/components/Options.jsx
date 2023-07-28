@@ -106,7 +106,7 @@ function Options(props) {
                 setCustomColourPicker(false);
               }}
             />
-            Use Image Colour
+            Use Image Colour 
           </label>
 
           <label>
@@ -145,7 +145,7 @@ function Options(props) {
         </div>
 
         <div>
-          <h4>Border to Image Ratio</h4>
+          <h4>Border Size</h4>
 
           <input
             onChange={(e) => setRatio(e.target.value)}
