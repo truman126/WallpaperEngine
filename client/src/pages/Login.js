@@ -11,7 +11,11 @@ const Login = () => {
     e.preventDefault();
     await login(email, password);
   };
+  console.log("ERR", error)
+
   return (
+    <>
+    {error && <div className="error">{error}</div>}
     <form className="login" onSubmit={handleSubmit}>
       <h3>Log in</h3>
       <label>Email:</label>
@@ -28,9 +32,10 @@ const Login = () => {
         value={password}
       />
       <button>Log in</button>
-      {error && <div className="error">{error}</div>}
 
     </form>
+    </>
+
   );
 };
 

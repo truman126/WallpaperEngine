@@ -26,5 +26,8 @@ router.post("/submit", FileController.emptyDirectory, FileController.directoryCh
 
 router.get("/images/:id", FileController.getImage);
 
+router.get("/reloadThumbnail/:id", FileController.reloadThumbnail);
+
+
 
 module.exports = router;

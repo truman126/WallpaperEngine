@@ -15,6 +15,7 @@ function App() {
     <div className="App">
 
       <BrowserRouter>
+
         <UserBar />
 
         <div className="pages">

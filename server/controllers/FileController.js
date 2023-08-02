@@ -5,13 +5,12 @@ const multer = require("multer");
 const multerS3 = require("multer-s3");
 const { GetObjectCommand, DeleteObjectCommand, HeadObjectCommand, S3Client} = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+require('dotenv').config()
 
-const AWS_S3_BUCKET_NAME = "wallpaperengineimages";
-const AWS_S3_ACCESS_KEY_ID = "***REMOVED***";
-const AWS_S3_SECRET_ACCESS_KEY = "***REMOVED***";
-
-const AWS_S3_BUCKET_NAME_RESIZED = "wallpaperengineimages-resized";
-
+const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
+const AWS_S3_ACCESS_KEY_ID = process.env.AWS_S3_ACCESS_KEY_ID;
+const AWS_S3_SECRET_ACCESS_KEY = process.env.AWS_S3_SECRET_ACCESS_KEY;
+const AWS_S3_BUCKET_NAME_RESIZED = process.env.AWS_S3_BUCKET_NAME_RESIZED;
 
 const s3 = new S3Client({
   region: "us-east-2",
@@ -168,8 +167,7 @@ uploadImageKey = async (req, res) => {
       const exists = await s3_resized.send(head).catch((err) => (console.log(err)));
 
       
-      const url = await getSignedUrl(s3_resized, new GetObjectCommand(bucketParams), { expiresIn: 90000 });
-
+      const url = await getSignedUrl(s3_resized, new GetObjectCommand(bucketParams), { expiresIn: 90000 }); //90k
 
       let newKey = new ImageKey({
         key: keyName,
@@ -211,6 +209,31 @@ downloadImages = async (req, res,next ) => {
       next();
     })
 
+}
+reloadThumbnail  = async(req,res) => {
+  // await new Promise(r => setTimeout(r, 2000));
+  const { id } = req.params;
+  const key = await ImageKey.findOne({ _id: id});
+
+  const bucketParams = {
+    Bucket: AWS_S3_BUCKET_NAME_RESIZED,
+    Key: "thumbnails/resized-" + key.key,
+  };
+  try{
+    
+    const new_url = await getSignedUrl(s3_resized, new GetObjectCommand(bucketParams), { expiresIn: 90000 }); //90k
+    const item = await ImageKey.findOneAndUpdate({ _id: id}, {$set:{url:new_url}});
+    res.status(200).json({ ok: true, data:item});
+
+  }catch(e){
+    console.log(e)
+    res.status(404);
+
+  }
+
+
+
+  
 }
 async function getFileFromS3(key) {
   // parameters for the s3 bucket, convert to dotenv variables before pushing
@@ -271,5 +294,6 @@ module.exports = {
   directoryCheck,
   getImage,
   upload,
-  emptyDirectory
+  emptyDirectory,
+  reloadThumbnail
 };
