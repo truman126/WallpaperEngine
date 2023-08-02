@@ -16,6 +16,7 @@ export const useLogin = () => {
     await api
       .login(payload)
       .then((axiosRes) => {
+        console.log("axios res");
         console.log(axiosRes)
         const data = axiosRes.data
 
@@ -29,7 +30,11 @@ export const useLogin = () => {
       })
       
       .catch((axiosRes) => {
-        const error = axiosRes.response.data.Error
+        console.log("axios res2");
+        console.log(axiosRes);
+
+
+        const error = axiosRes.response.data.error
         setIsLoading(false);
         setError(error);
       });

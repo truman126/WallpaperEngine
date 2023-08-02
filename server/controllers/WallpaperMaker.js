@@ -109,7 +109,7 @@ generateWallpapers = async (req, res, next) => {
         req.body.filetype == "jpeg"
           ? canvas.toBuffer("image/jpeg")
           : canvas.toBuffer("image/png");
-      fs.writeFileSync(
+      await fs.writeFileSync(
         directory +
           "/wallpapers/" +
           keys[i].key.replace(/\.[^/.]+$/, ".") +

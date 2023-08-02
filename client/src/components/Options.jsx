@@ -137,7 +137,7 @@ function Options(props) {
 
           <select name="size" onChange={(e) => changeSizeInput(e)}>
             {commonResolutions.map(([w, h], index) => (
-              <option name="size" value={index}>
+              <option name="size" value={index} key={index}>
                 {w} x {h}
               </option>
             ))}

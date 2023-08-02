@@ -8,6 +8,7 @@ import { AuthContextProvider } from "./context/AuthContext";
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
+document.title = "Wallpaper Engine"
 root.render(
   <React.StrictMode>
     <AuthContextProvider>

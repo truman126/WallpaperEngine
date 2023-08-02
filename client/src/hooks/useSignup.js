@@ -29,7 +29,7 @@ export const useSignup = () => {
       })
       
       .catch((axiosRes) => {
-        const error = axiosRes.response.data.Error
+        const error = axiosRes.response.data.error
         setIsLoading(false);
         setError(error);
       });
