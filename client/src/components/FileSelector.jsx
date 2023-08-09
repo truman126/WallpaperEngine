@@ -69,7 +69,7 @@ function FileSelector(props) {
 
   return (
     <div className="files">
-      <h3>Files</h3>
+      <h3>Files ({files && files.length})</h3>
       <div className="file-list" >
           {files && files.map((file) => (
             <File

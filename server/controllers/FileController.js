@@ -49,6 +49,8 @@ emptyDirectory = async (req, res, next) => {
   fs.readdir(directory, (err, files) => {
     if (err) {
       console.log(err);
+      console.log(1);
+
       return;
     }
 
@@ -61,6 +63,8 @@ emptyDirectory = async (req, res, next) => {
   fs.readdir(wallpaper_dir, (err, files) => {
     if (err) {
       console.log(err);
+      console.log(2);
+
       return;
     }
 
@@ -200,39 +204,48 @@ uploadImageKey = async (req, res) => {
 
 downloadImages = async (req, res, next) => {
   console.log("downloading");
-
-  const user_id = req.user._id;
-
-  const images = await ImageKey.find({ user_id });
-  let image_streams = new Map(); //dictionary
-  images.map((image) => image_streams.set(image.key, null))
-  console.log(image_streams)
-  for (image of images) {
-    const key = "images/" + image.key;
+  const make_promise = async (key) => {
     const { Body } = await s3.send(
-      new GetObjectCommand({ Bucket: AWS_S3_BUCKET_NAME, Key: key })
-    );
-    Body.on("data", async () =>{
-      image_streams.set(image.key, stream )
-    })
-    const stream = Body.pipe(
-      fs.createWriteStream("data/" + user_id + "/" + image.key)
+      new GetObjectCommand({ Bucket: AWS_S3_BUCKET_NAME, Key:"images/" + key })
     )
     
-    stream.on("finish", async () => {
-      console.log("stream finished, map has: ", image_streams.has(image.key));
-      console.log("attempting to delete: ",image.key, image_streams.delete(image.key));
-    });
-    // stream.on("error", (error) => console.log(error))
+    return new Promise((resolve, reject) => {
+      const file =  Body.pipe(
+        fs.createWriteStream("data/" + user_id + "/" + key)
+      )
+      
+      
+      file.on("finish", () => { resolve(true); }); // not sure why you want to pass a boolean
+      file.on("error", reject); // don't forget this!
+    })
   }
 
-  while (image_streams.size > 0) {
-    console.log(image_streams.size);
-    // image_streams.forEach(stream => {
-    //   console.log(stream)
-    // });
-    await new Promise((r) => setTimeout(r, 1000));
+  const user_id = req.user._id;
+  const images = await ImageKey.find({ user_id });
+  const promises = []
+
+
+  for (const image of images) {
+    try{
+    
+      promises.push(make_promise(image.key))
+    
   }
+  catch(e){
+    console.log(e)
+  }
+
+  }
+  const all = Promise.all(promises)
+  console.log(all)
+  all.then(values => {
+    console.log(values); // [resolvedValue1, resolvedValue2]
+    next()
+  }).catch(error => {
+    console.log(error); // rejectReason of any first rejected promise
+  });
+
+  
 
   // next();
 };
