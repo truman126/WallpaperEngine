@@ -8,6 +8,7 @@ function Options(props) {
   const [customColourPicker, setCustomColourPicker] = useState(false);
   const [customColour, setCustomColour] = useState('#afe3b2')
   const [customSize, setCustomSizeToggle] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [borderRatio, setRatio] = useState(4);
   const [outputFiletype, setFileType] = useState("jpeg");
   const [config, setConfig] = useState({
@@ -65,6 +66,9 @@ function Options(props) {
   }
 
   async function handleSubmit(e) {
+    setIsDownloading(true);
+    props.setLoading(true)
+
     e.preventDefault();
     console.log(customColourPicker)
 
@@ -86,6 +90,9 @@ function Options(props) {
     link.download = fileName;
 
     link.click();
+    setIsDownloading(false);
+    props.setLoading(false)
+
   }
 
   return (
@@ -186,7 +193,7 @@ function Options(props) {
           </label>
         </div>
 
-        <button type="submit" value="submit">
+        <button disabled={isDownloading} type="submit" value="submit">
           Create Wallpapers
         </button>
       </form>

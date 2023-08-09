@@ -15,7 +15,7 @@ function rgbToHex(r, g, b) {
 }
 
 generateWallpapers = async (req, res, next) => {
-
+  console.log("starting to create wallpapers")
   //these should be set in req.body
   const canvasWidth = req.body.size.width;
   const canvasHeight = req.body.size.height;
@@ -29,20 +29,22 @@ generateWallpapers = async (req, res, next) => {
     const directory = `./data/${user_id}/`;
 
     const keys = await ImageKey.find({ user_id });
-
+    
     for (let i = 0; i < keys.length; i++) {
       const canvas = createCanvas(canvasWidth, canvasHeight);
       const context = canvas.getContext("2d");
+      
+      // context.imageSmoothingEnabled = true;
 
       let image = await loadImage(directory + keys[i].key).then((image) => {
         return image;
       });
+      
 
       const landscape = image.width > image.height ? true : false; // true if the image is landscape, false if it is a portrait image. used to calculate the border size
 
       const imageWidth = image.width;
       const imageHeight = image.height;
-      const aspectRatio = imageWidth / imageHeight;
 
       const translatedImageSize = {
         w: landscape ? canvasWidth / sizeDown : canvasHeight / sizeDown, //(image.width / image.height) * (canvasHeight / sizeDown),
@@ -60,7 +62,10 @@ generateWallpapers = async (req, res, next) => {
 
       if (req.body.colour != "average") {
         context.fillStyle = req.body.colour;
-      } else {
+      } 
+      
+      else {
+        
         /**
          *
          * Find the average Colour of the image
@@ -69,8 +74,10 @@ generateWallpapers = async (req, res, next) => {
         //in memory canvas to get the image data
         const dataCanvas = createCanvas(imageWidth, imageHeight);
         var imgDataContext = dataCanvas.getContext("2d");
+        
         await imgDataContext.drawImage(image, 0, 0);
-        var imageData = imgDataContext.getImageData(
+        
+        var imageData =  imgDataContext.getImageData(
           0,
           0,
           imageWidth,
@@ -81,7 +88,7 @@ generateWallpapers = async (req, res, next) => {
         // Loop over each pixel and invert the color.
         let rgb = { r: 0, g: 0, b: 0, a: 0 };
         let count = 0;
-
+        console.log(pix.length)
         for (var j = 0, n = pix.length; j < n; j += 4) {
           count++;
           rgb.r += pix[j]; //red
@@ -98,17 +105,20 @@ generateWallpapers = async (req, res, next) => {
         rgb.a = ~~(rgb.b / count);
         context.fillStyle = rgbToHex(rgb.r, rgb.g, rgb.b);
 
+
+        
       }
 
 
-      context.fillRect(0, 0, canvasWidth, canvasHeight);
-
-      await context.drawImage(image, x, y, w, h);
-
+      context.fillRect(0, 0, canvasWidth, canvasHeight);      
+      await context.drawImage(image, x,y,w,h);
+    
       const buffer =
         req.body.filetype == "jpeg"
-          ? canvas.toBuffer("image/jpeg")
-          : canvas.toBuffer("image/png");
+          ?  canvas.toBuffer("image/jpeg")
+          :  canvas.toBuffer("image/png");
+
+
       await fs.writeFileSync(
         directory +
           "/wallpapers/" +
@@ -116,6 +126,7 @@ generateWallpapers = async (req, res, next) => {
           req.body.filetype,
         buffer
       );
+      
     }
     next();
   } catch (e) {
