@@ -12,33 +12,37 @@ function FileSelector(props) {
   const {user} = useAuthContext();
 
   async function handleFileUpload(e) {
-
     e.preventDefault()
-
+    setError()
     if (!user){
       setError("You must be logged in.")
       return
     }
-    
-    
-
     var formData = new FormData();
-
     const images = e.target.files;
-
     let tempImages  = [];
-
 
     for (const image of images){
       if(image.size > 20000000){
         setError("Only files sizes under 20MB are allowed.")
-        return
+        return;
       }
+      else if(image.name.split(".").slice(-1)[0].toLowerCase() === 'jpeg'){
+        setError("Unsupported file type")
+        return;
+      }
+      else if(image.type != "image/jpeg" && image.type != "image/png"){
+        console.log(image.type)
+        setError("Unsupported file type")
+        return;
+      }
+      
       formData.append('images', image);
       tempImages.push({"key": image.name})
+      console.log(image)
+
     }
     dispatch({type: 'CREATE_FILES', payload:tempImages})   
-    
     
     const response = await api.uploadImage(formData , user);
     const json = await response.data.data;
@@ -70,6 +74,8 @@ function FileSelector(props) {
   return (
     <div className="files">
       <h3>Files ({files && files.length})</h3>
+      {error && <div className="error">{error}</div>}
+
       <div className="file-list" >
           {files && files.map((file) => (
             <File
@@ -85,7 +91,7 @@ function FileSelector(props) {
             Upload Files
           <input
             type="file"
-            accept="image/*"
+            accept="image/jpg, image/png"
             multiple={true}
             onChange={(e) => {
               handleFileUpload(e);

@@ -16,6 +16,10 @@ const imageKey = new Schema(
     url:{
       type: String,
       required: false
+    },
+    name:{
+      type: String,
+      required: true
     }
   },
   { timestamps: true }
