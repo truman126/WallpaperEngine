@@ -9,6 +9,7 @@ const {
   DeleteObjectCommand,
   HeadObjectCommand,
   S3Client,
+  waitUntilObjectExists,
 } = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 require("dotenv").config();
@@ -104,7 +105,7 @@ deleteImage = async (req, res) => {
     const main = await s3.send(
       new DeleteObjectCommand({
         Bucket: AWS_S3_BUCKET_NAME,
-        Key: "images/" + key.key,
+        Key: key.key,
       })
     );
     const thumb = await s3_resized.send(
@@ -166,7 +167,7 @@ uploadImageKey = async (req, res) => {
     let savedKeys = [];
 
     for (file of req.files) {
-      const keyName = file.originalname;
+      const keyName = file.key;
       const bucketParams = {
         Bucket: AWS_S3_BUCKET_NAME_RESIZED,
         Key: "thumbnails/resized-" + keyName,
@@ -174,10 +175,22 @@ uploadImageKey = async (req, res) => {
 
       //get the head data to ensure the object exists before requesting the thumbnail
       const head = new HeadObjectCommand(bucketParams);
-      const exists = await s3_resized
+
+      //temp solution to check if the thumbnail exists
+      for(let i = 0; i < 5; i++){
+        const exists = await s3_resized
         .send(head)
         .catch((err) => console.log(err));
 
+        if (exists){
+          break;
+        }
+        await new Promise(r => setTimeout(r, 1500));
+
+      }
+
+      
+     
       const url = await getSignedUrl(
         s3_resized,
         new GetObjectCommand(bucketParams),
@@ -188,6 +201,7 @@ uploadImageKey = async (req, res) => {
         key: keyName,
         user_id,
         url: url,
+        name: file.originalname,
       });
 
       newKey = await newKey.save();
@@ -206,46 +220,42 @@ downloadImages = async (req, res, next) => {
   console.log("downloading");
   const make_promise = async (key) => {
     const { Body } = await s3.send(
-      new GetObjectCommand({ Bucket: AWS_S3_BUCKET_NAME, Key:"images/" + key })
-    )
-    
+      new GetObjectCommand({ Bucket: AWS_S3_BUCKET_NAME, Key: key })
+    );
+
     return new Promise((resolve, reject) => {
-      const file =  Body.pipe(
+      const file = Body.pipe(
         fs.createWriteStream("data/" + user_id + "/" + key)
-      )
-      
-      
-      file.on("finish", () => { resolve(true); }); // not sure why you want to pass a boolean
+      );
+
+      file.on("finish", () => {
+        resolve(true);
+      }); // not sure why you want to pass a boolean
       file.on("error", reject); // don't forget this!
-    })
-  }
+    });
+  };
 
   const user_id = req.user._id;
   const images = await ImageKey.find({ user_id });
-  const promises = []
-
+  const promises = [];
 
   for (const image of images) {
-    try{
-    
-      promises.push(make_promise(image.key))
-    
+    try {
+      promises.push(make_promise(image.key));
+    } catch (e) {
+      console.log(e);
+    }
   }
-  catch(e){
-    console.log(e)
-  }
-
-  }
-  const all = Promise.all(promises)
-  console.log(all)
-  all.then(values => {
-    console.log(values); // [resolvedValue1, resolvedValue2]
-    next()
-  }).catch(error => {
-    console.log(error); // rejectReason of any first rejected promise
-  });
-
-  
+  const all = Promise.all(promises);
+  console.log(all);
+  all
+    .then((values) => {
+      console.log(values); // [resolvedValue1, resolvedValue2]
+      next();
+    })
+    .catch((error) => {
+      console.log(error); // rejectReason of any first rejected promise
+    });
 
   // next();
 };
@@ -253,6 +263,7 @@ reloadThumbnail = async (req, res) => {
   // await new Promise(r => setTimeout(r, 2000));
   const { id } = req.params;
   const key = await ImageKey.findOne({ _id: id });
+  console.log(key);
 
   const bucketParams = {
     Bucket: AWS_S3_BUCKET_NAME_RESIZED,
@@ -314,7 +325,7 @@ const upload = multer({
       cb(null, { fieldName: file.fieldname });
     },
     key: function (req, file, cb) {
-      cb(null, "images/" + file.originalname);
+      cb(null, Date.now() + file.originalname);
     },
   }),
 });

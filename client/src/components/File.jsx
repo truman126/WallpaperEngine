@@ -38,14 +38,17 @@ function File(props) {
         <section className="loader"></section>
       ) : (
         <img src={props.image.url} 
-        onError={({ currentTarget }) => {
-          currentTarget.onerror = null; // prevents looping
+        onError={({currentTarget}) => {
+          
+          currentTarget.onError = null; // prevents looping
           console.log("reloading thumbnail")
           const url = reloadThumbnail(props.image._id, user);
-          currentTarget.src= url
-        }}/>
+          currentTarget.src= url;
+          
+        }}
+        />
       )}
-      <p>{props.image.key}</p>
+      <p>{props.image.name}</p>
       <button
         variant="danger"
         id={props.image.key}
