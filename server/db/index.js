@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 	
 
 mongoose
-    .connect('***REMOVED***', { useNewUrlParser: true })
+    .connect(process.env.MONGO_URI, { useNewUrlParser: true })
 	.catch(e => {
         console.error('Connection error', e.message)
     })
