@@ -6,7 +6,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "proxy": "https://server.truman.xyz",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
