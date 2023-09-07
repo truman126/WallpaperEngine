@@ -377,3 +377,6 @@ client/node_modules/.cache/default-development/9.pack
 client/node_modules/.cache/default-development/index.pack
 client/node_modules/.cache/default-development/index.pack.old
 server/data/images/C320374-R1-04-5A.jpg
+client/dist/output.css
+client/dist/output.css
+client/dist/output.css
