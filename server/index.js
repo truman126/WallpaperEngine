@@ -6,7 +6,16 @@ const imageRouter = require("./routes/image-router");
 const userRouter = require("./routes/user");
 require('dotenv').config()
 const app = express();
-app.use(cors());
+
+const corsOpts = {
+  origin: '*',
+  credentials: true,
+  methods: ['GET','POST','HEAD','PUT','PATCH','DELETE'],
+  allowedHeaders: ['Content-Type'],
+    exposedHeaders: ['Content-Type']
+};
+app.use(cors(corsOpts));
+
 
 const apiPort = 8000;
 
