@@ -10,7 +10,7 @@ const app = express();
 const corsOpts = {
   origin: '*',
   credentials: true,
-  methods: ['GET','POST','HEAD','PUT','PATCH','DELETE'],
+  methods: ['GET','POST','HEAD','PUT','PATCH','DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type'],
     exposedHeaders: ['Content-Type']
 };
