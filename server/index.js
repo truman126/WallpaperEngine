@@ -6,16 +6,9 @@ const imageRouter = require("./routes/image-router");
 const userRouter = require("./routes/user");
 require('dotenv').config()
 const app = express();
-
-const corsOpts = {
-  origin: '*',
-  credentials: true,
-  methods: ['GET','POST','HEAD','PUT','PATCH','DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type'],
-  exposedHeaders: ['Content-Type'],
-  preflightContinue: false,
-};
-app.use(cors(corsOpts));
+app.use(cors({
+  origin: 'https://www.truman.xyz'
+}));
 
 
 const apiPort = 8000;
