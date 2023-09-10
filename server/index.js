@@ -7,7 +7,8 @@ const userRouter = require("./routes/user");
 require('dotenv').config()
 const app = express();
 app.use(cors({
-  origin: 'https://www.truman.xyz'
+  origin: "true",
+  credentials:"true"  
 }));
 
 
