@@ -61,6 +61,10 @@ emptyDirectory = async (req, res, next) => {
       });
     }
   });
+  if (!fs.existsSync(wallpaper_dir)) {
+    fs.mkdirSync(wallpaper_dir);
+    return;
+  }
   fs.readdir(wallpaper_dir, (err, files) => {
     if (err) {
       console.log(err);
