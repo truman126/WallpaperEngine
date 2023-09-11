@@ -1,11 +1,12 @@
-const express = require("express");
+var express = require('express')
+var cors = require('cors')
+var app = express()
 const bodyParser = require("body-parser");
-const cors = require("cors");
 const db = require("./db");
 const imageRouter = require("./routes/image-router");
 const userRouter = require("./routes/user");
 require('dotenv').config()
-const app = express();
+
 app.use(cors({
   origin: "true",
   credentials:"true"  
