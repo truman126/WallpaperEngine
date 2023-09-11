@@ -8,11 +8,9 @@ const userRouter = require("./routes/user");
 require('dotenv').config()
 
 app.use(cors({
-  origin: "true",
+  origin: "https://truman.xyz",
   credentials:"true"  
 }));
-
-app.options('*', cors())
 const apiPort = 8000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
