@@ -11,7 +11,7 @@ app.use(cors({
   credentials:"true"  
 }));
 
-
+app.options('*', cors())
 const apiPort = 8000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
