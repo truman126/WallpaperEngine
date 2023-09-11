@@ -165,7 +165,7 @@ function Options(props) {
             id="myRange"
           />
           <img
-            src={`http://localhost:8000/examples/${borderRatio}.png`}
+            src={`http://server.truman.xyz/examples/${borderRatio}.png`}
             style={{ height: "100px" }}
           />
         </div>
