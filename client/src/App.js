@@ -14,17 +14,17 @@ function App() {
   return (
     <div className="App">
 
-      <BrowserRouter>
+      <BrowserRouter basename="/wallpaperengine">
 
         <UserBar />
 
         <div className="pages">
           <Routes>
-            <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
+            <Route path="/wallpaperengine/" element={user ? <Home /> : <Navigate to="/wallpaperengine/login" />} />
 
-            <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+            <Route path="/wallpaperengine/login" element={!user ? <Login /> : <Navigate to="/wallpaperengine/" />} />
 
-            <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
+            <Route path="/wallpaperengine/signup" element={!user ? <Signup /> : <Navigate to="/wallpaperengine/" />} />
           </Routes>
         </div>
       </BrowserRouter>
