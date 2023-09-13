@@ -35,7 +35,6 @@ sendDownload = async (req, res, next) => {
     console.log("sending")
     res.send(data);
     res.status(200)
-    next();
 
 
   } catch (e) {
