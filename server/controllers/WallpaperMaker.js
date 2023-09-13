@@ -128,6 +128,7 @@ generateWallpapers = async (req, res, next) => {
       );
       
     }
+    console.log("finished creating wallpapers")
     next();
   } catch (e) {
     console.log(e);

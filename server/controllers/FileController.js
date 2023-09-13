@@ -38,6 +38,7 @@ const s3_resized = new S3Client({
 });
 
 emptyDirectory = async (req, res, next) => {
+  console.log("empty starting")
   const user_id = req.user._id;
   const directory = `./data/${user_id}/`;
   const wallpaper_dir = directory + "wallpapers";
@@ -82,16 +83,21 @@ emptyDirectory = async (req, res, next) => {
         if (err) console.log(err);
       });
     }
-    next();
   });
+  console.log("empty ending")
+  next();
+
+
 };
 directoryCheck = async (req, res, next) => {
+  console.log("dircheck starting")
   const user_id = req.user._id;
   const directory = `./data/${user_id}`;
   if (!fs.existsSync(directory)) {
     fs.mkdirSync(directory);
     fs.mkdirSync(directory + "/wallpapers");
   }
+  console.log("dircheck ending")
 
   next();
 };
@@ -221,7 +227,8 @@ uploadImageKey = async (req, res) => {
 };
 
 downloadImages = async (req, res, next) => {
-  console.log("downloading");
+  console.log("download starting")
+
   const make_promise = async (key) => {
     const { Body } = await s3.send(
       new GetObjectCommand({ Bucket: AWS_S3_BUCKET_NAME, Key: key })
@@ -260,8 +267,9 @@ downloadImages = async (req, res, next) => {
     .catch((error) => {
       console.log(error); // rejectReason of any first rejected promise
     });
+  console.log("download ended")
 
-  // next();
+  next();
 };
 reloadThumbnail = async (req, res) => {
   // await new Promise(r => setTimeout(r, 2000));
