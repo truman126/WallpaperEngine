@@ -69,7 +69,6 @@ emptyDirectory = async (req, res, next) => {
   fs.readdir(wallpaper_dir, (err, files) => {
     if (err) {
       console.log(err);
-      console.log(2);
 
       return;
     }
@@ -268,8 +267,6 @@ downloadImages = async (req, res, next) => {
       console.log(error); // rejectReason of any first rejected promise
     });
   console.log("download ended")
-
-  next();
 };
 reloadThumbnail = async (req, res) => {
   // await new Promise(r => setTimeout(r, 2000));
