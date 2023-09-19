@@ -33,7 +33,7 @@ function File(props) {
     
   }
   return (
-    <div className="file-details">
+    <div className="file-details container">
       {!props.image.url ? (
         <section className="loader"></section>
       ) : (
