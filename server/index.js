@@ -7,10 +7,19 @@ const imageRouter = require("./routes/image-router");
 const userRouter = require("./routes/user");
 require('dotenv').config()
 
-app.use(cors({
-  origin: "https://truman.xyz",
-  credentials:"true"  
-}));
+
+//temp solution for using development or production CORS
+if (process.env.USE_CORS == 1){
+  console.log("CORS: ",process.env.USE_CORS == 1)
+  app.use(cors({
+    origin: 'https://truman.xyz',
+    credentials:"true"  
+  }));
+}
+else (
+  app.use(cors())
+)
+
 const apiPort = 8000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
