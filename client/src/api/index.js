@@ -1,8 +1,8 @@
 import axios from 'axios'
-
+const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 const api = axios.create({
-    baseURL: 'https://server.truman.xyz/api'
+    baseURL: BASE_URL
 })
 
 
