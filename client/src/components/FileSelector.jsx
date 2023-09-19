@@ -3,7 +3,7 @@ import File from "./File";
 import api from "../api";
 import {useFilesContext} from "../hooks/useFilesContext"
 import { useAuthContext } from "../hooks/useAuthContext";
-
+import { Tooltip } from 'react-tooltip'
 
 
 function FileSelector(props) {
@@ -72,11 +72,20 @@ function FileSelector(props) {
   }, [dispatch, user]);
 
   return (
-    <div className="files">
-      <h3>Files ({files && files.length})</h3>
+    <div className="files container">
+      <h3>Files ({files && files.length})<div data-tooltip-id="file-types" className="help-tip"></div></h3>
+      
+      <Tooltip
+        className="reacttooltip"
+        id="file-types"
+        place="bottom"
+        variant="info"
+        content="Currently supporting JPEG, PNG, and HEIC image types."
+      />
+
       {error && <div className="error">{error}</div>}
 
-      <div className="file-list" >
+      <div className="file-list container" >
           {files && files.map((file) => (
             <File
               image={file}

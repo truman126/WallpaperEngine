@@ -96,7 +96,7 @@ function Options(props) {
   }
 
   return (
-    <div className="wallpaper-options">
+    <div className="wallpaper-options container">
       <form onSubmit={handleSubmit}>
         <h3>Options</h3>
         <div>

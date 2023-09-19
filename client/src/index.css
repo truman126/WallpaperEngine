@@ -55,7 +55,7 @@ header a {
 
 
 }
-.home div{
+.home .container{
   min-width:500px;
   overflow-x:hidden;
 
@@ -243,4 +243,35 @@ Form.signup label, Form.login label,Form.signup button, Form.login button{
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.help-tip {
+  float:right;
+  min-width: 24px !important; 
+  top: 16px;
+  right: 16px;
+  text-align: center;
+  background-color: var(--primary);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+  line-height: 26px;
+  cursor: default;
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+  overflow:visible !important;
+}
+
+.help-tip:hover {
+  cursor: pointer;
+  background-color: #ccc;
+}
+
+.help-tip:before {
+  content: '?';
+  font-weight: 700;
+  color: #fff;
+}
+.reacttooltip{
+  z-index:7;
 }
