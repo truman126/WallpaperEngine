@@ -20,11 +20,11 @@ function App() {
 
         <div className="pages">
           <Routes>
-            <Route path="/wallpaperengine/" element={user ? <Home /> : <Navigate to="/wallpaperengine/login" />} />
+            <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
 
-            <Route path="/wallpaperengine/login" element={!user ? <Login /> : <Navigate to="/wallpaperengine/" />} />
+            <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
 
-            <Route path="/wallpaperengine/signup" element={!user ? <Signup /> : <Navigate to="/wallpaperengine/" />} />
+            <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
           </Routes>
         </div>
       </BrowserRouter>
