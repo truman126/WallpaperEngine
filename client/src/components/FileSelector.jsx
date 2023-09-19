@@ -27,10 +27,10 @@ function FileSelector(props) {
         setError("Only files sizes under 20MB are allowed.")
         return;
       }
-      else if(image.name.split(".").slice(-1)[0].toLowerCase() === 'jpeg'){
-        setError("Unsupported file type")
-        return;
-      }
+      // else if(image.name.split(".").slice(-1)[0].toLowerCase() === 'jpeg'){
+      //   setError("Unsupported file type")
+      //   return;
+      // }
       else if(image.type != "image/jpeg" && image.type != "image/png"){
         console.log(image.type)
         setError("Unsupported file type")
