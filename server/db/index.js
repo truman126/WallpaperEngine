@@ -1,5 +1,8 @@
 const mongoose = require('mongoose')
+require("dotenv").config({path:".env.local"});
+
 require("dotenv").config();
+
 	
 
 mongoose

@@ -3,7 +3,6 @@ const fs = require("fs");
 const path = require("path");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
-const Readable = require("stream").Readable;
 const {
   GetObjectCommand,
   DeleteObjectCommand,
@@ -164,7 +163,9 @@ getImage = async (req, res) => {
   );
   // res.status(200)
 };
-
+precheck = async (req,res) => {
+  console.log("PRECHECKING")
+}
 uploadImageKey = async (req, res) => {
   try {
     const user_id = req.user._id;
@@ -176,7 +177,12 @@ uploadImageKey = async (req, res) => {
     let savedKeys = [];
 
     for (file of req.files) {
+      let thumb_url = null;
       const keyName = file.key;
+      console.log("FILE PRECHECK")
+      console.log(file)
+      console.log(file.mimetype)
+      if (file.mimetype != "image/heic"){
       const bucketParams = {
         Bucket: AWS_S3_BUCKET_NAME_RESIZED,
         Key: "thumbnails/resized-" + keyName,
@@ -193,25 +199,27 @@ uploadImageKey = async (req, res) => {
 
         if (exists){
           break;
+          console.log("refreshing")
         }
         await new Promise(r => setTimeout(r, 1500));
 
       }
-
       
      
-      const url = await getSignedUrl(
+      thumb_url = await getSignedUrl(
         s3_resized,
         new GetObjectCommand(bucketParams),
         { expiresIn: 90000 }
       ); //90k
 
+      }
       let newKey = new ImageKey({
         key: keyName,
         user_id,
-        url: url,
         name: file.originalname,
+        url: (thumb_url != null ? thumb_url : 'none')
       });
+      
 
       newKey = await newKey.save();
 
@@ -269,7 +277,8 @@ downloadImages = async (req, res, next) => {
   console.log("download ended")
 };
 reloadThumbnail = async (req, res) => {
-  // await new Promise(r => setTimeout(r, 2000));
+  await new Promise(r => setTimeout(r, 500));
+  console.log("reloading thumb")
   const { id } = req.params;
   const key = await ImageKey.findOne({ _id: id });
   console.log(key);
@@ -294,6 +303,7 @@ reloadThumbnail = async (req, res) => {
     res.status(404);
   }
 };
+
 async function getFileFromS3(key) {
   // parameters for the s3 bucket, convert to dotenv variables before pushing
   const bucketParams = {
@@ -351,4 +361,5 @@ module.exports = {
   upload,
   emptyDirectory,
   reloadThumbnail,
+  precheck
 };
