@@ -8,12 +8,14 @@ const UserController = require("../controllers/UserController");
 const router = express.Router()
 
 
-//log in rout
+//log in route
 router.post('/login', UserController.loginUser)
-
 
 // sign up route
 router.post('/signup', UserController.signupUser)
+
+// guest log in
+router.post('/guestlogin', UserController.guestLoginUser)
 
 
 

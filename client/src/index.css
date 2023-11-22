@@ -219,17 +219,26 @@ nav a {
 }
 
 /* auth forms */
-Form.signup, Form.login {
+div.signup, div.login{
   max-width: 400px;
   margin: 40px auto;
   padding: 20px;
   background: #fff;
   border-radius: 4px;
 }
-Form.signup label, Form.login label,Form.signup button, Form.login button{
-  margin:20px 0 0 0;
+div.signup label, div.login label,div.signup form button, div.login form button{
+  margin:20px 20px 0 0;
   display:block;
 }
+div.signup p, div.login p{
+  margin: 10px 0 0 0;
+}
+div.signup button, div.signup form button, div.login button, div.login form button{
+  /* width: 100px; */
+  /* margin: 0 auto; */
+  display: block;
+}
+
 .loader {
   border: 6px solid #f3f3f3; /* Light grey */
   border-top: 6px solid #3498db; /* Blue */

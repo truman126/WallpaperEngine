@@ -31,7 +31,7 @@ function UserBar(props) {
       )}
       {user && (
         <div>
-          <span>{user.email}</span>
+          <span>{user.email != null ? user.email : "Guest"}</span>
           <button onClick={handleClick}>Log out</button>
         </div>
       )}

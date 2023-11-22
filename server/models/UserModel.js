@@ -1,6 +1,8 @@
+const { v4: uuidv4 } = require('uuid');
 const mongoose = require('mongoose');
 const bcrypt = require ('bcrypt');
 const validator = require('validator');
+
 
 const Schema = mongoose.Schema
 
@@ -9,12 +11,16 @@ const userSchema = new Schema({
 
     email: {
         type:String,
-        required: true,
-        unique: true
+        required: false,
+        unique: false
     },
     password: {
         type: String,
-        required:true
+        required:false
+    },
+    guest: {
+        type: Boolean,
+        required:false,
     }
 })
 
@@ -44,7 +50,7 @@ userSchema.statics.login = async function(email, password) {
 
 //static signup method
 userSchema.statics.signup = async function(email, password) {
-
+    console.log("guesty")
     //validation
     if(!email || !password){
         throw Error('All fields must be filled.')
@@ -74,5 +80,10 @@ userSchema.statics.signup = async function(email, password) {
     return user;
 }
 
+userSchema.statics.guestLogin = async function(){
+
+    const user = await this.create({guest: true})
+    return user;
+}
 
 module.exports = mongoose.model('User', userSchema)
