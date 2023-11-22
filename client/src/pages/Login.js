@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
+import { useGuestLogin } from "../hooks/useGuestLogin"
 
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const {login, error, isLoading} = useLogin()
+  const {guestLogin, error2, isLoading2} = useGuestLogin()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,7 +16,7 @@ const Login = () => {
   console.log("ERR", error)
 
   return (
-    <>
+    <div className="login">
     {error && <div className="error">{error}</div>}
     <form className="login" onSubmit={handleSubmit}>
       <h3>Log in</h3>
@@ -34,7 +36,9 @@ const Login = () => {
       <button>Log in</button>
 
     </form>
-    </>
+    <p>Don't want to create an account?</p>
+      <button onClick={(e) => guestLogin()}>Continue as Guest</button>
+    </div>
 
   );
 };
