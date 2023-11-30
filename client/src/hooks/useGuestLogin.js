@@ -7,13 +7,14 @@ export const useGuestLogin = () => {
   const [isLoading, setIsLoading] = useState(null);
   const { dispatch } = useAuthContext();
 
-  const guestLogin = async (email, password) => {
+  const guestLogin = async (token) => {
     setIsLoading(true);
     setError(null);
+    const payload = { token }
 
 
     await api
-      .guestLogin()
+      .guestLogin(payload)
       .then((axiosRes) => {
         console.log(axiosRes)
         const data = axiosRes.data
