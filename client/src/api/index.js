@@ -14,7 +14,7 @@ export const reloadThumbnail = (id, user) => api.get(`/reloadThumbnail/${id}`,  
 
 export const signup = (payload) => api.post(`/user/signup`, payload)
 export const login = (payload) => api.post(`/user/login`, payload)
-export const guestLogin = () => api.post(`/user/guestlogin`)
+export const guestLogin = (payload) => api.post(`/user/guestlogin`, payload)
 
 
 

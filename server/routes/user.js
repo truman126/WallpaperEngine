@@ -2,10 +2,12 @@ const express = require('express')
 
 //controllers
 const UserController = require("../controllers/UserController");
+const recaptcha = require("../middleware/recaptcha")
 
 
 
 const router = express.Router()
+router.use(recaptcha)
 
 
 //log in route

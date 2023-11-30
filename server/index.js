@@ -32,6 +32,7 @@ app.get("/", (req, res) => {
   res.send("hello");
 });
 app.use("/api/user", userRouter);
+
 app.use("/api", imageRouter);
 
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`));
