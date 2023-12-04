@@ -3,8 +3,8 @@ import { useAuthContext } from "./useAuthContext";
 import api from "../api";
 
 export const useGuestLogin = () => {
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(null);
+  const [error, setError] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const { dispatch } = useAuthContext();
 
   const guestLogin = async (token) => {
