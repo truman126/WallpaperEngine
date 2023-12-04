@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
 import { useLogin } from "../hooks/useLogin";
 import ReCAPTCHA from "react-google-recaptcha";
-import Modal from "react-bootstrap/Modal";
 import { useGuestLogin } from "../hooks/useGuestLogin";
 
 const Login = () => {
@@ -9,31 +8,45 @@ const Login = () => {
   // log in
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, error, isLoading } = useLogin();
+  const { login, loginError, loginIsLoading } = useLogin();
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await login(email, password);
+
+    if (!token) {
+      setCaptchaError("Please complete the captcha");
+      return;
+    }
+    await login(email, password, token);
   };
 
-  // guest log in
-  const { guestLogin, error2, isLoading2 } = useGuestLogin();
-  const [showCaptcha, setShowCaptcha] = useState(false)
-
-  // captcha
-  const handleClose = () => setShowCaptcha(false);
-  const handleShow = () => setShowCaptcha(true);
-  const captchaRef = useRef(null);
-
-  const onChange = async(e) => {
-    setShowCaptcha(false)
-    const token = captchaRef.current.getValue();
-    const response = await guestLogin(token)
-  }
+ 
+    // guest log in
+    const { guestLogin, guestLoginError, guestIsLoading } = useGuestLogin();
+    const handleGuestLogin = async () => {
+      if (!token) {
+        setCaptchaError("Please complete the captcha");
+        return;
+      }
+      const response = await guestLogin(token);
+    };
   
+    // captcha
+    const [token, updateToken] = useState();
+    const [captchaError, setCaptchaError] = useState();
+    const captchaRef = useRef(null);
+    const updateCaptcha = (e) => {
+      updateToken(captchaRef.current.getValue());
+    };
+
+    console.log("login Error:", loginError)
   return (
+    
     <div className="login">
-      {error && <div className="error">{error}</div>}
+      {captchaError && <div className="error">{captchaError}</div>}
+      {loginError && <div className="error">{loginError}</div>}
+      {guestLoginError && <div className="error">{guestLoginError}</div>}
+
       <form className="login" onSubmit={handleSubmit}>
         <h3>Log in</h3>
         <label>Email:</label>
@@ -49,36 +62,16 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           value={password}
         />
+        <ReCAPTCHA
+            ref={captchaRef}
+            sitekey="6LeBYhkpAAAAABwRVO5QRASROAi0B80JVSs6LHWf"
+            onChange={(e) => updateCaptcha(e)}
+          />
         <button>Log in</button>
       </form>
 
-      <div>
-      <p>Don't want to create an account?</p>
-      <button onClick={(e) => handleShow()}>Continue as Guest</button>
+      <button onClick={(e) => handleGuestLogin()}>Continue as Guest</button>
       
-    </div>
-    <div
-      className="modal show"
-      style={{ display: "block", position: "initial" }}
-    >
-      <Modal show={showCaptcha} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Prove you're a human</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <ReCAPTCHA
-            ref={captchaRef}
-            sitekey="6LeBYhkpAAAAABwRVO5QRASROAi0B80JVSs6LHWf"
-            onChange={(e) => onChange(e)}
-          />
-        </Modal.Body>
-
-        <Modal.Footer></Modal.Footer>
-      </Modal>
-    </div>
-
-
     </div>
     
   );

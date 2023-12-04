@@ -3,22 +3,23 @@ import { useAuthContext } from "./useAuthContext";
 import api from "../api";
 
 export const useLogin = () => {
-  const [error, setError] = useState(null);
+  const [error, setError] = useState("no error");
   const [isLoading, setIsLoading] = useState(null);
   const { dispatch } = useAuthContext();
 
-  const login = async (email, password) => {
+  const login = async (email, password, token) => {
     setIsLoading(true);
-    setError(null);
+    
 
-    const payload = { email, password };
-
-    await api
+    const payload = { email, password , token };
+    
+    const resp = await api
       .login(payload)
-      .then((axiosRes) => {
-        console.log("axios res");
-        console.log(axiosRes)
-        const data = axiosRes.data
+      .then((res) => {
+        console.log("No Login Error")
+        console.log(res)
+        const data = res.data
+        setIsLoading(false);
 
         //save the user to local storage
         localStorage.setItem("user", JSON.stringify(data));
@@ -26,18 +27,18 @@ export const useLogin = () => {
         //update the auth cointext
         dispatch({ type: "LOGIN", payload: data });
 
-        setIsLoading(false);
       })
-      
-      .catch((axiosRes) => {
-        console.log("axios res2");
-        console.log(axiosRes);
+      .catch((res) => {
+        console.log("There was an error with login");
+        console.log(res);
 
+        setError(res.response.data.error);
+        console.log("Error", error)
 
-        const error = axiosRes.response.data.error
         setIsLoading(false);
-        setError(error);
       });
+      
   };
-  return { login, isLoading, error };
+  console.log("returning", error)
+  return { login, loginError: error, loginisLoading: isLoading };
 };
