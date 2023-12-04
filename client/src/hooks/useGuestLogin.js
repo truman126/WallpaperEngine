@@ -16,7 +16,6 @@ export const useGuestLogin = () => {
     await api
       .guestLogin(payload)
       .then((axiosRes) => {
-        console.log(axiosRes)
         const data = axiosRes.data
 
         //save the user to local storage
@@ -34,5 +33,5 @@ export const useGuestLogin = () => {
         setError(error);
       });
   };
-  return { guestLogin, isLoading, error };
+  return { guestLogin,guestLoginError: error  , guestIsLoading: isLoading};
 };

@@ -7,16 +7,15 @@ export const useSignup = () => {
   const [isLoading, setIsLoading] = useState(null);
   const { dispatch } = useAuthContext();
 
-  const signup = async (email, password) => {
+  const signup = async (email, password, token) => {
     setIsLoading(true);
     setError(null);
 
-    const payload = { email, password };
+    const payload = { email, password, token };
 
     await api
       .signup(payload)
       .then((axiosRes) => {
-        console.log(axiosRes)
         const data = axiosRes.data
 
         //save the user to local storage
@@ -34,5 +33,5 @@ export const useSignup = () => {
         setError(error);
       });
   };
-  return { signup, isLoading, error };
+  return { signup, signupError: error, signupIsLoading: isLoading };
 };
