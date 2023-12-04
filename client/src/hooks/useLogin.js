@@ -3,8 +3,8 @@ import { useAuthContext } from "./useAuthContext";
 import api from "../api";
 
 export const useLogin = () => {
-  const [error, setError] = useState("no error");
-  const [isLoading, setIsLoading] = useState(null);
+  const [error, setError] = useState();
+  const [isLoading, setIsLoading] = useState(false);
   const { dispatch } = useAuthContext();
 
   const login = async (email, password, token) => {
