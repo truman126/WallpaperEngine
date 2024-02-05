@@ -10,6 +10,17 @@ function FileSelector(props) {
   const { files, dispatch } = useFilesContext();
   const { user } = useAuthContext();
 
+  async function handleDeleteAll() {
+    if (!user) {
+      return;
+    }
+    const response = await api.deleteAllImages(user);
+
+    
+    if (response.data.ok) {
+      dispatch({ type: "DELETE_ALL"});
+    }
+  }
   async function handleFileUpload(e) {
     e.preventDefault();
     setError();
@@ -63,11 +74,16 @@ function FileSelector(props) {
   }, [dispatch, user]);
 
   return (
+    
     <div className="files container">
+      {files && <>
       <h3>
-        Files ({files && files.length})
+        Files ({files.length})
         <div data-tooltip-id="file-types" className="help-tip"></div>
       </h3>
+      {(files && files.length > 0) && <button className="delete" onClick={() => {
+          handleDeleteAll();
+        }}>Delete all</button>}
 
       <Tooltip
         className="reacttooltip"
@@ -95,6 +111,9 @@ function FileSelector(props) {
           />
         </label>
       </form>
+      </>}
+      {!files && 
+    <div className="loading"><section className="loader"></section></div>}
     </div>
   );
 }

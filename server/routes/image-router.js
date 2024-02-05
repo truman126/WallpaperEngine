@@ -20,6 +20,9 @@ router.delete("/images/:id", FileController.deleteImage); //remove the wallpaper
 //GETS all image keys to display images
 router.get("/allimages", FileController.getAllImages);
 
+//DELETES all images
+router.delete("/allimages", FileController.deleteAllImages);
+
 //submits the form to create the wallpapers
 router.post("/submit",FileController.emptyDirectory, FileController.directoryCheck, FileController.downloadImages, WallpaperMaker.generateWallpapers, Downloader.sendDownload, FileController.emptyDirectory); //WallpaperMaker.generateWallpapers, Downloader.sendDownload); //executes the creation of wallpapers
 
