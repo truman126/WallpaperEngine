@@ -16,6 +16,10 @@ export const filesReducer = (state, action) => {
       return {
         files: state.files.filter((file) =>  file._id !== action.payload._id)
       };
+      case "DELETE_ALL":
+      return {
+        files: []
+      };
     case "UPDATE_FILE":
       console.log("action", action.payload.url)
       state.files.map(file => (

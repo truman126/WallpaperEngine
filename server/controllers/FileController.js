@@ -6,6 +6,7 @@ const multerS3 = require("multer-s3");
 const {
   GetObjectCommand,
   DeleteObjectCommand,
+  DeleteObjectsCommand,
   HeadObjectCommand,
   S3Client,
   waitUntilObjectExists,
@@ -37,7 +38,7 @@ const s3_resized = new S3Client({
 });
 
 emptyDirectory = async (req, res, next) => {
-  console.log("empty starting")
+  console.log("empty starting");
   const user_id = req.user._id;
   const directory = `./data/${user_id}/`;
   const wallpaper_dir = directory + "wallpapers";
@@ -82,20 +83,18 @@ emptyDirectory = async (req, res, next) => {
       });
     }
   });
-  console.log("empty ending")
+  console.log("empty ending");
   next();
-
-
 };
 directoryCheck = async (req, res, next) => {
-  console.log("dircheck starting")
+  console.log("dircheck starting");
   const user_id = req.user._id;
   const directory = `./data/${user_id}`;
   if (!fs.existsSync(directory)) {
     fs.mkdirSync(directory);
     fs.mkdirSync(directory + "/wallpapers");
   }
-  console.log("dircheck ending")
+  console.log("dircheck ending");
 
   next();
 };
@@ -142,6 +141,56 @@ deleteImage = async (req, res) => {
     data: key,
   });
 };
+deleteAllImages = async (req, res) => {
+  const user_id = req.user._id;
+
+  //find all the keys in mongo
+  const images = await ImageKey.find({ user_id });
+
+  //create parameters for s3
+  const mainDeleteParams = {
+    Bucket: AWS_S3_BUCKET_NAME,
+    Delete: { Objects: [] },
+  };
+  const thumbDeleteParams = {
+    Bucket: AWS_S3_BUCKET_NAME_RESIZED,
+    Delete: { Objects: [] },
+  };
+
+  //loop through the keys from mongo and add the keys to the params for s3
+  for (image in images) {
+    mainDeleteParams.Delete.Objects.push({ Key: images[image].key });
+    thumbDeleteParams.Delete.Objects.push({
+      Key: `thumbnails/resized-${images[image].key}`,
+    });
+  }
+
+  // delete file from s3
+  try {
+    const main = await s3.send(new DeleteObjectsCommand(mainDeleteParams));
+    const thumb = await s3_resized.send(
+      new DeleteObjectsCommand(thumbDeleteParams)
+    );
+
+    console.log("Success. Object deleted.", main);
+    console.log("Success. Object deleted.", thumb);
+  } catch (err) {
+    console.log("Error", err);
+  }
+
+  //delete the key from the mongo database
+  const keys = await ImageKey.deleteMany({ user_id });
+
+  if (!keys) {
+    return res.status(400).json({ error: "Image was not found" });
+  }
+
+  //send response
+
+  res.status(200).json({
+    ok: true,
+  });
+};
 getAllImages = async (req, res) => {
   console.log(req.user);
   const user_id = req.user._id;
@@ -163,9 +212,7 @@ getImage = async (req, res) => {
   );
   // res.status(200)
 };
-precheck = async (req,res) => {
-  console.log("PRECHECKING")
-}
+
 uploadImageKey = async (req, res) => {
   try {
     const user_id = req.user._id;
@@ -179,47 +226,43 @@ uploadImageKey = async (req, res) => {
     for (file of req.files) {
       let thumb_url = null;
       const keyName = file.key;
-      console.log("FILE PRECHECK")
-      console.log(file)
-      console.log(file.mimetype)
-      if (file.mimetype != "image/heic"){
-      const bucketParams = {
-        Bucket: AWS_S3_BUCKET_NAME_RESIZED,
-        Key: "thumbnails/resized-" + keyName,
-      };
+      console.log("FILE PRECHECK");
+      console.log(file);
+      console.log(file.mimetype);
+      if (file.mimetype != "image/heic") {
+        const bucketParams = {
+          Bucket: AWS_S3_BUCKET_NAME_RESIZED,
+          Key: "thumbnails/resized-" + keyName,
+        };
 
-      //get the head data to ensure the object exists before requesting the thumbnail
-      const head = new HeadObjectCommand(bucketParams);
+        //get the head data to ensure the object exists before requesting the thumbnail
+        const head = new HeadObjectCommand(bucketParams);
 
-      //temp solution to check if the thumbnail exists
-      for(let i = 0; i < 5; i++){
-        const exists = await s3_resized
-        .send(head)
-        .catch((err) => console.log(err));
+        //temp solution to check if the thumbnail exists
+        for (let i = 0; i < 5; i++) {
+          const exists = await s3_resized
+            .send(head)
+            .catch((err) => console.log(err));
 
-        if (exists){
-          break;
-          console.log("refreshing")
+          if (exists) {
+            break;
+            console.log("refreshing");
+          }
+          await new Promise((r) => setTimeout(r, 1500));
         }
-        await new Promise(r => setTimeout(r, 1500));
 
-      }
-      
-     
-      thumb_url = await getSignedUrl(
-        s3_resized,
-        new GetObjectCommand(bucketParams),
-        { expiresIn: 90000 }
-      ); //90k
-
+        thumb_url = await getSignedUrl(
+          s3_resized,
+          new GetObjectCommand(bucketParams),
+          { expiresIn: 90000 }
+        ); //90k
       }
       let newKey = new ImageKey({
         key: keyName,
         user_id,
         name: file.originalname,
-        url: (thumb_url != null ? thumb_url : 'none')
+        url: thumb_url != null ? thumb_url : "none",
       });
-      
 
       newKey = await newKey.save();
 
@@ -234,7 +277,7 @@ uploadImageKey = async (req, res) => {
 };
 
 downloadImages = async (req, res, next) => {
-  console.log("download starting")
+  console.log("download starting");
 
   const make_promise = async (key) => {
     const { Body } = await s3.send(
@@ -274,11 +317,11 @@ downloadImages = async (req, res, next) => {
     .catch((error) => {
       console.log(error); // rejectReason of any first rejected promise
     });
-  console.log("download ended")
+  console.log("download ended");
 };
 reloadThumbnail = async (req, res) => {
-  await new Promise(r => setTimeout(r, 500));
-  console.log("reloading thumb")
+  await new Promise((r) => setTimeout(r, 500));
+  console.log("reloading thumb");
   const { id } = req.params;
   const key = await ImageKey.findOne({ _id: id });
   console.log(key);
@@ -351,6 +394,7 @@ const upload = multer({
 
 module.exports = {
   deleteImage,
+  deleteAllImages,
   getAllImages,
   uploadImageKey,
   uploadLocal,
@@ -361,5 +405,4 @@ module.exports = {
   upload,
   emptyDirectory,
   reloadThumbnail,
-  precheck
 };
