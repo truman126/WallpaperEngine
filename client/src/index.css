@@ -4,7 +4,7 @@
 /* layout */
 :root {
   --primary: #80BCBD;
-  --primary-hover:#AAD9BB;
+  --primary-hover:#669697;
   --error: #E78895;
   --error-hover:#FF8080; 
 
@@ -16,7 +16,6 @@
 
 body {
   margin: 0;
-  font-family: "Poppins";
   background-color: var(--light-background);
   color: var(--dark-background);
   scrollbar-color: var(--dark-background) var(--light-background);
@@ -29,7 +28,7 @@ body {
   background-color: var(--dark-background);
   color: var(--white-text);
   scrollbar-color: var(--white-text) var(--dark-background);
-  --image-grayscale: 50%;
+  --image-grayscale: 25%;
   --image-opacity: 90%;
 }
 img {
@@ -59,6 +58,7 @@ header a {
 }
 .pages{
   max-width: 1400px;
+  min-height:300px;
   padding: 40px;
   margin: 0 auto;
   border-radius: 12px;
@@ -242,16 +242,26 @@ nav {
 nav a {
   margin-left: 10px;
 }
+.nav-buttons {
+  vertical-align: middle;
+  display:inline-block;
+
+}
+.react-toggle{
+  /* float:left; */
+  vertical-align: middle;
+
+}
 .react-toggle-track > * { 
   line-height: 10px !important;
   font-size: 14px;
   
 }
 .react-toggle--checked .react-toggle-track {
-  background-color: darkgray !important;
+  background-color: #3d3f45 !important;
 }
-.react-toggle--checked .react-toggle-track:hover, .react-toggle-thumb:hover {
-  background-color: var(--two-tone-grey) !important;
+.react-toggle--checked:hover:not(.react-toggle--disabled) .react-toggle-track {
+  background-color: #54575f !important;
 }
 .react-toggle-thumb{
   border-color: black !important;
@@ -311,7 +321,7 @@ div.signup button, div.signup form button, div.login button, div.login form butt
 
 .help-tip:hover {
   cursor: pointer;
-  background-color: #ccc;
+  background-color: var(--primary-hover);
 }
 
 .help-tip:before {
@@ -319,6 +329,8 @@ div.signup button, div.signup form button, div.login button, div.login form butt
   font-weight: 700;
   color: #fff;
 }
-.reacttooltip{
+
+.react-tooltip{
   z-index:7;
 }
+
