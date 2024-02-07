@@ -14,8 +14,6 @@ function UserBar(props) {
   const [isDark, setIsDark] = useState(
     JSON.parse(localStorage.getItem("isDark")) ? true : false
   );
-  console.log("dark? ", isDark);
-  console.log("isdark? ", isDark);
   useEffect(() => {
     localStorage.setItem("isDark", isDark);
     if (isDark) {
@@ -33,26 +31,27 @@ function UserBar(props) {
         </Link>
 
         <div className="nav-buttons">
-          <Toggle
+          <span><Toggle
             checked={isDark}
             onChange={({ target }) => setIsDark(target.checked)}
             icons={{ checked: "🌙", unchecked: "🔆" }}
             aria-label="Dark mode toggle"
           />
+          </span>
           {!user && (
-            <nav>
+            <>
               <Link to="/login">
-              <span><button>Log in</button></span>
+                <span><button>Log in</button></span>
               </Link>
               <Link to="/signup">
-                <span><button>Register</button></span>
+              <span><button>Register</button></span>
               </Link>
-            </nav>
+            </>
           )}
           {user && (
             <>
               <span>{user.email != null ? user.email : "Guest"}</span>
-              <button onClick={handleLogoutButtonClick}>Log out</button>
+              <span><button onClick={handleLogoutButtonClick}>Log out</button></span>
             </>
           )}
         </div>

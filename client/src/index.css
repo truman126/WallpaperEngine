@@ -39,7 +39,7 @@ header{
   padding:20px;
 }
 header span{
-  margin: 0 20px 0 20px;
+  margin: 0 5px 0 10px;
 }
 header .container {
   max-width: 1400px;
@@ -236,8 +236,8 @@ input.error {
 
 /* navbar */
 nav {
-  display: flex;
-  align-items: center;
+  /* display: flex; */
+  /* align-items: center; */
 }
 nav a {
   margin-left: 10px;
