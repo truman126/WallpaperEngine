@@ -5,6 +5,7 @@ import { useFilesContext } from "../hooks/useFilesContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { Tooltip } from "react-tooltip";
 
+
 function FileSelector(props) {
   const [error, setError] = useState();
   const { files, dispatch } = useFilesContext();
@@ -89,7 +90,7 @@ function FileSelector(props) {
         className="reacttooltip"
         id="file-types"
         place="bottom"
-        variant="info"
+        style={{ backgroundColor: "var(--primary)" }}
         content="Currently supporting JPEG and PNG image types."
       />
 
