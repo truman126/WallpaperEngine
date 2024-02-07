@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./index.css";
+import 'react-tooltip/dist/react-tooltip.css'
+import "react-toggle/style.css";
+
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
