@@ -13,10 +13,10 @@ const Home = () => {
     {isLoading && 
     <div className="loading"><h1>LOADING</h1><section className="loader"></section></div>}
 
-    <div className="home" style={{visibility: isLoading ? 'hidden' : '' }} >
+    <span className="home" style={{visibility: isLoading ? 'hidden' : '' }} >
       <FileSelector setLoading={setIsLoading} />
       <Options  setLoading={setIsLoading} />
-    </div>
+    </span>
     
     </>
   );
