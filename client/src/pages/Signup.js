@@ -40,26 +40,26 @@ const Signup = () => {
   };
 
   return (
-    <div className="signup">
+    <div data-testId="signup" className="signup">
       {captchaError && <div className="error">{captchaError}</div>}
       {signupError && <div className="error">{signupError}</div>}
       {guestLoginError && <div className="error">{guestLoginError}</div>}
 
       <form onSubmit={handleSubmit}>
         <h3>Sign up</h3>
-        <label>Email:</label>
+        <label>Email:
         <input
           type="email"
           onChange={(e) => setEmail(e.target.value)}
           value={email}
-        />
+        /></label>
 
-        <label>Password:</label>
+        <label>Password:
         <input
           type="password"
           onChange={(e) => setPassword(e.target.value)}
           value={password}
-        />
+        /></label>
 
         <ReCAPTCHA
           ref={captchaRef}
