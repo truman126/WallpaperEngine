@@ -3,15 +3,39 @@
 
 /* layout */
 :root {
-  --primary: #1aa5ac;
-  --primary-hover:#12796d;
-  --error: #e7195a;
-  --error-hover:#b31345; 
+  --primary: #80BCBD;
+  --primary-hover:#AAD9BB;
+  --error: #E78895;
+  --error-hover:#FF8080; 
+
+  --light-background: #fafafa; /*background*/
+  --dark-background: #1f2023; /*background, text*/
+  --white-text: #efefef; /*text*/
+  --two-tone-grey: #f1f1f1;
 }
+
 body {
   margin: 0;
   font-family: "Poppins";
+  background-color: var(--light-background);
+  color: var(--dark-background);
+  scrollbar-color: var(--dark-background) var(--light-background);
+  --image-grayscale: 0;
+  --image-opacity: 100%;
 }
+
+
+.dark{
+  background-color: var(--dark-background);
+  color: var(--white-text);
+  scrollbar-color: var(--white-text) var(--dark-background);
+  --image-grayscale: 50%;
+  --image-opacity: 90%;
+}
+img {
+  filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
+}
+
 header{
   padding:20px;
 }
@@ -30,11 +54,13 @@ header a {
   color: #333;
   text-decoration: none;
 }
+.dark header a{
+  color: var(--white-text);
+}
 .pages{
   max-width: 1400px;
   padding: 40px;
   margin: 0 auto;
-  background-color: #f1f1f1;
   border-radius: 12px;
 
 }
@@ -55,6 +81,9 @@ header a {
 
 
 }
+.files, .wallpaper-options{
+  border: 2px ridge;
+}
 .home .container{
   min-width:500px;
   overflow-x:hidden;
@@ -70,7 +99,6 @@ header a {
   display: inline;
 }
 .files{
-  background-color: #fff;
   border-radius: 12px;
   padding: 20px;
 
@@ -83,12 +111,12 @@ header a {
   
 }
 .file-details {
-  background: #fff;
   border-radius: 4px;
   margin: 5px auto;
   padding: 20px;
   position: relative;
-  box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+  border: 1px solid;
+  /* box-shadow: 2px 2px 5px rgba(0,0,0,0.05); */
 }
 
 .file-details p {
@@ -108,7 +136,6 @@ header a {
 }
 
 .wallpaper-options{
-  background: #fff;
   border-radius: 12px;
   padding: 20px;
   position: relative;
@@ -133,7 +160,6 @@ header a {
   left: 0;
   height: 20px;
   width:20px;
-  background-color: #eee;
   border-radius: 50%;
 }
 .wallpaper-options input { 
@@ -199,7 +225,6 @@ button.delete{
 }
 div.error {
   padding: 10px;
-  background: #ffefef;
   border: 1px solid var(--error);
   color: var(--error);
   border-radius: 4px;
@@ -217,13 +242,26 @@ nav {
 nav a {
   margin-left: 10px;
 }
+.react-toggle-track > * { 
+  line-height: 10px !important;
+  font-size: 14px;
+  
+}
+.react-toggle--checked .react-toggle-track {
+  background-color: darkgray !important;
+}
+.react-toggle--checked .react-toggle-track:hover, .react-toggle-thumb:hover {
+  background-color: var(--two-tone-grey) !important;
+}
+.react-toggle-thumb{
+  border-color: black !important;
+}
 
 /* auth forms */
 div.signup, div.login{
   max-width: 400px;
   margin: 40px auto;
   padding: 20px;
-  background: #fff;
   border-radius: 4px;
 }
 div.signup label, div.login label,div.signup form button, div.login form button{
