@@ -87,6 +87,7 @@ header a {
 .home .container{
   min-width:500px;
   overflow-x:hidden;
+  border: 2px ridge;
 
 }
 .home h3{
@@ -123,7 +124,6 @@ header a {
   margin: 0 20px 0 20px;
   display:inline;
   font-size: 1.1em;
-  color: #555;
 }
 .file-details img{
   height: "150px"
@@ -152,7 +152,6 @@ header a {
 .wallpaper-options p, .wallpaper-options label {
   display:inline;
   font-size: 1.1em;
-  color: #555;
 }
 .wallpaper-options .radio{
   cursor: pointer;
@@ -268,11 +267,19 @@ nav a {
 }
 
 /* auth forms */
-div.signup, div.login{
+.authpage{
+  display:inline-block;
+  background-color: grey;
+  width:100%
+}
+.signup, .login{
+  /* border: 2px ridge; */
   max-width: 400px;
   margin: 40px auto;
   padding: 20px;
   border-radius: 4px;
+  display:inline-block;
+
 }
 div.signup label, div.login label,div.signup form button, div.login form button{
   margin:20px 20px 0 0;
@@ -286,6 +293,16 @@ div.signup button, div.signup form button, div.login button, div.login form butt
   /* margin: 0 auto; */
   display: block;
 }
+.carousel img, .carousel{
+  height: 400px;
+}
+.carousel{
+  width:800px;
+  overflow:visible;
+  display:inline;
+}
+
+
 
 .loader {
   border: 6px solid #f3f3f3; /* Light grey */
@@ -334,3 +351,8 @@ div.signup button, div.signup form button, div.login button, div.login form butt
   z-index:7;
 }
 
+@media (min-width: 1025px) {
+  .h-custom-2 {
+    height: 100%;
+    }
+  }
