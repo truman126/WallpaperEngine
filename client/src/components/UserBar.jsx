@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useLogout } from "../hooks/useLogout";
 import { useAuthContext } from "../hooks/useAuthContext";
 import Toggle from "react-toggle";
+import { MDBBtn } from "mdb-react-ui-kit";
+
 
 function UserBar(props) {
   const { logout } = useLogout();
@@ -41,17 +43,17 @@ function UserBar(props) {
           {!user && (
             <>
               <Link to="/login">
-                <span><button>Log in</button></span>
+                <span><MDBBtn>Log in</MDBBtn></span>
               </Link>
               <Link to="/signup">
-              <span><button>Register</button></span>
+              <span><MDBBtn>Register</MDBBtn></span>
               </Link>
             </>
           )}
           {user && (
             <>
               <span>{user.email != null ? user.email : "Guest"}</span>
-              <span><button onClick={handleLogoutButtonClick}>Log out</button></span>
+              <span><MDBBtn onClick={handleLogoutButtonClick}>Log out</MDBBtn></span>
             </>
           )}
         </div>

@@ -81,13 +81,10 @@ header a {
 
 
 }
-.files, .wallpaper-options{
-  border: 2px ridge;
-}
+
 .home .container{
   min-width:500px;
   overflow-x:hidden;
-  border: 2px ridge;
 
 }
 .home h3{
@@ -107,8 +104,7 @@ header a {
 }
 .file-list{
   overflow-y: scroll;
-  max-height: 65vh;
-  margin: 20px 0 20px 0;
+  max-height: 50vh;
   
 }
 .file-details {
@@ -116,7 +112,7 @@ header a {
   margin: 5px auto;
   padding: 20px;
   position: relative;
-  border: 1px solid;
+
   /* box-shadow: 2px 2px 5px rgba(0,0,0,0.05); */
 }
 
