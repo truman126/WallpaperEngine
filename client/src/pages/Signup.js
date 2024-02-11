@@ -17,7 +17,6 @@ import {
   example5,
 } from "../img/carousel";
 
-
 const Signup = () => {
   //sign up
   const [email, setEmail] = useState("");
@@ -31,7 +30,6 @@ const Signup = () => {
       setCaptchaError("Please complete the captcha");
       return;
     }
-    console.log(token)
 
     await signup(email, password, token);
   };
@@ -96,11 +94,12 @@ const Signup = () => {
                 contrast
               />
 
-              <MDBBtn className="mb-4 px-5 mx-5 w-100" color="info" size="lg">
+              <MDBBtn type="submit" className="mb-4 px-5 mx-5 w-100" color="info" size="lg">
                 Sign up
               </MDBBtn>
               <hr className="hr mb-4 px-5 mx-5 w-100" />
               <MDBBtn
+                type="button"
                 className="mb-4 px-5 mx-5 w-100"
                 color="info"
                 size="lg"
