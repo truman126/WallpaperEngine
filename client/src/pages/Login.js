@@ -40,7 +40,7 @@ const Login = () => {
       setCaptchaError("Please complete the captcha");
       return;
     }
-    const response = await guestLogin(token);
+    await guestLogin(token);
   };
 
   // captcha
@@ -93,11 +93,12 @@ const Login = () => {
                 contrast
               />
 
-              <MDBBtn className="mb-4 px-5 mx-5 w-100" color="info" size="lg">
+              <MDBBtn type="submit" className="mb-4 px-5 mx-5 w-100" color="info" size="lg">
                 Login
               </MDBBtn>
               <hr className="hr mb-4 px-5 mx-5 w-100" />
               <MDBBtn
+              type="button"
                 className="mb-4 px-5 mx-5 w-100"
                 color="info"
                 size="lg"
