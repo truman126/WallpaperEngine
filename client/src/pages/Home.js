@@ -1,23 +1,38 @@
 import { FileSelector, Options } from "../components";
 import { useState, useEffect } from "react";
+import {
+  MDBBtn,
+  MDBContainer,
+  MDBRow,
+  MDBCol,
+} from "mdb-react-ui-kit";
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
-  console.log(isLoading)
+  console.log(isLoading);
   useEffect(() => {
-    console.log("using effect")
+    console.log("using effect");
   }, [isLoading]);
 
   return (
     <>
-    {isLoading && 
-    <div className="loading"><h1>LOADING</h1><section className="loader"></section></div>}
-
-    <span className="home" style={{visibility: isLoading ? 'hidden' : '' }} >
-      <FileSelector setLoading={setIsLoading} />
-      <Options  setLoading={setIsLoading} />
-    </span>
-    
+      {isLoading && (
+        <div className="loading">
+          <h1>LOADING</h1>
+          <section className="loader"></section>
+        </div>
+      )}
+      <MDBContainer fluid style={{ visibility: isLoading ? "hidden" : "" }}>
+        
+        <MDBRow>
+          <MDBCol className="sm-6">
+ <FileSelector className=" mx-5" setLoading={setIsLoading} />
+          </MDBCol>
+          <MDBCol className="sm-6">
+            <Options className="mx-5 w-100" setLoading={setIsLoading} />
+          </MDBCol>
+        </MDBRow>
+      </MDBContainer>
     </>
   );
 };

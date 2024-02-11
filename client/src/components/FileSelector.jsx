@@ -4,7 +4,7 @@ import api from "../api";
 import { useFilesContext } from "../hooks/useFilesContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { Tooltip } from "react-tooltip";
-
+import { MDBBtn } from "mdb-react-ui-kit";
 
 function FileSelector(props) {
   const [error, setError] = useState();
@@ -17,9 +17,8 @@ function FileSelector(props) {
     }
     const response = await api.deleteAllImages(user);
 
-    
     if (response.data.ok) {
-      dispatch({ type: "DELETE_ALL"});
+      dispatch({ type: "DELETE_ALL" });
     }
   }
   async function handleFileUpload(e) {
@@ -37,8 +36,7 @@ function FileSelector(props) {
       if (image.size > 10000000) {
         setError("Only files sizes under 10MB are allowed.");
         return;
-      }
-      else if (image.type != "image/jpeg" && image.type != "image/png") {
+      } else if (image.type != "image/jpeg" && image.type != "image/png") {
         console.log(image.type);
         setError("Unsupported file type");
         return;
@@ -75,47 +73,68 @@ function FileSelector(props) {
   }, [dispatch, user]);
 
   return (
-    
-    <div className="files container">
-      {files && <>
-      <h3>
-        Files ({files.length})
-        <div data-tooltip-id="file-types" className="help-tip"></div>
-      </h3>
-      {(files && files.length > 0) && <button className="delete" onClick={() => {
-          handleDeleteAll();
-        }}>Delete all</button>}
+    <div>
 
-      <Tooltip
-        className="reacttooltip"
-        id="file-types"
-        place="bottom"
-        style={{ backgroundColor: "var(--primary)" }}
-        content="Currently supporting JPEG and PNG image types."
-      />
+    {files && (
+      <>
+      <div className="py-3">
+        <h3>
+          Files ({files && files.length})
+          <div data-tooltip-id="file-types" className="help-tip"></div>
+        </h3>
 
-      {error && <div className="error">{error}</div>}
-
-      <div className="file-list container">
-        {files && files.map((file) => <File image={file} key={file.key} />)}
-      </div>
-      <form>
-        <label className="upload-button">
-          Upload Files
-          <input
-            type="file"
-            accept="image/jpeg,image/png"
-            multiple={true}
-            onChange={(e) => {
-              handleFileUpload(e);
+        {files && files.length > 0 && (
+          <button
+            className="delete"
+            onClick={() => {
+              handleDeleteAll();
             }}
-          />
-        </label>
+          >
+            Delete all
+          </button>
+        )}
+
+        <Tooltip
+          className="reacttooltip"
+          id="file-types"
+          place="bottom"
+          style={{ backgroundColor: "var(--primary)" }}
+          content="Currently supporting JPEG and PNG image types."
+        />
+      </div>
+
+      <div className="px-4 py-4 mx-2 file-list">
+        
+            {error && <div className="error">{error}</div>}
+
+            <div className="">
+              {files &&
+                files.map((file) => <File image={file} key={file.key} />)}
+            </div>
+          
+      </div>
+      <form className="py-3">
+        <MDBBtn
+          type="file"
+          accept="image/jpeg,image/png"
+          multiple={true}
+          onChange={(e) => {
+            handleFileUpload(e);
+          }}
+        >
+          Upload Files
+        </MDBBtn>
       </form>
-      </>}
-      {!files && 
-    <div className="loading"><section className="loader"></section></div>}
+      
+      </>
+        )}
+        {!files && (
+        <div className="loading">
+          <section className="loader"></section>
+        </div>
+      )}
     </div>
+    
   );
 }
 
