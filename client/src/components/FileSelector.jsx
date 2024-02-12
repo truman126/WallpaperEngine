@@ -4,7 +4,7 @@ import api from "../api";
 import { useFilesContext } from "../hooks/useFilesContext";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { Tooltip } from "react-tooltip";
-import { MDBBtn } from "mdb-react-ui-kit";
+import { MDBBtn, MDBFile } from "mdb-react-ui-kit";
 
 function FileSelector(props) {
   const [error, setError] = useState();
@@ -113,18 +113,19 @@ function FileSelector(props) {
             </div>
           
       </div>
-      <form className="py-3">
-        <MDBBtn
-          type="file"
-          accept="image/jpeg,image/png"
-          multiple={true}
-          onChange={(e) => {
-            handleFileUpload(e);
-          }}
-        >
+      <MDBBtn as="form">
+        <label className="">
           Upload Files
-        </MDBBtn>
-      </form>
+          <input
+            type="file"
+            accept="image/jpeg,image/png"
+            multiple={true}
+            onChange={(e) => {
+              handleFileUpload(e);
+            }}
+          />
+        </label>
+      </MDBBtn>
       
       </>
         )}
