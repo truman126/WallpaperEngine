@@ -21,6 +21,7 @@ body {
   scrollbar-color: var(--dark-background) var(--light-background);
   --image-grayscale: 0;
   --image-opacity: 100%;
+  
 }
 
 
@@ -30,6 +31,9 @@ body {
   scrollbar-color: var(--white-text) var(--dark-background);
   --image-grayscale: 25%;
   --image-opacity: 90%;
+}
+.dark .form-outline, .dark .form-control, .dark .form-label{
+  color:var(--white-text) !important;
 }
 img {
   filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
@@ -277,10 +281,10 @@ nav a {
   display:inline-block;
 
 }
-div.signup label, div.login label,div.signup form button, div.login form button{
+/* div.signup label, div.login label,div.signup form button, div.login form button{
   margin:20px 20px 0 0;
   display:block;
-}
+} */
 div.signup p, div.login p{
   margin: 10px 0 0 0;
 }
