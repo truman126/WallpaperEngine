@@ -80,7 +80,6 @@ const Login = () => {
                 id="formControl-sm"
                 type="email"
                 size="lg"
-                contrast
               />
               <MDBInput
                 value={password}
@@ -90,7 +89,6 @@ const Login = () => {
                 id="formControl-lg"
                 type="password"
                 size="lg"
-                contrast
               />
 
               <MDBBtn type="submit" className="mb-4 px-5 mx-5 w-100" color="info" size="lg">
