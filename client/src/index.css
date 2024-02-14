@@ -149,18 +149,18 @@ header a {
   font-size: 1.2em;
 
 }
-.wallpaper-options p, .wallpaper-options label {
+/* .wallpaper-options p, .wallpaper-options label {
   display:inline;
   font-size: 1.1em;
-}
-.wallpaper-options .radio{
+} */
+/* .wallpaper-options .radio{
   cursor: pointer;
   top: 0;
   left: 0;
   height: 20px;
   width:20px;
   border-radius: 50%;
-}
+} */
 .wallpaper-options input { 
   margin:15px;
 }
