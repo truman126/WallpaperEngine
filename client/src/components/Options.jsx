@@ -110,36 +110,44 @@ function Options(props) {
         <MDBRow className={rowMargin + "py-1"}>
           <h4>Background Colour</h4>
           <MDBRow className={rowMargin}>
-        <MDBCol className="w-25">
-          <MDBRadio
-            name="colour"
-            value="average"
-            checked={!customColourPicker}
-            onChange={(e) => {
-              setCustomColourPicker(false);
-            }}
-            label="Use Image Colour"
-            inline
-          />
+       
+       
+          <MDBCol>
+            <MDBRadio
+              name='colour'
+              type="radio"
+              id='colour1'
+              label="Use Average Colour"
+              inline
+              value="average"
+              onChange={(e) => {
+                setCustomColourPicker(false);
+              }}
+              checked={!customColourPicker}
+            />
           </MDBCol>
-        <MDBCol className="w-25">
-
-          <MDBRadio
-            name="colour"
-            checked={customColourPicker}
-            onChange={(e) => {
-              {
-                setCustomColourPicker(true);
-              }
-            }}
-            label="Custom"
-            inline
-          />
+          <MDBCol>
+            <MDBRadio
+              name='colour'
+              type="radio"
+              id='colour2'
+              label="Select Colour"
+              inline
+              onChange={(e) => {
+                {
+                  setCustomColourPicker(true);
+                }
+              }}
+              checked={customColourPicker}
+            />
+          
           {customColourPicker ? (
             <input
               className="w-25"
-              name="colour"
+              name="customcolour"
               type="color"
+            
+
               value={customColour}
               onChange={(e) => setCustomColour(e.target.value)}
             />
@@ -191,8 +199,9 @@ function Options(props) {
           <h4>Output Filetype</h4>
           <MDBCol>
             <MDBRadio
-              className="radio"
+            name='ftype'
               type="radio"
+              id='ftype3'
               checked={outputFiletype == "jpeg"}
               onChange={(e) => setFileType("jpeg")}
               label="JPEG"
@@ -201,7 +210,9 @@ function Options(props) {
           </MDBCol>
           <MDBCol>
             <MDBRadio
+              name='ftype'
               type="radio"
+              id='ftype2'
               checked={outputFiletype == "png"}
               onChange={() => setFileType("png")}
               label="PNG"
