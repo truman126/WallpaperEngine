@@ -43,10 +43,7 @@ emptyDirectory = async (req, res, next) => {
   const directory = `./data/${user_id}/`;
   const wallpaper_dir = directory + "wallpapers";
 
-  if (!fs.existsSync(directory)) {
-    fs.mkdirSync(directory);
-    return;
-  }
+  fs.mkdirSync(directory);
 
   fs.readdir(directory, (err, files) => {
     if (err) {
