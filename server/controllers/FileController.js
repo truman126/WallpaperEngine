@@ -44,9 +44,11 @@ emptyDirectory = async (req, res, next) => {
   const wallpaper_dir = directory + "wallpapers";
 
   if (!fs.existsSync(directory)) {
+    console.log("Making main user dir")
     fs.mkdirSync(directory);
+    next();
   }
-
+  
   fs.readdir(directory, (err, files) => {
     if (err) {
       console.log(err);
@@ -54,6 +56,7 @@ emptyDirectory = async (req, res, next) => {
 
       return;
     }
+    console.log("Deleting old files")
 
     for (const file of files) {
       fs.unlink(path.join(directory, file), (err) => {
@@ -62,8 +65,9 @@ emptyDirectory = async (req, res, next) => {
     }
   });
   if (!fs.existsSync(wallpaper_dir)) {
+    console.log("Making wallpaper dir")
     fs.mkdirSync(wallpaper_dir);
-    return;
+    next();
   }
   fs.readdir(wallpaper_dir, (err, files) => {
     if (err) {
@@ -73,9 +77,10 @@ emptyDirectory = async (req, res, next) => {
     }
 
     if (!files) {
-      return;
+      console.log("no files")
+      next()
     }
-
+    console.log("deleting old wallpapers")
     for (const file of files) {
       fs.unlink(path.join(wallpaper_dir, file), (err) => {
         if (err) console.log(err);
