@@ -43,8 +43,10 @@ emptyDirectory = async (req, res, next) => {
   const directory = `./data/${user_id}/`;
   const wallpaper_dir = directory + "wallpapers";
 
-  try{
+  try {
+    console.log('before')
     fs.mkdirSync(directory);
+    console.log('after')
   }
   catch(err){
     console.log(err)
