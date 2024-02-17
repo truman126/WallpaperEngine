@@ -9,13 +9,12 @@ export const useLogin = () => {
 
   const login = async (email, password, token) => {
     setIsLoading(true);
-    
-
     const payload = { email, password , token };
     
     const resp = await api
       .login(payload)
       .then((res) => {
+
         console.log("No Login Error")
         console.log(res)
         const data = res.data
@@ -29,16 +28,13 @@ export const useLogin = () => {
 
       })
       .catch((res) => {
-        console.log("There was an error with login");
-        console.log(res);
-
+        if (res.message === 'Network Error' ){
+          setError('Network Error.')
+        }
         setError(res.response.data.error);
-        console.log("Error", error)
-
         setIsLoading(false);
       });
       
   };
-  console.log("returning", error)
   return { login, loginError: error, loginisLoading: isLoading };
 };

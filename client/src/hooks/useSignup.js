@@ -28,9 +28,11 @@ export const useSignup = () => {
       })
       
       .catch((axiosRes) => {
-        const error = axiosRes.response.data.error
+        if (res.message === 'Network Error' ){
+          setError('Network Error.')
+        }
+        setError(axiosRes.response.data.error);
         setIsLoading(false);
-        setError(error);
       });
   };
   return { signup, signupError: error, signupIsLoading: isLoading };
