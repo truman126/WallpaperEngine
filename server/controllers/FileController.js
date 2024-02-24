@@ -1,266 +1,140 @@
-const ImageKey = require("../models/image-model");
+require("dotenv").config();
 const fs = require("fs");
 const path = require("path");
-const multer = require("multer");
-const multerS3 = require("multer-s3");
-const {
-  GetObjectCommand,
-  DeleteObjectCommand,
-  DeleteObjectsCommand,
-  HeadObjectCommand,
-  S3Client,
-  waitUntilObjectExists,
-} = require("@aws-sdk/client-s3");
-const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
-require("dotenv").config();
+const ImageKey = require("../models/image-model");
+const S3Controller = require("../aws/S3Controller");
+const s3Clients = require("../aws/S3Clients.js");
 
-const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
-const AWS_S3_ACCESS_KEY_ID = process.env.AWS_S3_ACCESS_KEY_ID;
-const AWS_S3_SECRET_ACCESS_KEY = process.env.AWS_S3_SECRET_ACCESS_KEY;
+/**
+ * TODO:
+ * - Eventually move bucket names into the S3Controller to limit references to the aws directory
+ *  
+ */
 const AWS_S3_BUCKET_NAME_RESIZED = process.env.AWS_S3_BUCKET_NAME_RESIZED;
+const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
 
-const s3 = new S3Client({
-  region: "us-east-2",
-  credentials: {
-    secretAccessKey: AWS_S3_SECRET_ACCESS_KEY,
-    accessKeyId: AWS_S3_ACCESS_KEY_ID,
-  },
-  endpoint: `http://${AWS_S3_BUCKET_NAME}.s3.us-east-2.amazonaws.com`,
-  forcePathStyle: true,
-});
-const s3_resized = new S3Client({
-  region: "us-east-2",
-  credentials: {
-    secretAccessKey: AWS_S3_SECRET_ACCESS_KEY,
-    accessKeyId: AWS_S3_ACCESS_KEY_ID,
-  },
-  endpoint: `http://s3.us-east-2.amazonaws.com`,
-});
-
-emptyDirectory = async (req, res, next) => {
-  console.log("empty starting");
-  const user_id = req.user._id;
-  const directory = `./data/${user_id}/`;
-  const wallpaper_dir = directory + "wallpapers";
-
-  if (!fs.existsSync(directory)) {
-    console.log("Making main user dir")
-    fs.mkdirSync(directory);
-    next();
-  }
-  
-  fs.readdir(directory, (err, files) => {
-    if (err) {
-      console.log(err);
-      console.log(1);
-
-      return;
-    }
-    console.log("Deleting old files")
-
-    for (const file of files) {
-      fs.unlink(path.join(directory, file), (err) => {
-        if (err) console.log(err);
-      });
-    }
-  });
-  if (!fs.existsSync(wallpaper_dir)) {
-    console.log("Making wallpaper dir")
-    fs.mkdirSync(wallpaper_dir);
-    next();
-  }
-  fs.readdir(wallpaper_dir, (err, files) => {
-    if (err) {
-      console.log(err);
-
-      return;
-    }
-
-    if (!files) {
-      console.log("no files")
-      next()
-    }
-    console.log("deleting old wallpapers")
-    for (const file of files) {
-      fs.unlink(path.join(wallpaper_dir, file), (err) => {
-        if (err) console.log(err);
-      });
-    }
-  });
-  console.log("empty ending");
-  next();
-};
-directoryCheck = async (req, res, next) => {
-  console.log("dircheck starting");
-  const user_id = req.user._id;
-  const directory = `./data/${user_id}`;
-  if (!fs.existsSync(directory)) {
-    fs.mkdirSync(directory);
-    fs.mkdirSync(directory + "/wallpapers");
-  }
-  console.log("dircheck ending");
-
-  next();
-};
-
+// DELETE '/api/images/:id'
 deleteImage = async (req, res) => {
+  //Image id to delete
   const { id } = req.params;
-  const user_id = req.user._id;
 
+  // Delete the image from MongoDB
   const key = await ImageKey.findOneAndDelete({ _id: id });
 
-  console.log(key);
-
-  //delete file from s3
-  try {
-    const main = await s3.send(
-      new DeleteObjectCommand({
-        Bucket: AWS_S3_BUCKET_NAME,
-        Key: key.key,
-      })
-    );
-    const thumb = await s3_resized.send(
-      new DeleteObjectCommand({
-        Bucket: AWS_S3_BUCKET_NAME_RESIZED,
-        Key: "thumbnails/resized-" + key.key,
-      })
-    );
-    console.log("Success. Object deleted.", main);
-    console.log("Success. Object deleted.", thumb);
-  } catch (err) {
-    console.log("Error", err);
-  }
-
-  // delete the key from the mongo database
-  // const key = await ImageKey.findOneAndDelete({ _id: id });
-
+  // If no key exists when trying to delete in Mongo, throw error
   if (!key) {
     return res.status(400).json({ error: "Image was not found" });
   }
 
-  //send response
+  // Delete the full image and the thumbnail from S3
+  try {
+    const fullImageParams = {
+      Bucket: AWS_S3_BUCKET_NAME,
+      Key: key.key,
+    };
+    const thumbnailImageParams = {
+      Bucket: AWS_S3_BUCKET_NAME_RESIZED,
+      Key: "thumbnails/resized-" + key.key,
+    };
+    S3Controller.deleteFullImageFromS3(fullImageParams);
+    S3Controller.deleteThumbnailImageFromS3(thumbnailImageParams);
+  } catch (err) {
+    console.log("Error", err);
+  }
 
+  // Respond with deleted key
   res.status(200).json({
     ok: true,
     data: key,
   });
 };
+
+// DELETE '/api/allimages'
 deleteAllImages = async (req, res) => {
   const user_id = req.user._id;
 
-  //find all the keys in mongo
+  // Find all the image keys in mongo from the user
   const images = await ImageKey.find({ user_id });
 
-  //create parameters for s3
-  const mainDeleteParams = {
+  // No images, throw error
+  if (!images) {
+    return res
+      .status(400)
+      .json({ error: "Images were not found from this user" });
+  }
+  // Create parameters for s3 deletion functions
+  const fullImageDeleteParams = {
     Bucket: AWS_S3_BUCKET_NAME,
     Delete: { Objects: [] },
   };
-  const thumbDeleteParams = {
+  const thumbnailImageDeleteParams = {
     Bucket: AWS_S3_BUCKET_NAME_RESIZED,
     Delete: { Objects: [] },
   };
 
-  //loop through the keys from mongo and add the keys to the params for s3
+  // Loop through the mongo keys and add them to the S3 params
   for (image in images) {
-    mainDeleteParams.Delete.Objects.push({ Key: images[image].key });
-    thumbDeleteParams.Delete.Objects.push({
+    fullImageDeleteParams.Delete.Objects.push({ Key: images[image].key });
+    thumbnailImageDeleteParams.Delete.Objects.push({
       Key: `thumbnails/resized-${images[image].key}`,
     });
   }
 
-  // delete file from s3
+  // Delete all the S3 Full images and thumbnails
   try {
-    const main = await s3.send(new DeleteObjectsCommand(mainDeleteParams));
-    const thumb = await s3_resized.send(
-      new DeleteObjectsCommand(thumbDeleteParams)
-    );
-
-    console.log("Success. Object deleted.", main);
-    console.log("Success. Object deleted.", thumb);
+    S3Controller.deleteAllFullImagesFromS3(fullImageDeleteParams);
+    S3Controller.deleteAllThumbnailImagesFromS3(thumbnailImageDeleteParams);
   } catch (err) {
     console.log("Error", err);
   }
 
-  //delete the key from the mongo database
+  // Deletes all the image keys associated with the user from MongoDB
   const keys = await ImageKey.deleteMany({ user_id });
 
-  if (!keys) {
-    return res.status(400).json({ error: "Image was not found" });
-  }
-
-  //send response
-
+  // Send response
   res.status(200).json({
     ok: true,
   });
 };
+
+// GET '/api/allimages'
 getAllImages = async (req, res) => {
-  console.log(req.user);
   const user_id = req.user._id;
+
+  // Get all the images from the user in Mongo
   const images = await ImageKey.find({ user_id });
+
+  // Send response, return image keys
   res.status(200).json({ ok: true, data: images });
 };
-getImage = async (req, res) => {
-  const { id } = req.params;
-  const user_id = req.user._id;
 
-  const key = await ImageKey.find({ _id: id });
-
-  if (!key) {
-    return res.status(400).json({ error: "Image was not found" });
-  }
-
-  res.sendFile(
-    path.join(__dirname + "/../data/images/" + user_id + "/" + key[0].key)
-  );
-  // res.status(200)
-};
-
+// POST '/api/upload'
 uploadImageKey = async (req, res) => {
   try {
     const user_id = req.user._id;
+
     if (!req.files) {
-      console.log("no files");
       res.status(400).send({ msg: "No Files" });
     }
 
+    /* This is the array of uploaded images. 
+    Returns the mongo record of the image so that the thumbnail and name can be accessed.
+    */
     let savedKeys = [];
 
     for (file of req.files) {
       let thumb_url = null;
       const keyName = file.key;
-      console.log("FILE PRECHECK");
-      console.log(file);
-      console.log(file.mimetype);
-      if (file.mimetype != "image/heic") {
-        const bucketParams = {
-          Bucket: AWS_S3_BUCKET_NAME_RESIZED,
-          Key: "thumbnails/resized-" + keyName,
-        };
 
-        //get the head data to ensure the object exists before requesting the thumbnail
-        const head = new HeadObjectCommand(bucketParams);
+      const bucketParams = {
+        Key: "thumbnails/resized-" + keyName,
+        Bucket: AWS_S3_BUCKET_NAME_RESIZED,
+      };
 
-        //temp solution to check if the thumbnail exists
-        for (let i = 0; i < 5; i++) {
-          const exists = await s3_resized
-            .send(head)
-            .catch((err) => console.log(err));
+      await S3Controller.checkHeadObject(bucketParams);
 
-          if (exists) {
-            break;
-            console.log("refreshing");
-          }
-          await new Promise((r) => setTimeout(r, 1500));
-        }
+      thumb_url = await S3Controller.getSignedThumbnailURL(bucketParams);
 
-        thumb_url = await getSignedUrl(
-          s3_resized,
-          new GetObjectCommand(bucketParams),
-          { expiresIn: 90000 }
-        ); //90k
-      }
       let newKey = new ImageKey({
         key: keyName,
         user_id,
@@ -272,6 +146,7 @@ uploadImageKey = async (req, res) => {
 
       savedKeys.push(newKey);
     }
+    console.log("UPLOAD COMPLETE###############");
 
     res.status(200).json({ ok: true, data: savedKeys });
   } catch (err) {
@@ -280,28 +155,33 @@ uploadImageKey = async (req, res) => {
   }
 };
 
+// GET '/api/submit'
 downloadImages = async (req, res, next) => {
-  console.log("download starting");
+  
 
+  // Function to send request for the object to S3 then pipe the data stream to a local directory
   const make_promise = async (key) => {
-    const { Body } = await s3.send(
-      new GetObjectCommand({ Bucket: AWS_S3_BUCKET_NAME, Key: key })
-    );
-
+    const params = {Bucket: AWS_S3_BUCKET_NAME, Key: key}
+    const { Body } = await S3Controller.getObject(params)
     return new Promise((resolve, reject) => {
+
       const file = Body.pipe(
         fs.createWriteStream("data/" + user_id + "/" + key)
       );
 
       file.on("finish", () => {
         resolve(true);
-      }); // not sure why you want to pass a boolean
-      file.on("error", reject); // don't forget this!
+      }); 
+      file.on("error", reject); 
     });
   };
 
+
   const user_id = req.user._id;
+
   const images = await ImageKey.find({ user_id });
+
+  // Having an array of promises for downloads allows for parallel downloads
   const promises = [];
 
   for (const image of images) {
@@ -312,101 +192,53 @@ downloadImages = async (req, res, next) => {
     }
   }
   const all = Promise.all(promises);
-  console.log(all);
+  
   all
     .then((values) => {
-      console.log(values); // [resolvedValue1, resolvedValue2]
       next();
     })
     .catch((error) => {
       console.log(error); // rejectReason of any first rejected promise
     });
-  console.log("download ended");
 };
-reloadThumbnail = async (req, res) => {
-  await new Promise((r) => setTimeout(r, 500));
-  console.log("reloading thumb");
-  const { id } = req.params;
-  const key = await ImageKey.findOne({ _id: id });
-  console.log(key);
 
+// GET '/api/reloadThumbnail/:id'
+reloadThumbnail = async (req, res) => {
+  // mongo id of thumbnail to refresh
+  const { id } = req.params;
+
+  const key = await ImageKey.findOne({ _id: id });
+  
   const bucketParams = {
     Bucket: AWS_S3_BUCKET_NAME_RESIZED,
     Key: "thumbnails/resized-" + key.key,
   };
+
+
   try {
-    const new_url = await getSignedUrl(
-      s3_resized,
-      new GetObjectCommand(bucketParams),
-      { expiresIn: 90000 }
-    ); //90k
-    const item = await ImageKey.findOneAndUpdate(
+    
+    // returns signed url of thumbnail from s3
+    const new_url = await S3Controller.getSignedThumbnailURL(bucketParams);
+    
+    // update thumbnail url in mongo
+    const updatedKey = await ImageKey.findOneAndUpdate(
       { _id: id },
       { $set: { url: new_url } }
     );
-    res.status(200).json({ ok: true, data: item });
+    
+
+    res.status(200).json({ ok: true, data: updatedKey });
   } catch (e) {
     console.log(e);
     res.status(404);
   }
 };
 
-async function getFileFromS3(key) {
-  // parameters for the s3 bucket, convert to dotenv variables before pushing
-  const bucketParams = {
-    Bucket: AWS_S3_BUCKET_NAME,
-    Key: key,
-  };
-
-  //send the request to get data
-  try {
-    const data = await s3.send(new GetObjectCommand(bucketParams));
-
-    return data;
-  } catch (err) {
-    console.log("Error", err);
-    return err; //400
-  }
-}
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, `data/images/${req.user._id}/`);
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-  key: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-const uploadLocal = multer({ storage: storage });
-
-const upload = multer({
-  storage: multerS3({
-    region: "us-east-2",
-    s3: s3,
-    bucket: AWS_S3_BUCKET_NAME,
-    metadata: function (req, file, cb) {
-      cb(null, { fieldName: file.fieldname });
-    },
-    key: function (req, file, cb) {
-      cb(null, Date.now() + file.originalname);
-    },
-  }),
-});
-
 module.exports = {
   deleteImage,
   deleteAllImages,
   getAllImages,
   uploadImageKey,
-  uploadLocal,
   downloadImages,
-  storage,
-  directoryCheck,
-  getImage,
-  upload,
-  emptyDirectory,
   reloadThumbnail,
 };

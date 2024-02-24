@@ -34,8 +34,7 @@ generateWallpapers = async (req, res, next) => {
       const canvas = createCanvas(canvasWidth, canvasHeight);
       const context = canvas.getContext("2d");
       
-      // context.imageSmoothingEnabled = true;
-
+      
       let image = await loadImage(directory + keys[i].key).then((image) => {
         return image;
       });

@@ -3,46 +3,49 @@ const path = require("path");
 const fs = require("fs");
 const admz = require("adm-zip");
 
-sendDownload = async (req, res, next) => {
-  console.log("starting to make download")
-  const user_id = req.user._id;
-  const wallpaperDirectory = `./data/${user_id}/wallpapers/`
+
+// POST '/api/submit'
+sendZipDownloadToClient = async (req, res, next) => {
+
+
+  const userId = req.user._id;
+
+  // Directory where the users wallpapers are stored
+  const wallpaperDirectory = `./data/${userId}/wallpapers/`
+  const zipFileName = 'wallpaper.zip'
   try {
-    var to_zip = fs.readdirSync(wallpaperDirectory);
 
-    console.log(to_zip)
-    const zp = new admz();
+    // Discovers all the files in the local wallpaper directory
+    // Anything in to_
+    var wallpapersToAddToZip = fs.readdirSync(wallpaperDirectory);
 
-    for (let k = 0; k < to_zip.length; k++) {
-      zp.addLocalFile(wallpaperDirectory + to_zip[k]);
+    // Adds all the wallpapers to a zip file
+    const zipFile = new admz();
+    for (let i = 0; i < wallpapersToAddToZip.length; i++) {
+      zipFile.addLocalFile(wallpaperDirectory + wallpapersToAddToZip[i]);
     }
 
-    const file_after_download = "downloaded_file.zip";
+    // Writes the zip file locally to the backend
+    await zipFile.writeZip(zipFileName)
+    const data = zipFile.toBuffer();
 
-    await zp.writeZip(file_after_download)
-    const data = zp.toBuffer();
-
-
-    console.log("getting ready to send")
-
-
+    // Sends the local zip file to the client
     res.set("Content-Type", "application/octect-stream");
     res.set(
       "Content-Disposition",
-      `attachment; filename=${file_after_download}`
+      `attachment; filename=${zipFileName}`
     );
     res.set("Content-Length", data.length);
-    console.log("sending")
     res.send(data);
     res.status(200)
 
 
-  } catch (e) {
-    console.log(e);
+  } catch (error) {
+    console.log(error)
     res.status(401)
   }
 };
 
 module.exports = {
-  sendDownload,
+  sendZipDownloadToClient,
 };
