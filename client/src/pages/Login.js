@@ -11,10 +11,7 @@ import {
 } from "mdb-react-ui-kit";
 import {
   example1,
-  example2,
-  example3,
-  example4,
-  example5,
+  example2
 } from "../img/carousel";
 
 const Login = () => {

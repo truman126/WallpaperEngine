@@ -21,6 +21,7 @@ function FileSelector(props) {
       dispatch({ type: "DELETE_ALL" });
     }
   }
+
   async function handleFileUpload(e) {
     e.preventDefault();
     setError();
@@ -37,14 +38,14 @@ function FileSelector(props) {
         setError("Only files sizes under 10MB are allowed.");
         return;
       } else if (image.type != "image/jpeg" && image.type != "image/png") {
-        console.log(image.type);
+        
         setError("Unsupported file type");
         return;
       }
 
       formData.append("images", image);
       tempImages.push({ key: image.name });
-      console.log(image);
+      
     }
     dispatch({ type: "CREATE_FILES", payload: tempImages });
 

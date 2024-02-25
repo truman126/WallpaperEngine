@@ -75,7 +75,7 @@ function Options(props) {
     props.setLoading(true);
 
     e.preventDefault();
-    console.log(customColourPicker);
+    
 
     const { colour, size, ratio, filetype } = {
       colour: customColourPicker ? customColour : "average",
@@ -85,7 +85,7 @@ function Options(props) {
     };
 
     const payload = { colour, size, ratio, filetype };
-    console.log(payload);
+    
     const response = await api.generateWallpapers(payload, user);
 
     var blob = new Blob([response.data], { type: "application/zip" });

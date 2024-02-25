@@ -23,8 +23,7 @@ function File(props) {
     if (!user) {
       return;
     }
-    console.log("reloading thumbnail")
-    console.log(id)
+
     const response = await api.reloadThumbnail(id, user)
     const json = await response.data.data;
 
@@ -41,7 +40,6 @@ function File(props) {
         onError={({currentTarget}) => {
           
           currentTarget.onError = null; // prevents looping
-          console.log("reloading thumbnail")
           const url = reloadThumbnail(props.image._id, user);
           currentTarget.src= url;
           

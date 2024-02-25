@@ -9,9 +9,7 @@ import {
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
-  console.log(isLoading);
   useEffect(() => {
-    console.log("using effect");
   }, [isLoading]);
 
   return (
