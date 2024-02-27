@@ -20,7 +20,7 @@ else (
   app.use(cors())
 )
 
-const apiPort = 8000;
+const apiPort = process.env.PORT;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
