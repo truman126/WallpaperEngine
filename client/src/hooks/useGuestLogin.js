@@ -28,7 +28,7 @@ export const useGuestLogin = () => {
       })
       
       .catch((axiosRes) => {
-        if (res.message === 'Network Error' ){
+        if (axiosRes.message === 'Network Error' ){
           setError('Network Error.')
         }
         setError(axiosRes.response.data.error);
