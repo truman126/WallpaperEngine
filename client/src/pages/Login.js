@@ -123,7 +123,7 @@ const Login = () => {
             alt="Login image"
             className="w-100"
             style={{ objectFit: "cover", objectPosition: "left" }}
-          />
+          />TESTTEST
           <img
             src={example2}
             alt="Login image"

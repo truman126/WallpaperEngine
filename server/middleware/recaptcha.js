@@ -6,15 +6,14 @@ const recaptcha = async (req, res, next) => {
   const secret = process.env.RECAPTCHA_SECRET_KEY;
 
   try {
-    console.log("trying");
-    console.log(token)
     // Sending secret key and response token to Google Recaptcha API for authentication.
     const response = await axios.post(
       `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`
     );
-    console.log(response.data);
+    console.log("google response" , response.data);
     // Check response status and send back to the client-side
     if (response.data.success) {
+      console.log("captcha success")
       // res.send("Human 👨 👩");
       next();
     } else {

@@ -1,0 +1,32 @@
+services:
+  mongo:
+    image: mongo
+    container_name: mongo_c
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/wallpaper_engine_db
+  server:
+    build: ./server
+    container_name: server_c
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./server:/server
+      - ./server:/node_modules
+    environment: 
+      - START_CMD=npx nodemon index.js
+    stdin_open: true
+    tty: true
+  client:
+    build: ./client
+    container_name: client_c
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./client:/client
+      - ./client:/node_modules
+    stdin_open: true
+    tty: true
+volumes:
+  mongo-data:

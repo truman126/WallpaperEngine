@@ -1,0 +1,12 @@
+#!/bin/sh
+
+echo "Which container would you like to exec into? "
+echo "Options:"
+
+eval docker ps -a --format "{{.Names}}"
+
+read container
+
+eval docker exec -it $container /bin/sh 
+
+echo "Attempting to exec into $container" 

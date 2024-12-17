@@ -11,9 +11,9 @@ mongoose
         console.error('Connection error', e.message)
     })
 	
-
 const db = mongoose.connection
 	
+console.log("MONGO CONNECTION: ", mongoose.connection.readyState);
 
 module.exports = db
 
