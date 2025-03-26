@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useLogin } from "../hooks/useLogin";
+import { Link } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useGuestLogin } from "../hooks/useGuestLogin";
 import {
@@ -110,9 +111,11 @@ const Login = () => {
             />
             <p className="ms-5">
               Don't have an account?{" "}
-              <a href="/wallpaperengine/signup" class="link-info">
-                Register here
-              </a>
+              <Link to="/signup">
+                <a class="link-info">
+                  Register here
+                </a>
+              </Link>
             </p>
           </div>
         </MDBCol>
@@ -123,7 +126,7 @@ const Login = () => {
             alt="Login image"
             className="w-100"
             style={{ objectFit: "cover", objectPosition: "left" }}
-          />TESTTEST
+          />
           <img
             src={example2}
             alt="Login image"

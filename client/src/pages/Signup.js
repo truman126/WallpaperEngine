@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { useSignup } from "../hooks/useSignup";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useGuestLogin } from "../hooks/useGuestLogin";
+import { Link } from "react-router-dom";
 import {
   MDBBtn,
   MDBContainer,
@@ -114,9 +115,9 @@ const Signup = () => {
             />
             <p className="ms-5">
               Already have an account?{" "}
-              <a href="/wallpaperengine/login" class="link-info">
+              <Link to="/login"> <a class="link-info">
                 Log in here
-              </a>
+              </a></Link>
             </p>
           </div>
         </MDBCol>
