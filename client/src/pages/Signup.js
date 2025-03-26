@@ -115,9 +115,9 @@ const Signup = () => {
             />
             <p className="ms-5">
               Already have an account?{" "}
-              <Link to="/login"> <a class="link-info">
+              <Link to="/login" className="link-info">
                 Log in here
-              </a></Link>
+              </Link>
             </p>
           </div>
         </MDBCol>

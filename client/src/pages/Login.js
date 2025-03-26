@@ -111,10 +111,9 @@ const Login = () => {
             />
             <p className="ms-5">
               Don't have an account?{" "}
-              <Link to="/signup">
-                <a class="link-info">
+              <Link to="/signup" className="link-info">
                   Register here
-                </a>
+                
               </Link>
             </p>
           </div>
