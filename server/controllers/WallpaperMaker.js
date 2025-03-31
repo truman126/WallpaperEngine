@@ -15,7 +15,7 @@ function rgbToHex(r, g, b) {
 }
 
 generateWallpapers = async (req, res, next) => {
-  console.log("starting to create wallpapers")
+
   //these should be set in req.body
   const canvasWidth = req.body.size.width;
   const canvasHeight = req.body.size.height;
@@ -26,19 +26,19 @@ generateWallpapers = async (req, res, next) => {
   try {
     // ADD AT THE END WHEN CLEARING WALLPAPER AND IMAGE FOLDER
     //delete all files in the wallpaper folder
-    const directory = `./data/${user_id}/`;
-
-    const keys = await ImageKey.find({ user_id });
+    const directory = path.join(__dirname + '/../data/' + user_id + '/').toString();
     
+    const keys = await ImageKey.find({ user_id });
+
     for (let i = 0; i < keys.length; i++) {
       const canvas = createCanvas(canvasWidth, canvasHeight);
       const context = canvas.getContext("2d");
-      
-      
+
+
       let image = await loadImage(directory + keys[i].key).then((image) => {
         return image;
       });
-      
+
 
       const landscape = image.width > image.height ? true : false; // true if the image is landscape, false if it is a portrait image. used to calculate the border size
 
@@ -61,10 +61,10 @@ generateWallpapers = async (req, res, next) => {
 
       if (req.body.colour != "average") {
         context.fillStyle = req.body.colour;
-      } 
-      
+      }
+
       else {
-        
+
         /**
          *
          * Find the average Colour of the image
@@ -73,10 +73,10 @@ generateWallpapers = async (req, res, next) => {
         //in memory canvas to get the image data
         const dataCanvas = createCanvas(imageWidth, imageHeight);
         var imgDataContext = dataCanvas.getContext("2d");
-        
+
         await imgDataContext.drawImage(image, 0, 0);
-        
-        var imageData =  imgDataContext.getImageData(
+
+        var imageData = imgDataContext.getImageData(
           0,
           0,
           imageWidth,
@@ -105,29 +105,24 @@ generateWallpapers = async (req, res, next) => {
         context.fillStyle = rgbToHex(rgb.r, rgb.g, rgb.b);
 
 
-        
+
       }
 
 
-      context.fillRect(0, 0, canvasWidth, canvasHeight);      
-      await context.drawImage(image, x,y,w,h);
-    
-      const buffer =
-        req.body.filetype == "jpeg"
-          ?  canvas.toBuffer("image/jpeg")
-          :  canvas.toBuffer("image/png");
+      context.fillRect(0, 0, canvasWidth, canvasHeight);
+      await context.drawImage(image, x, y, w, h);
 
+      const buffer = canvas.toBuffer('image/jpeg');
 
       await fs.writeFileSync(
         directory +
-          "/wallpapers/" +
-          keys[i].key.replace(/\.[^/.]+$/, ".") +
-          req.body.filetype,
+        "wallpapers/" +
+        keys[i].key.replace(/\.[^/.]+$/, ".") +
+        req.body.filetype,
         buffer
       );
-      
+
     }
-    console.log("finished creating wallpapers")
     next();
   } catch (e) {
     console.log(e);

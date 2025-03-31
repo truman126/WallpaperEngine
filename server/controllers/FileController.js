@@ -146,7 +146,6 @@ uploadImageKey = async (req, res) => {
 
       savedKeys.push(newKey);
     }
-    console.log("UPLOAD COMPLETE###############");
 
     res.status(200).json({ ok: true, data: savedKeys });
   } catch (err) {
@@ -157,6 +156,9 @@ uploadImageKey = async (req, res) => {
 
 // GET '/api/submit'
 downloadImages = async (req, res, next) => {
+  const user_id = req.user._id;
+
+  const directory = path.join(__dirname + '/../data/' + user_id + '/').toString();
   
 
   // Function to send request for the object to S3 then pipe the data stream to a local directory
@@ -166,18 +168,18 @@ downloadImages = async (req, res, next) => {
     return new Promise((resolve, reject) => {
 
       const file = Body.pipe(
-        fs.createWriteStream("data/" + user_id + "/" + key)
+        fs.createWriteStream(directory + key)
       );
 
       file.on("finish", () => {
         resolve(true);
-      }); 
-      file.on("error", reject); 
+      });
+      file.on("error", reject);
     });
   };
 
 
-  const user_id = req.user._id;
+
 
   const images = await ImageKey.find({ user_id });
 
@@ -195,6 +197,7 @@ downloadImages = async (req, res, next) => {
   
   all
     .then((values) => {
+      console.log("images downloaded")
       next();
     })
     .catch((error) => {

@@ -7,7 +7,6 @@ const recaptcha = require("../middleware/recaptcha")
 //  route : /api/user
 
 const router = express.Router()
-router.use(recaptcha)
 
 
 //log in route

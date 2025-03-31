@@ -31,11 +31,11 @@ const signupUser = async (req, res) => {
     const user = await User.signup(email, password);
 
     //create a token
-
+    console.log("user created in controller")
     const token = createToken(user._id);
     res.status(200).json({ email, token });
   } catch (error) {
-    console.log(error);
+    console.log("error:@@@@@",error);
     res.status(400).json({ error: error.message });
   }
 };

@@ -19,7 +19,6 @@ if (process.env.USE_CORS == 1){
 else (
   app.use(cors())
 )
-
 const apiPort = process.env.PORT;
 
 app.use(bodyParser.urlencoded({ extended: true }));
