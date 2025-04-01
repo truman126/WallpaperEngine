@@ -5,7 +5,7 @@ import reportWebVitals from "./reportWebVitals";
 import { FilesContextProvider } from "./context/FileContext";
 import { AuthContextProvider } from "./context/AuthContext";
 
-
+//this is a test to see if changes are made2
 const root = ReactDOM.createRoot(document.getElementById("root"));
 document.title = "Wallpaper Engine"
 root.render(

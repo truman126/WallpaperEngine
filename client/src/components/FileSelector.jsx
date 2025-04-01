@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import File from "./File";
 import api from "../api";
 import { useFilesContext } from "../hooks/useFilesContext";
@@ -10,6 +10,7 @@ function FileSelector(props) {
   const [error, setError] = useState();
   const { files, dispatch } = useFilesContext();
   const { user } = useAuthContext();
+  const fileInputRef = useRef();
 
   async function handleDeleteAll() {
     if (!user) {
@@ -23,6 +24,7 @@ function FileSelector(props) {
   }
 
   async function handleFileUpload(e) {
+    console.log('handling')
     e.preventDefault();
     setError();
     if (!user) {
@@ -114,16 +116,17 @@ function FileSelector(props) {
             </div>
           
       </div>
-      <MDBBtn as="form">
+      <MDBBtn as="form" onClick={()=>fileInputRef.current.click()}>
         <label className="">
           Upload Files
           <input
             type="file"
             accept="image/jpeg,image/png"
             multiple={true}
-            onChange={(e) => {
-              handleFileUpload(e);
-            }}
+            onChange={
+              handleFileUpload
+            }
+            ref={fileInputRef}
           />
         </label>
       </MDBBtn>

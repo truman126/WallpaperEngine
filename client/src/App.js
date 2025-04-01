@@ -21,7 +21,7 @@ function App() {
   return (
     <div className="App">
 
-      <BrowserRouter basename="/wallpaperengine">
+      <BrowserRouter basename="/">
 
         <UserBar />
 

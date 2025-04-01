@@ -5,26 +5,30 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - mongo-data:/data/wallpaper_engine_db
+      - mongo-data:/data/db
   server:
     build: ./server
     container_name: server_c
     ports:
       - '8000:8000'
     volumes:
-      - ./server:/server
-      - ./server:/node_modules
+      - ./server:/app
+      - /app/node_modules
+    environment: 
+      - WATCHPACK_POLLING=true
+      - START_CMD=npx nodemon index.js
     stdin_open: true
     tty: true
   client:
     build: ./client
     container_name: client_c
+    environment:
+      - WATCHPACK_POLLING=true
     ports:
       - '3000:3000'
     volumes:
-      - ./client:/client
-      - ./client:/node_modules
+      - ./client/src:/app/src
     stdin_open: true
     tty: true
 volumes:
-  mongo-data: 
+  mongo-data:

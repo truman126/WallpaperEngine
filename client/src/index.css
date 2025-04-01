@@ -18,7 +18,7 @@ body {
   margin: 0;
   background-color: var(--light-background);
   color: var(--dark-background);
-  scrollbar-color: var(--dark-background) var(--light-background);
+  scrollbar-color: var(--light-background);
   --image-grayscale: 0;
   --image-opacity: 100%;
   

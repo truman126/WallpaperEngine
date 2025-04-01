@@ -6,6 +6,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
 function File(props) {
   const { files, dispatch } = useFilesContext();
   const { user } = useAuthContext();
+  console.log(props.image)
 
   async function handleDelete(id) {
     if (!user) {
@@ -36,7 +37,7 @@ function File(props) {
       {!props.image.url ? (
         <section className="loader"></section>
       ) : (
-        <img src={props.image.url} 
+        <img src={props.image.url}
         onError={({currentTarget}) => {
           
           currentTarget.onError = null; // prevents looping

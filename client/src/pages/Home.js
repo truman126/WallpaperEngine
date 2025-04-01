@@ -16,7 +16,6 @@ const Home = () => {
     <>
       {isLoading && (
         <div className="loading">
-          <h1>LOADING</h1>
           <section className="loader"></section>
         </div>
       )}
