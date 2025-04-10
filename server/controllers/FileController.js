@@ -155,11 +155,9 @@ uploadImageKey = async (req, res) => {
 };
 
 // GET '/api/submit'
-downloadImages = async (req, res, next) => {
-  const user_id = req.user._id;
+async function downloadImages(user_id, path){
 
-  const directory = path.join(__dirname + '/../data/' + user_id + '/').toString();
-  
+  console.log('attemping to download images')
 
   // Function to send request for the object to S3 then pipe the data stream to a local directory
   const make_promise = async (key) => {
@@ -168,7 +166,7 @@ downloadImages = async (req, res, next) => {
     return new Promise((resolve, reject) => {
 
       const file = Body.pipe(
-        fs.createWriteStream(directory + key)
+        fs.createWriteStream(path + key)
       );
 
       file.on("finish", () => {
@@ -198,7 +196,6 @@ downloadImages = async (req, res, next) => {
   all
     .then((values) => {
       console.log("images downloaded")
-      next();
     })
     .catch((error) => {
       console.log(error); // rejectReason of any first rejected promise

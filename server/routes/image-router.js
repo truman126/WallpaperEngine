@@ -4,6 +4,7 @@ const router = express.Router();
 
 // Controllers
 const FileController = require("../controllers/FileController");
+const ImageController = require("../controllers/ImageController");
 const FileUtils = require("../controllers/FileUtils");
 const WallpaperMaker = require("../controllers/WallpaperMaker");
 const Downloader = require("../controllers/Downloader");
@@ -31,7 +32,8 @@ router.get("/allimages", FileController.getAllImages);
 router.delete("/allimages", FileController.deleteAllImages);
 
 //submits the form to create the wallpapers
-router.post("/submit",FileUtils.emptyDirectory, FileUtils.directoryCheck, FileController.downloadImages, WallpaperMaker.generateWallpapers, Downloader.sendZipDownloadToClient, FileUtils.emptyDirectory);
+// router.post("/submit",FileUtils.emptyDirectory, FileUtils.directoryCheck, FileController.downloadImages, WallpaperMaker.generateWallpapers, Downloader.sendZipDownloadToClient, FileUtils.emptyDirectory);
+router.post("/submit", ImageController.createWallpapers);
 
 
 // router.get("/images/:id", FileController.getImage);

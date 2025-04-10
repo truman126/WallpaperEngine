@@ -5,47 +5,28 @@ const admz = require("adm-zip");
 
 
 // POST '/api/submit'
-sendZipDownloadToClient = async (req, res, next) => {
-
-
-  const userId = req.user._id;
+async function createZipFile(path) {
 
   // Directory where the users wallpapers are stored
-  const wallpaperDirectory = `./data/${userId}/wallpapers/`
-  const zipFileName = 'wallpaper.zip'
-  try {
+  const zipFileName = path + 'wallpapers.zip'
 
-    // Discovers all the files in the local wallpaper directory
-    // Anything in to_
-    var wallpapersToAddToZip = fs.readdirSync(wallpaperDirectory);
+  // Discovers all the files in the local wallpaper directory
+  // Anything in to_
+  var wallpapersToAddToZip = fs.readdirSync(path);
 
-    // Adds all the wallpapers to a zip file
-    const zipFile = new admz();
-    for (let i = 0; i < wallpapersToAddToZip.length; i++) {
-      zipFile.addLocalFile(wallpaperDirectory + wallpapersToAddToZip[i]);
-    }
-
-    // Writes the zip file locally to the backend
-    await zipFile.writeZip(zipFileName)
-    const data = zipFile.toBuffer();
-
-    // Sends the local zip file to the client
-    res.set("Content-Type", "application/octect-stream");
-    res.set(
-      "Content-Disposition",
-      `attachment; filename=${zipFileName}`
-    );
-    res.set("Content-Length", data.length);
-    res.send(data);
-    res.status(200)
-
-
-  } catch (error) {
-    console.log(error)
-    res.status(401)
+  // Adds all the wallpapers to a zip file
+  const zipFile = new admz();
+  for (let i = 0; i < wallpapersToAddToZip.length; i++) {
+    zipFile.addLocalFile(path + wallpapersToAddToZip[i]);
   }
+
+  // Writes the zip file locally to the backend
+  await zipFile.writeZip(zipFileName)
+  const data = zipFile.toBuffer();
+  console.log("data:", data)
+  return data;
 };
 
 module.exports = {
-  sendZipDownloadToClient,
+  createZipFile,
 };
