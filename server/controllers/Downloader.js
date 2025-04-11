@@ -23,7 +23,6 @@ async function createZipFile(path) {
   // Writes the zip file locally to the backend
   await zipFile.writeZip(zipFileName)
   const data = zipFile.toBuffer();
-  console.log("data:", data)
   return data;
 };
 

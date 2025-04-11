@@ -8,11 +8,11 @@ const ImageController = require("../controllers/ImageController");
 const FileUtils = require("../controllers/FileUtils");
 const WallpaperMaker = require("../controllers/WallpaperMaker");
 const Downloader = require("../controllers/Downloader");
-
+const DAO = require("../controllers/DAO.js");
 
 // Middleware
 const requireAuth = require("../middleware/requireAuth")
-const multer = require("../middleware/multer.js")
+const { default: DAOController } = require("../controllers/DAOController.js");
 
  
 //require auth for all routes
@@ -20,7 +20,8 @@ router.use(requireAuth)
 
 
 //CREATE image key and stores image on server
-router.post("/upload", multer.upload.array("images"), FileController.uploadImageKey);
+// router.post("/upload", multer.upload.array("images"), FileController.uploadImageKey);
+router.post('/upload', DAOController.upload)
 
 //REMOVE image and its image key
 router.delete("/images/:id", FileController.deleteImage); //remove the wallpaper from the list
@@ -32,7 +33,6 @@ router.get("/allimages", FileController.getAllImages);
 router.delete("/allimages", FileController.deleteAllImages);
 
 //submits the form to create the wallpapers
-// router.post("/submit",FileUtils.emptyDirectory, FileUtils.directoryCheck, FileController.downloadImages, WallpaperMaker.generateWallpapers, Downloader.sendZipDownloadToClient, FileUtils.emptyDirectory);
 router.post("/submit", ImageController.createWallpapers);
 
 

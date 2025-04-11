@@ -2,11 +2,10 @@ const multer = require("multer");
 const multerS3 = require("multer-s3");
 const s3Clients = require("../aws/S3Clients.js");
 
-const AWS_S3_BUCKET_NAME_RESIZED = process.env.AWS_S3_BUCKET_NAME_RESIZED;
 const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
 
-
-const upload = multer({
+if (process.env.DAO_TYPE=='AWS'){
+  const upload = multer({
     storage: multerS3({
       region: "us-east-2",
       s3: s3Clients.s3FullClient,
@@ -19,5 +18,7 @@ const upload = multer({
       },
     }),
   });
+}
+
 
   module.exports = {upload};

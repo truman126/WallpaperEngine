@@ -10,8 +10,6 @@ const s3Clients = require("../aws/S3Clients.js");
  * - Eventually move bucket names into the S3Controller to limit references to the aws directory
  *  
  */
-const AWS_S3_BUCKET_NAME_RESIZED = process.env.AWS_S3_BUCKET_NAME_RESIZED;
-const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
 
 // DELETE '/api/images/:id'
 deleteImage = async (req, res) => {
