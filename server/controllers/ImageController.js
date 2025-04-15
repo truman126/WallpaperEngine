@@ -2,6 +2,7 @@ const Downloader = require('./Downloader');
 const FileUtils = require('./FileUtils');
 const FileController = require('./FileController');
 const WallpaperMaker = require('./WallpaperMaker');
+const DAOFactory = require('./DAOFactory');
 
 const path = require("path");
 
@@ -23,11 +24,11 @@ async function createWallpapers(request, response) {
   const fileType = request.body.filetype;
   const colour = request.body.colour;
 
+  const DAO = new DAOFactory();
 
 
   //Set up / Clean Directories
   try {
-  console.log('trying to create dirs')
 
     if (!FileUtils.directoryExists(user_directory_images)) {
       await FileUtils.makeDirectory(user_directory_images)
@@ -40,7 +41,7 @@ async function createWallpapers(request, response) {
     // await FileUtils.emptyDirectory(user_directory_wallpapers)
 
     // DAO download images
-    await FileController.downloadImages(user_id, user_directory_images)
+    await DAO.downloadImages(user_id, user_directory_images)
     
     // await new Promise(r => setTimeout(r, 2000));
     await WallpaperMaker.generateWallpapers(user_id, user_directory_images, user_directory_wallpapers, canvasWidth, canvasHeight, frameScale, fileType, colour)

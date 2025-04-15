@@ -5,7 +5,7 @@ export default function DAOController() {
 
     const DAO = new DAOFactory();
 
-    async function uploadImage(request, response) {
+    async function uploadImageKey(request, response) {
         const user_id = request.user_id;
         const files = request.files;
 
@@ -66,8 +66,6 @@ export default function DAOController() {
     };
     function getThumbnail(request, response) {
         //return url to thumbnail
+        //TODO:deal with this
     };
-    function downloadImages(request, response) {
-
-    }
 }
