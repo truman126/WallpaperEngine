@@ -21,7 +21,7 @@ router.use(requireAuth)
 
 //CREATE image key and stores image on server
 // router.post("/upload", multer.upload.array("images"), FileController.uploadImageKey);
-router.post('/upload', DAOController.upload)
+router.post('/upload', multer.upload.array("images"), DAOController.upload)
 
 //REMOVE image and its image key
 router.delete("/images/:id", FileController.deleteImage); //remove the wallpaper from the list
