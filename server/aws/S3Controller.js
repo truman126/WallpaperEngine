@@ -1,9 +1,9 @@
-const {
+import {
   GetObjectCommand,
   DeleteObjectCommand,
   DeleteObjectsCommand,
   HeadObjectCommand,
-} = require("@aws-sdk/client-s3");
+} from "@aws-sdk/client-s3";
 
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 
@@ -68,12 +68,12 @@ async function getObject(params){
   return object;
   
 }
-module.exports = {
+export {
   deleteFullImageFromS3,
   deleteThumbnailImageFromS3,
   deleteAllFullImagesFromS3,
   deleteAllThumbnailImagesFromS3,
   checkHeadObject,
   getSignedThumbnailURL,
-  getObject
-};
+  getObject}
+;

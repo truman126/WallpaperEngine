@@ -1,4 +1,4 @@
-const DAOFactory = require('./DAOFactory');
+import DAOFactory from './DAOFactory.js';
 
 
 export default function DAOController() {

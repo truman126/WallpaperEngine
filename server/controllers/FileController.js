@@ -1,9 +1,8 @@
-require("dotenv").config();
-const fs = require("fs");
-const path = require("path");
-const ImageKey = require("../models/image-model");
-const S3Controller = require("../aws/S3Controller");
-const s3Clients = require("../aws/S3Clients.js");
+import fs from "fs";
+import path from "path";
+import ImageKey from "../models/image-model";
+import S3Controller from "../aws/S3Controller";
+import s3Clients from "../aws/S3Clients.js";
 
 /**
  * TODO:
@@ -232,7 +231,7 @@ reloadThumbnail = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   deleteImage,
   deleteAllImages,
   getAllImages,

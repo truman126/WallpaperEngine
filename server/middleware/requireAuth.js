@@ -1,6 +1,5 @@
-const jwt = require('jsonwebtoken')
-const User = require('../models/UserModel')
-require('dotenv').config()
+import jwt from 'jsonwebtoken';
+import User from '../models/UserModel';
 
 const requireAuth = async (req, res, next) => {
   //verify authentication
@@ -26,4 +25,4 @@ const requireAuth = async (req, res, next) => {
 
 }
 
-module.exports = requireAuth
+export default requireAuth;

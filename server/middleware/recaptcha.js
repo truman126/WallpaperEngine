@@ -1,5 +1,4 @@
-const axios = require("axios");
-require("dotenv").config();
+import axios from "axios";
 
 const recaptcha = async (req, res, next) => {
   const {token} = req.body;
@@ -25,4 +24,4 @@ const recaptcha = async (req, res, next) => {
     res.status(500).send("Error verifying reCAPTCHA");
   }
 };
-module.exports = recaptcha;
+export default recaptcha;

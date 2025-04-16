@@ -1,5 +1,5 @@
-const User = require("../models/UserModel");
-const jwt = require("jsonwebtoken");
+import User from "../models/UserModel";
+import jwt from "jsonwebtoken";
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "7d" });
@@ -55,4 +55,4 @@ const guestLoginUser = async (req, res) => {
   }
 };
 
-module.exports = { loginUser, signupUser, guestLoginUser };
+export { loginUser, signupUser, guestLoginUser };

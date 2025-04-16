@@ -1,14 +1,14 @@
-const ImageKey = require("../models/image-model");
-const path = require("path");
-const fs = require("fs");
+import ImageKey from "../models/image-model";
+import path from "path";
+import fs from "fs";
 
-const {
+import {
   createCanvas,
   loadImage,
   drawImage,
   getImageData,
   setFillColor,
-} = require("canvas");
+} from "canvas";
 
 function rgbToHex(r, g, b) {
   return "#" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
@@ -123,7 +123,4 @@ async function generateWallpapers(user_id, user_directory_images, user_directory
       console.log(err)
   }
 };
-
-module.exports = {
-  generateWallpapers,
-};
+export default generateWallpapers;

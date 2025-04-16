@@ -1,12 +1,13 @@
-var express = require('express')
-var cors = require('cors')
-var app = express()
-const bodyParser = require("body-parser");
-const db = require("./db");
-const imageRouter = require("./routes/image-router");
-const userRouter = require("./routes/user");
-require('dotenv').config()
+import express from 'express';
+import cors from 'cors';
+import bodyParser from "body-parser";
+import db from "./db/index.js";
+import imageRouter from "./routes/image-router.js";
+import userRouter from "./routes/user.js";
+import dotenv from 'dotenv';  // Import dotenv
+dotenv.config();
 
+var app = express()
 
 //temp solution for using development or production CORS
 if (process.env.USE_CORS == 1){

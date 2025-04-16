@@ -1,10 +1,10 @@
-const Downloader = require('./Downloader');
-const FileUtils = require('./FileUtils');
-const FileController = require('./FileController');
-const WallpaperMaker = require('./WallpaperMaker');
-const DAOFactory = require('./DAOFactory');
+import Downloader from './Downloader.js';
+import FileUtils from './FileUtils.js';
+import FileController from './FileController.js';
+import WallpaperMaker from './WallpaperMaker.js';
+import DAOFactory from './DAOFactory.js';
 
-const path = require("path");
+import path from "path";
 
 
 async function createWallpapers(request, response) {
@@ -71,4 +71,4 @@ async function createWallpapers(request, response) {
 
 }
 
-module.exports = {createWallpapers}
+export default createWallpapers;

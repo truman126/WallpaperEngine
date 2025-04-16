@@ -1,16 +1,13 @@
-require("dotenv").config();
-const fs = require("fs");
-const path = require("path");
-const ImageKey = require("../models/image-model");
-const S3Controller = require("../aws/S3Controller");
-const s3Clients = require("../aws/S3Clients.js");
+import fs from "fs";
+import path from "path";
+import ImageKey from "../models/image-model.js";
+import S3Controller from "../aws/S3Controller.js";
+import s3Clients from "../aws/S3Clients.js";
 
 
 export default function AWSDAO() {
 
     async function uploadImageKey(user_id, fileInfo) {
-
-        const user_id = req.user._id;
 
         if (!req.files) {
             throw new Error("no files")

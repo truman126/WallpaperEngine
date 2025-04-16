@@ -1,17 +1,18 @@
-const express = require("express");
-const router = express.Router(); 
+import express from "express";
 
 
 // Controllers
-const FileController = require("../controllers/FileController");
-const ImageController = require("../controllers/ImageController");
-const DAO = require("../controllers/DAOFactory.js");
+import FileController from "../controllers/FileController.js";
+import ImageController from "../controllers/ImageController.js";
+import DAO from "../controllers/DAOFactory.js";
 
 // Middleware
-const requireAuth = require("../middleware/requireAuth")
-const { default: DAOController } = require("../controllers/DAOController.js");
+import requireAuth from "../middleware/requireAuth.js";
+import DAOController from "../controllers/DAOController.js";
 
  
+const router = express.Router(); 
+
 //require auth for all routes
 router.use(requireAuth)
 
@@ -38,4 +39,4 @@ router.get("/reloadThumbnail/:id", FileController.reloadThumbnail);
 
 
 
-module.exports = router;
+export default router;

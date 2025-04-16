@@ -1,6 +1,5 @@
-const { error } = require("console");
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
 
 function emptyDirectory(path){
 
@@ -39,4 +38,4 @@ function makeDirectory(path){
   return true;
 }
 
-module.exports = { emptyDirectory, directoryExists, makeDirectory };
+export { emptyDirectory, directoryExists, makeDirectory };

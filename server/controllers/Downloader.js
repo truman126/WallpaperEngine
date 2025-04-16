@@ -1,7 +1,7 @@
-const ImageKey = require("../models/image-model");
-const path = require("path");
-const fs = require("fs");
-const admz = require("adm-zip");
+import ImageKey from "../models/image-model";
+import path from "path";
+import fs from "fs";
+import admz from "adm-zip";
 
 
 // POST '/api/submit'
@@ -26,6 +26,4 @@ async function createZipFile(path) {
   return data;
 };
 
-module.exports = {
-  createZipFile,
-};
+export default createZipFile;

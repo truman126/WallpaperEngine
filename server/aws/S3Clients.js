@@ -1,7 +1,6 @@
-require("dotenv").config();
-const {
+import {
     S3Client
-  } = require("@aws-sdk/client-s3");
+  } from "@aws-sdk/client-s3";
 
 const AWS_S3_BUCKET_NAME_RESIZED = process.env.AWS_S3_BUCKET_NAME_RESIZED;
 const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
@@ -31,5 +30,4 @@ const s3FullClient = new S3Client({
 
 
   
-
-  module.exports = {s3FullClient, s3ThumbnailClient};
+export {s3FullClient, s3ThumbnailClient};

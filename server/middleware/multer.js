@@ -1,6 +1,6 @@
-const multer = require("multer");
-const multerS3 = require("multer-s3");
-const s3Clients = require("../aws/S3Clients.js");
+import multer from "multer";
+import multerS3 from "multer-s3";
+import s3Clients from "../aws/S3Clients.js";
 
 const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
 
@@ -20,5 +20,4 @@ if (process.env.DAO_TYPE=='AWS'){
   });
 }
 
-
-  module.exports = {upload};
+export default upload

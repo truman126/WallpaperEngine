@@ -1,5 +1,6 @@
-require("dotenv").config();
-const AWSDAO = require('./AWSDAO');
+import dotenv from 'dotenv';  // Import dotenv
+dotenv.config();
+import AWSDAO from './AWSDAO.js';
 
 
 export default function DAO() {
