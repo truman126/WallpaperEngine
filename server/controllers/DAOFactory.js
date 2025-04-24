@@ -1,5 +1,3 @@
-import dotenv from 'dotenv';  // Import dotenv
-dotenv.config();
 import AWSDAO from './AWSDAO.js';
 
 
@@ -8,11 +6,11 @@ export default function DAO() {
 
     if (DAOType == 'AWS') {
         //use AWS
-        awsCredentials = {
+        const awsCredentials = {
             AWS_S3_BUCKET_NAME_RESIZED: process.env.AWS_S3_BUCKET_NAME_RESIZED,
             AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME
         }
-        return new AWSDAO();
+        return AWSDAO
     }
     else {
         //use local, add other options here;

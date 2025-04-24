@@ -5,6 +5,7 @@ import db from "./db/index.js";
 import imageRouter from "./routes/image-router.js";
 import userRouter from "./routes/user.js";
 import dotenv from 'dotenv';  // Import dotenv
+import path from 'path';
 dotenv.config();
 
 var app = express()
@@ -25,7 +26,10 @@ const apiPort = process.env.PORT;
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(bodyParser.json());
+
+const __dirname = path.resolve();
 app.use(express.static(__dirname + "/data"));
+
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 
 app.get("/", (req, res) => {

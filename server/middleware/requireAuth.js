@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/UserModel';
+import User from '../models/UserModel.js';
 
-const requireAuth = async (req, res, next) => {
+export default async function requireAuth(req, res, next){
   //verify authentication
   const { authorization } = req.headers;
 
@@ -25,4 +25,3 @@ const requireAuth = async (req, res, next) => {
 
 }
 
-export default requireAuth;

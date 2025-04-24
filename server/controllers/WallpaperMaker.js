@@ -1,21 +1,14 @@
-import ImageKey from "../models/image-model";
+import ImageKey from "../models/image-model.js";
 import path from "path";
 import fs from "fs";
-
-import {
-  createCanvas,
-  loadImage,
-  drawImage,
-  getImageData,
-  setFillColor,
-} from "canvas";
+import canvas from "canvas"
 
 function rgbToHex(r, g, b) {
   return "#" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
 }
 
 //TODO: Find a better name for frameScale / sizeDown
-async function generateWallpapers(user_id, user_directory_images, user_directory_wallpapers, canvasWidth, canvasHeight, frameScale, fileType, colour){
+export default async function generateWallpapers(user_id, user_directory_images, user_directory_wallpapers, canvasWidth, canvasHeight, frameScale, fileType, colour){
 
   //these should be set in req.body
 
@@ -123,4 +116,3 @@ async function generateWallpapers(user_id, user_directory_images, user_directory
       console.log(err)
   }
 };
-export default generateWallpapers;

@@ -2,14 +2,13 @@ import express from "express";
 
 
 // Controllers
-import FileController from "../controllers/FileController.js";
-import ImageController from "../controllers/ImageController.js";
-import DAO from "../controllers/DAOFactory.js";
+import * as FileController from "../controllers/FileController.js";
+import createWallpapers from "../controllers/ImageController.js";
 
 // Middleware
 import requireAuth from "../middleware/requireAuth.js";
-import DAOController from "../controllers/DAOController.js";
-
+import {uploadImageKey, deleteImage, deleteAllImages, getAllImages } from "../controllers/DAOController.js";
+import upload from "../middleware/multer.js"
  
 const router = express.Router(); 
 
@@ -17,25 +16,26 @@ const router = express.Router();
 router.use(requireAuth)
 
 
+
 //CREATE image key and stores image on server
-router.post('/upload', multer.upload.array("images"), DAOController.uploadImageKey)
+router.post('/upload', uploadImageKey)
 
-//REMOVE image and its image key
-router.delete("/images/:id", DAO.deleteImage); //remove the wallpaper from the list
+// //REMOVE image and its image key
+router.delete("/images/:id", deleteImage); //remove the wallpaper from the list
 
-//GETS all image keys to display images
-router.get("/allimages", DAO.getAllImages);
+// //GETS all image keys to display images
+router.get("/allimages", getAllImages);
 
-//DELETES all images
-router.delete("/allimages", DAO.deleteAllImages);
+// //DELETES all images
+router.delete("/allimages", deleteAllImages);
 
-//submits the form to create the wallpapers
-router.post("/submit", ImageController.createWallpapers);
+// //submits the form to create the wallpapers
+router.post("/submit", createWallpapers);
 
 
-// router.get("/images/:id", FileController.getImage);
+// // router.get("/images/:id", FileController.getImage);
 
-router.get("/reloadThumbnail/:id", FileController.reloadThumbnail);
+// router.get("/reloadThumbnail/:id", FileController.reloadThumbnail);
 
 
 

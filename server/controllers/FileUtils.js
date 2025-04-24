@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 
+export default function FileUtils(){
 function emptyDirectory(path){
 
   if(!directoryExists(path)){
@@ -36,6 +37,4 @@ function makeDirectory(path){
   fs.mkdirSync(path);
 
   return true;
-}
-
-export { emptyDirectory, directoryExists, makeDirectory };
+}}

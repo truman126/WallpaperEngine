@@ -65,8 +65,8 @@ function FileSelector(props) {
     const getData = async () => {
       const response = await api.fetchImages(user);
       const json = await response.data.data;
-
-      if (response.data.ok) {
+      
+      if (response.status >= 200 && response.status < 300) {
         dispatch({ type: "SET_FILES", payload: json });
       }
     };
@@ -77,7 +77,6 @@ function FileSelector(props) {
 
   return (
     <div>
-
     {files && (
       <>
       <div className="py-3">

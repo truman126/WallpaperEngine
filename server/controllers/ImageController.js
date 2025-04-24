@@ -1,13 +1,13 @@
 import Downloader from './Downloader.js';
 import FileUtils from './FileUtils.js';
-import FileController from './FileController.js';
+import * as FileController from './FileController.js';
 import WallpaperMaker from './WallpaperMaker.js';
 import DAOFactory from './DAOFactory.js';
 
 import path from "path";
 
 
-async function createWallpapers(request, response) {
+export default async function createWallpapers(request, response) {
 
 
   const user_id = request.user._id;
@@ -70,5 +70,3 @@ async function createWallpapers(request, response) {
   // FileUtils.emptyDirectory(user_directory_wallpapers)
 
 }
-
-export default createWallpapers;

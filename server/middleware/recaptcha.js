@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const recaptcha = async (req, res, next) => {
+export default async function recaptcha (req, res, next){
   const {token} = req.body;
   const secret = process.env.RECAPTCHA_SECRET_KEY;
 
@@ -23,5 +23,4 @@ const recaptcha = async (req, res, next) => {
     console.error(error);
     res.status(500).send("Error verifying reCAPTCHA");
   }
-};
-export default recaptcha;
+}

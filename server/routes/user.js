@@ -1,7 +1,7 @@
 import express from 'express';
 
 //controllers
-import UserController from "../controllers/UserController.js";
+import {loginUser, signupUser, guestLoginUser} from "../controllers/UserController.js";
 import recaptcha from "../middleware/recaptcha.js";
 
 //  route : /api/user
@@ -10,13 +10,13 @@ const router = express.Router()
 
 
 //log in route
-router.post('/login', UserController.loginUser);
+router.post('/login', loginUser);
 
 // sign up route
-router.post('/signup', UserController.signupUser);
+router.post('/signup', signupUser);
 
 // guest log in
-router.post('/guestlogin', UserController.guestLoginUser);
+router.post('/guestlogin', guestLoginUser);
 
 
 export default router;

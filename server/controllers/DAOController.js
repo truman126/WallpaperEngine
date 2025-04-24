@@ -1,11 +1,9 @@
 import DAOFactory from './DAOFactory.js';
 
+    const DAO = DAOFactory();
 
-export default function DAOController() {
 
-    const DAO = new DAOFactory();
-
-    async function uploadImageKey(request, response) {
+    export async function uploadImageKey(request, response) {
         const user_id = request.user_id;
         const files = request.files;
 
@@ -13,15 +11,15 @@ export default function DAOController() {
 
         //upload the image keys
         try {
-            await DAO.uploadImageKeys(user_id, files);
+            await DAO.uploadImageKey(user_id, files);
             response.sendStatus(201);
         }
         catch (error) {
             response.sendStatus(500)
 
         }
-    };
-    async function deleteImage(request, response) {
+    }
+    export async function deleteImage(request, response) {
         const user_id = request.user._id;
         const id = request.params.id
 
@@ -36,7 +34,7 @@ export default function DAOController() {
 
         }
     };
-    async function deleteAllImages() {
+    export async function deleteAllImages(request, response) {
         const user_id = request.user._id;
 
         try {
@@ -52,20 +50,23 @@ export default function DAOController() {
 
         }
     };
-    async function getAllImages(request, response) {
+    export async function getAllImages(request, response) {
         const user_id = request.user._id;
         try {
             const images = await DAO.getAllImages(user_id)
+            console.log(images)
             response.status(200).json({data: images });
 
         }
         catch (error) {
-            response.sendStatus(500)
+            console.log(error)
+            response.sendStatus(500, "Error getting all images")
+
         }
 
     };
-    function getThumbnail(request, response) {
+    export function getThumbnail(request, response) {
         //return url to thumbnail
         //TODO:deal with this
     };
-}
+
