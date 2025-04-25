@@ -34,6 +34,7 @@ const Login = () => {
   // guest log in
   const { guestLogin, guestLoginError, guestIsLoading } = useGuestLogin();
   const handleGuestLogin = async () => {
+    console.log("guest logging?")
     if (!token) {
       setCaptchaError("Please complete the captcha");
       return;

@@ -30,6 +30,6 @@ const apis = {
     signup,
     login,
     reloadThumbnail,
-    guestLogin,
+    guestLogin
 }
 export default apis

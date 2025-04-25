@@ -44,6 +44,7 @@ const createToken = (_id) => {
 
   export async function guestLoginUser(req,res){
     try {
+      console.log('attemping to log in guest')
       const user = await User.guestLogin();
 
       //create a token

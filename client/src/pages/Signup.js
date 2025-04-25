@@ -18,6 +18,10 @@ import {
   example5,
 } from "../img/carousel";
 
+console.log(process.env)
+console.log(process.env.USE_RECAPTCHA);
+console.log(process.env.REACT_APP_USE_RECAPTCHA);
+
 const Signup = () => {
   //sign up
   const [email, setEmail] = useState("");

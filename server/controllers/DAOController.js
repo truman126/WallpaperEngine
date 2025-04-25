@@ -3,10 +3,9 @@ import DAOFactory from './DAOFactory.js';
     const DAO = DAOFactory();
 
 
-    export async function uploadImageKey(request, response) {
-        const user_id = request.user_id;
-        const files = request.files;
-
+    export async function uploadImageKey(request, response) { 
+        const user_id = request.user._id;
+        const files = request.files; 
         //images are uploaded in the multer middleware,
 
         //upload the image keys
@@ -15,8 +14,9 @@ import DAOFactory from './DAOFactory.js';
             response.sendStatus(201);
         }
         catch (error) {
-            response.sendStatus(500)
-
+            console.log(error)
+            response.status(500);
+            response.send( {error: error.toString()});
         }
     }
     export async function deleteImage(request, response) {
@@ -55,11 +55,11 @@ import DAOFactory from './DAOFactory.js';
         try {
             const images = await DAO.getAllImages(user_id)
             console.log(images)
-            response.status(200).json({data: images });
+            response.status(200);
+            response.send({data:images});
 
         }
         catch (error) {
-            console.log(error)
             response.sendStatus(500, "Error getting all images")
 
         }

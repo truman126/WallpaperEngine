@@ -4,12 +4,11 @@ import {
   DeleteObjectsCommand,
   HeadObjectCommand,
 } from "@aws-sdk/client-s3";
-
-import getSignedUrl from "@aws-sdk/s3-request-presigner";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 
 import s3Clients from "./S3Clients.js";
-function S3Controller() {
+
   async function deleteFullImageFromS3(params) {
     await s3Clients.s3FullClient.send(new DeleteObjectCommand(params));
   }
@@ -68,6 +67,5 @@ function S3Controller() {
     return object;
 
   }
-}
-
+const S3Controller = {deleteAllFullImagesFromS3, deleteThumbnailImageFromS3, deleteFullImageFromS3, deleteAllThumbnailImagesFromS3, checkHeadObject, getSignedThumbnailURL, getObject}
 export default S3Controller;

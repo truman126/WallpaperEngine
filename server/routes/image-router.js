@@ -9,6 +9,7 @@ import createWallpapers from "../controllers/ImageController.js";
 import requireAuth from "../middleware/requireAuth.js";
 import {uploadImageKey, deleteImage, deleteAllImages, getAllImages } from "../controllers/DAOController.js";
 import upload from "../middleware/multer.js"
+import multer from "multer";
  
 const router = express.Router(); 
 
@@ -18,7 +19,7 @@ router.use(requireAuth)
 
 
 //CREATE image key and stores image on server
-router.post('/upload', uploadImageKey)
+router.post('/upload', upload.array("images"), uploadImageKey)
 
 // //REMOVE image and its image key
 router.delete("/images/:id", deleteImage); //remove the wallpaper from the list

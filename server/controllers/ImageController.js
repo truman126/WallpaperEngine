@@ -12,7 +12,7 @@ export default async function createWallpapers(request, response) {
 
   const user_id = request.user._id;
 
-
+  const __dirname = path.resolve();
   const user_directory_images = path.join(__dirname + '/../data/' + user_id + '/').toString();
   const user_directory_wallpapers = path.join(__dirname + '/../data/' + user_id + '/wallpapers/').toString();
 

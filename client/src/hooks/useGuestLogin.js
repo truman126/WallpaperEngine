@@ -11,7 +11,7 @@ export const useGuestLogin = () => {
     setIsLoading(true);
     setError(null);
     const payload = { token }
-
+    console.log("payload", payload);
 
     await api
       .guestLogin(payload)

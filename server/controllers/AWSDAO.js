@@ -9,7 +9,7 @@ import s3Clients from "../aws/S3Clients.js";
 
 async function uploadImageKey(user_id, fileInfo) {
 
-    if (!req.files) {
+    if (!fileInfo) {
         throw new Error("no files")
     }
 
@@ -21,13 +21,13 @@ async function uploadImageKey(user_id, fileInfo) {
 
     try {
 
-        for (file of req.files) {
+        for (const file of fileInfo) {
             let thumb_url = null;
             const keyName = file.key;
 
             const bucketParams = {
                 Key: "thumbnails/resized-" + keyName,
-                Bucket: AWS_S3_BUCKET_NAME_RESIZED,
+                Bucket: process.env.AWS_S3_BUCKET_NAME_RESIZED,
             };
 
             await S3Controller.checkHeadObject(bucketParams);
@@ -51,7 +51,8 @@ async function uploadImageKey(user_id, fileInfo) {
         return savedKeys;
     }
     catch (error) {
-        throw new Error(error);
+        console.log(error)
+        throw new Error(error, "error posting image key");
     }
 };
 async function deleteImage(user_id, file_id) {
@@ -69,11 +70,11 @@ async function deleteImage(user_id, file_id) {
     // Delete the full image and the thumbnail from S3
     try {
         const fullImageParams = {
-            Bucket: AWS_S3_BUCKET_NAME,
+            Bucket: process.env.AWS_S3_BUCKET_NAME,
             Key: key.key,
         };
         const thumbnailImageParams = {
-            Bucket: AWS_S3_BUCKET_NAME_RESIZED,
+            Bucket: process.env.AWS_S3_BUCKET_NAME_RESIZED,
             Key: "thumbnails/resized-" + key.key,
         };
         S3Controller.deleteFullImageFromS3(fullImageParams);
@@ -94,11 +95,11 @@ async function deleteAllImages(user_id) {
     }
     // Create parameters for s3 deletion functions
     const fullImageDeleteParams = {
-        Bucket: AWS_S3_BUCKET_NAME,
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
         Delete: { Objects: [] },
     };
     const thumbnailImageDeleteParams = {
-        Bucket: AWS_S3_BUCKET_NAME_RESIZED,
+        Bucket: process.env.AWS_S3_BUCKET_NAME_RESIZED,
         Delete: { Objects: [] },
     };
 
@@ -149,6 +150,7 @@ async function getAllImages(user_id) {
         return images;
     }
     catch (error) {
+        console.log(error)
         throw new Error("Error getting all image keys", error);
     }
 
