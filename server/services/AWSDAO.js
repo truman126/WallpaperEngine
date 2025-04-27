@@ -21,23 +21,23 @@ async function uploadImageKey(user_id, fileInfo) {
 
 
     for (const file of fileInfo) {
-        let thumb_url = null;
+        // let thumb_url = null;
         const keyName = file.key;
 
-        const bucketParams = {
-            Key: "thumbnails/resized-" + keyName,
-            Bucket: process.env.AWS_S3_BUCKET_NAME_RESIZED,
-        };
+        // const bucketParams = {
+        //     Key: "thumbnails/resized-" + keyName,
+        //     Bucket: process.env.AWS_S3_BUCKET_NAME_RESIZED,
+        // };
 
-        await S3Controller.checkHeadObject(bucketParams);
+        // await S3Controller.checkHeadObject(bucketParams);
 
-        thumb_url = await S3Controller.getSignedThumbnailURL(bucketParams);
+        // thumb_url = await S3Controller.getSignedThumbnailURL(bucketParams);
 
         let newKey = new ImageKey({
             key: keyName,
             user_id,
             name: file.originalname,
-            url: thumb_url != null ? thumb_url : "none",
+            url: null,
         });
 
         newKey = await newKey.save();
@@ -179,9 +179,32 @@ async function downloadImages(user_id, download_path) {
 
 };
 //TODO:implement
-function getThumbnail() { };
+async function getThumbnail(userId, imageId) {
+    return null;
+    // console.log("CALLING THUMBNAIL THING");
+    // const key = await ImageKey.findOne({ _id: imageId });
 
-const AWSDAO = { uploadImageKey, deleteImage, deleteAllImages, deleteImageKey, deleteAllImageKeys, getAllImages, downloadImages };
+    // const bucketParams = {
+    //     Bucket: process.env.AWS_S3_BUCKET_NAME_RESIZED,
+    //     Key: "thumbnails/resized-" + key.key,
+    // };
+    // try {
+
+    //     // returns signed url of thumbnail from s3
+    //     const new_url = await S3Controller.getSignedThumbnailURL(bucketParams);
+
+    //     // update thumbnail url in mongo
+    //     const updatedKey = await ImageKey.findOneAndUpdate(
+    //         { _id: imageId },
+    //         { $set: { url: new_url } }
+    //     );
+    //     return updatedKey;
+    // } catch (e) {
+    //     console.log(e);
+    // }
+};
+
+const AWSDAO = { uploadImageKey, deleteImage, deleteAllImages, deleteImageKey, deleteAllImageKeys, getAllImages, downloadImages, getThumbnail };
 
 export default AWSDAO;
 

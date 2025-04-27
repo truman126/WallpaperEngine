@@ -1,8 +1,8 @@
-import fs from "fs";
-import path from "path";
-import ImageKey from "../models/image-model.js";
-import S3Controller from "../aws/S3Controller.js";
-import s3Clients from "../aws/S3Clients.js";
+// import fs from "fs";
+// import path from "path";
+// import ImageKey from "../models/image-model.js";
+// import S3Controller from "../aws/S3Controller.js";
+// import s3Clients from "../aws/S3Clients.js";
 
 /**
  * TODO:
@@ -152,82 +152,83 @@ import s3Clients from "../aws/S3Clients.js";
 // };
 
 // GET '/api/submit'
-export async function downloadImages(user_id, path){
+// export async function downloadImages(user_id, path){
 
-  console.log('attemping to download images')
+//   console.log('attemping to download images')
 
-  // Function to send request for the object to S3 then pipe the data stream to a local directory
-  const make_promise = async (key) => {
-    const params = {Bucket: AWS_S3_BUCKET_NAME, Key: key}
-    const { Body } = await S3Controller.getObject(params)
-    return new Promise((resolve, reject) => {
+//   // Function to send request for the object to S3 then pipe the data stream to a local directory
+//   const make_promise = async (key) => {
+//     const params = {Bucket: AWS_S3_BUCKET_NAME, Key: key}
+//     const { Body } = await S3Controller.getObject(params)
+//     return new Promise((resolve, reject) => {
 
-      const file = Body.pipe(
-        fs.createWriteStream(path + key)
-      );
+//       const file = Body.pipe(
+//         fs.createWriteStream(path + key)
+//       );
 
-      file.on("finish", () => {
-        resolve(true);
-      });
-      file.on("error", reject);
-    });
-  };
-
-
+//       file.on("finish", () => {
+//         resolve(true);
+//       });
+//       file.on("error", reject);
+//     });
+//   };
 
 
-  const images = await ImageKey.find({ user_id });
 
-  // Having an array of promises for downloads allows for parallel downloads
-  const promises = [];
 
-  for (const image of images) {
-    try {
-      promises.push(make_promise(image.key));
-    } catch (e) {
-      console.log(e);
-    }
-  }
-  const all = Promise.all(promises);
+//   const images = await ImageKey.find({ user_id });
+
+//   // Having an array of promises for downloads allows for parallel downloads
+//   const promises = [];
+
+//   for (const image of images) {
+//     try {
+//       promises.push(make_promise(image.key));
+//     } catch (e) {
+//       console.log(e);
+//     }
+//   }
+//   const all = Promise.all(promises);
   
-  all
-    .then((values) => {
-      console.log("images downloaded")
-    })
-    .catch((error) => {
-      console.log(error); // rejectReason of any first rejected promise
-    });
-};
+//   all
+//     .then((values) => {
+//       console.log("images downloaded")
+//     })
+//     .catch((error) => {
+//       console.log(error); // rejectReason of any first rejected promise
+//     });
+// };
 
-// GET '/api/reloadThumbnail/:id'
-export async function reloadThumbnail(req, res) {
-  // mongo id of thumbnail to refresh
-  const { id } = req.params;
+// // GET '/api/reloadThumbnail/:id'
+// export async function reloadThumbnail(req, res) {
+//   console.log("USING OLD THUMBNAIL MODULE")
+//   // mongo id of thumbnail to refresh
+//   const { id } = req.params;
 
-  const key = await ImageKey.findOne({ _id: id });
+//   const key = await ImageKey.findOne({ _id: id });
   
-  const bucketParams = {
-    Bucket: AWS_S3_BUCKET_NAME_RESIZED,
-    Key: "thumbnails/resized-" + key.key,
-  };
+//   const bucketParams = {
+//     Bucket: AWS_S3_BUCKET_NAME_RESIZED,
+//     Key: "thumbnails/resized-" + key.key,
+//   };
 
 
-  try {
+//   try {
     
-    // returns signed url of thumbnail from s3
-    const new_url = await S3Controller.getSignedThumbnailURL(bucketParams);
+//     // returns signed url of thumbnail from s3
+//     const new_url = await S3Controller.getSignedThumbnailURL(bucketParams);
     
-    // update thumbnail url in mongo
-    const updatedKey = await ImageKey.findOneAndUpdate(
-      { _id: id },
-      { $set: { url: new_url } }
-    );
+//     // update thumbnail url in mongo
+//     const updatedKey = await ImageKey.findOneAndUpdate(
+//       { _id: id },
+//       { $set: { url: new_url } }
+//     );
     
 
-    res.status(200).json({ ok: true, data: updatedKey });
-  } catch (e) {
-    console.log(e);
-    res.status(500);
-  }
-};
+//     res.status(200).json({ ok: true, data: updatedKey });
+//   } catch (e) {
+//     console.log(e);
+//     res.status(500);
+//   }
+// };
 

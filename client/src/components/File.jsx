@@ -5,6 +5,7 @@ import { useAuthContext } from "../hooks/useAuthContext";
 import { MDBBtn } from "mdb-react-ui-kit";
 
 function File(props) {
+  
   const { files, dispatch } = useFilesContext();
   const { user } = useAuthContext();
 
@@ -37,12 +38,13 @@ function File(props) {
         <section className="loader"></section>
       ) : (
         <img src={props.image.url}
-        onError={({currentTarget}) => {
-          currentTarget.onError = null; // prevents looping
-          const url = reloadThumbnail(props.image._id, user);
-          currentTarget.src= url;
+        // onError={({currentTarget}) => {
+        //   currentTarget.onError = null; // prevents looping
+
+        //   const url = reloadThumbnail(props.image._id, user);
+        //   currentTarget.src= url;
           
-        }}
+        // }}
         />
       )}
       <p>{props.image.name}</p>

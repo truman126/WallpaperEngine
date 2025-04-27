@@ -2,12 +2,11 @@ import express from "express";
 
 
 // Controllers
-import * as FileController from "../controllers/FileController.js";
 import createWallpapers from "../controllers/ImageController.js";
 
 // Middleware
 import requireAuth from "../middleware/requireAuth.js";
-import {uploadImageKey, deleteImage, deleteAllImages, getAllImages } from "../controllers/DAOController.js";
+import {uploadImageKey, deleteImage, deleteAllImages, getAllImages, getThumbnail } from "../controllers/DAOController.js";
 import upload from "../middleware/multer.js"
 import multer from "multer";
  
@@ -36,7 +35,7 @@ router.post("/submit", createWallpapers);
 
 // // router.get("/images/:id", FileController.getImage);
 
-// router.get("/reloadThumbnail/:id", FileController.reloadThumbnail);
+router.get("/reloadThumbnail/:id", getThumbnail);
 
 
 

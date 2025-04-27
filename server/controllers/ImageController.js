@@ -1,6 +1,5 @@
 import Downloader from '../services/Downloader.js';
 import {makeDirectory, emptyDirectory, directoryExists} from '../utils/FileUtils.js';
-import * as FileController from './FileController.js';
 import generateWallpapers from '../services/WallpaperMaker.js';
 import DAOFactory from '../services/DAOFactory.js';
 import { dirname } from 'node:path';
