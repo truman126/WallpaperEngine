@@ -1,7 +1,11 @@
 import ImageKey from "../models/image-model.js";
 import path from "path";
 import fs from "fs";
-import canvas from "canvas"
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+
+const { createCanvas, loadImage, Image } = require('canvas');
 
 function rgbToHex(r, g, b) {
   return "#" + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);

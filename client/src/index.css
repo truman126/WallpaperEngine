@@ -215,12 +215,9 @@ button:hover{
   background: var(--primary-hover)
 
 }
-button.delete:hover{
-  background: var(--error-hover)
-}
+
 button.delete{
   padding: 5px 15px 5px 15px;
-  background-color:var(--error);
 }
 div.error {
   padding: 10px;

@@ -17,8 +17,8 @@ const createToken = (_id) => {
 
       res.status(200).json({ email, token });
     } catch (error) {
-      console.log(error);
-      res.status(400).json({ error: error.message });
+      res.status(500)
+      res.send({error: "Error signing in guest user."})
     }
   };
 
@@ -31,12 +31,12 @@ const createToken = (_id) => {
       const user = await User.signup(email, password);
 
       //create a token
-      console.log("user created in controller")
+      
       const token = createToken(user._id);
       res.status(200).json({ email, token });
     } catch (error) {
-      console.log("error:@@@@@", error);
-      res.status(400).json({ error: error.message });
+      res.status(500)
+      res.send({error: "Error signing in guest user."})
     }
   };
 
@@ -44,15 +44,15 @@ const createToken = (_id) => {
 
   export async function guestLoginUser(req,res){
     try {
-      console.log('attemping to log in guest')
+      
       const user = await User.guestLogin();
 
       //create a token
       const token = createToken(user._id);
       res.status(200).json({ token });
     } catch (error) {
-      console.log(error);
-      res.status(400).json({ error: error.message });
+      res.status(500)
+      res.send({error: "Error signing in guest user."})
     }
   };
   

@@ -227,7 +227,7 @@ export async function reloadThumbnail(req, res) {
     res.status(200).json({ ok: true, data: updatedKey });
   } catch (e) {
     console.log(e);
-    res.status(404);
+    res.status(500);
   }
 };
 

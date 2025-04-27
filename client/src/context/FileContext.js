@@ -3,6 +3,7 @@ import { createContext, useReducer } from "react";
 export const FilesContext = createContext();
 
 export const filesReducer = (state, action) => {
+  console.log({action})
   switch (action.type) {
     case "SET_FILES":
       return {

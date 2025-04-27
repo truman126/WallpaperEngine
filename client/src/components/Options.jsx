@@ -9,6 +9,7 @@ import {
   MDBRadio,
   MDBInput,
 } from "mdb-react-ui-kit";
+import * as ratioExampleImages from "../img/ratioexamples/ratios.js";
 
 function Options(props) {
   const [customColourPicker, setCustomColourPicker] = useState(false);
@@ -188,7 +189,7 @@ function Options(props) {
           <MDBRow>
             <MDBRow className="w-auto">
               <img
-                src={`http://server.truman.xyz/examples/${borderRatio}.png`}
+                src={require(`../img/ratioexamples/${borderRatio}.png`)}
                 style={{ height: "100px" }}
               />
             </MDBRow>

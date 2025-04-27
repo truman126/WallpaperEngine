@@ -18,13 +18,12 @@ function FileSelector(props) {
     }
     const response = await api.deleteAllImages(user);
 
-    if (response.data.ok) {
+    if (response.status >= 200 && response.status < 300) {
       dispatch({ type: "DELETE_ALL" });
     }
   }
 
   async function handleFileUpload(e) {
-    console.log('handling')
     e.preventDefault();
     setError();
     if (!user) {
@@ -49,12 +48,13 @@ function FileSelector(props) {
       tempImages.push({ key: image.name });
       
     }
+    
     dispatch({ type: "CREATE_FILES", payload: tempImages });
 
     const response = await api.uploadImage(formData, user);
     const json = await response.data.data;
 
-    if (response.data.ok) {
+    if (response.status >= 200 && response.status < 300) {
       dispatch({ type: "DELETE_FILES", payload: tempImages });
       dispatch({ type: "CREATE_FILES", payload: json });
     }
@@ -86,14 +86,15 @@ function FileSelector(props) {
         </h3>
 
         {files && files.length > 0 && (
-          <button
-            className="delete"
+          <MDBBtn
+            className="delete me-1"
+            color="danger"
             onClick={() => {
               handleDeleteAll();
             }}
           >
             Delete all
-          </button>
+          </MDBBtn>
         )}
 
         <Tooltip

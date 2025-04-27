@@ -4,7 +4,7 @@ export default async function recaptcha (req, res, next){
   const {token} = req.body;
   console.log("attempting to verify recaptcha")
   const secret = process.env.RECAPTCHA_SECRET_KEY;
-  if (process.env.NODE_ENV == 'dev'){
+  if (!process.env.USE_RECAPTCHA){
     next();
   } 
 

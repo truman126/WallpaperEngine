@@ -1,43 +1,49 @@
-import DAOFactory from './DAOFactory.js';
-
+import DAOFactory from '../services/DAOFactory.js';
+    //TODO: hide error messages from frontend?
+    
     const DAO = DAOFactory();
 
 
     export async function uploadImageKey(request, response) { 
-        const user_id = request.user._id;
-        const files = request.files; 
-        //images are uploaded in the multer middleware,
-
-        //upload the image keys
+        
         try {
-            await DAO.uploadImageKey(user_id, files);
-            response.sendStatus(201);
+            const user_id = request.user._id;
+            const files = request.files; 
+
+            const savedKeys = await DAO.uploadImageKey(user_id, files);
+            response.status(201);
+            response.send({data: savedKeys})
         }
         catch (error) {
-            console.log(error)
             response.status(500);
             response.send( {error: error.toString()});
         }
     }
     export async function deleteImage(request, response) {
-        const user_id = request.user._id;
-        const id = request.params.id
-
+        
         try {
+            const user_id = request.user._id;
+            const id = request.params.id
             await DAO.deleteImage(user_id, id);
-            await DAO.deleteImageKey(user_id, id);
+            const key = await DAO.deleteImageKey(user_id, id);
 
-            response.sendStatus(200)
+            console.log({key})
+            response.status(200);
+            response.send({data: key});
+
         }
         catch (error) {
-            response.sendStatus(500)
+            response.status(500);
+            response.send( {error: error.toString()});
 
         }
     };
     export async function deleteAllImages(request, response) {
-        const user_id = request.user._id;
+        
 
         try {
+            const user_id = request.user._id;
+
             await DAO.deleteAllImages(user_id);
             await DAO.deleteAllImageKeys(user_id);
 
@@ -46,13 +52,15 @@ import DAOFactory from './DAOFactory.js';
 
         }
         catch (error) {
-            response.sendStatus(500)
+            response.status(500);
+            response.send( {error: error.toString()});
 
         }
     };
     export async function getAllImages(request, response) {
-        const user_id = request.user._id;
+        
         try {
+            const user_id = request.user._id;
             const images = await DAO.getAllImages(user_id)
             console.log(images)
             response.status(200);
