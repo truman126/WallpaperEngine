@@ -19,6 +19,7 @@ export const signup = (payload) => api.post(`/user/signup`, payload)
 export const login = (payload) => api.post(`/user/login`, payload)
 export const guestLogin = (payload) => api.post(`/user/guestlogin`, payload)
 
+export const getUsers = (user) => api.get(`/admin/getUsers`, {headers : {'Authorization' : `Bearer ${user.token}`}})
 
 
 const apis = {
@@ -31,5 +32,6 @@ const apis = {
     login,
     reloadThumbnail,
     guestLogin,
+    getUsers
 }
 export default apis

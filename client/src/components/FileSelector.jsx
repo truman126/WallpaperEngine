@@ -24,7 +24,6 @@ function FileSelector(props) {
   }
 
   async function handleFileUpload(e) {
-    console.log('handling')
     e.preventDefault();
     setError();
     if (!user) {
