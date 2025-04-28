@@ -1,8 +1,12 @@
 import axios from "axios";
 
-const recaptcha = async (req, res, next) => {
+export default async function recaptcha (req, res, next){
   const {token} = req.body;
+  console.log("attempting to verify recaptcha")
   const secret = process.env.RECAPTCHA_SECRET_KEY;
+  if (!process.env.USE_RECAPTCHA){
+    next();
+  } 
 
   try {
     // Sending secret key and response token to Google Recaptcha API for authentication.
@@ -23,5 +27,4 @@ const recaptcha = async (req, res, next) => {
     console.error(error);
     res.status(500).send("Error verifying reCAPTCHA");
   }
-};
-export default recaptcha;
+}

@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
 
-function emptyDirectory(path){
+
+export function emptyDirectory(path){
 
   if(!directoryExists(path)){
     throw new Error("Can't empty directory. Directory does not exist");
@@ -24,18 +25,16 @@ function emptyDirectory(path){
 
 
 
-function directoryExists(path){
+export function directoryExists(path){
 
   if (fs.existsSync(path)){
     return true;
   }
   return false;
 }
-function makeDirectory(path){
+export function makeDirectory(path){
 
-  fs.mkdirSync(path);
+  fs.mkdirSync(path, {recursive:true});
 
   return true;
 }
-
-export { emptyDirectory, directoryExists, makeDirectory };

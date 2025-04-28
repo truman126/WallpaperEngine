@@ -1,55 +1,54 @@
-import Downloader from './Downloader.js';
-import FileUtils from './FileUtils.js';
-import FileController from './FileController.js';
-import WallpaperMaker from './WallpaperMaker.js';
-import DAOFactory from './DAOFactory.js';
-
+import Downloader from '../services/Downloader.js';
+import {makeDirectory, emptyDirectory, directoryExists} from '../utils/FileUtils.js';
+import generateWallpapers from '../services/WallpaperMaker.js';
+import DAOFactory from '../services/DAOFactory.js';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import path from "path";
 
 
-async function createWallpapers(request, response) {
+export default async function createWallpapers(request, response) {
 
-
-  const user_id = request.user._id;
-
-
-  const user_directory_images = path.join(__dirname + '/../data/' + user_id + '/').toString();
-  const user_directory_wallpapers = path.join(__dirname + '/../data/' + user_id + '/wallpapers/').toString();
-
-
-
-  const canvasWidth = request.body.size.width;
-  const canvasHeight = request.body.size.height;
-  const frameScale = request.body.ratio;
-  const fileType = request.body.filetype;
-  const colour = request.body.colour;
-
-  const DAO = new DAOFactory();
-
-
-  //Set up / Clean Directories
   try {
+    const user_id = request.user._id;
 
-    if (!FileUtils.directoryExists(user_directory_images)) {
-      await FileUtils.makeDirectory(user_directory_images)
-    }
-    if (!FileUtils.directoryExists(user_directory_wallpapers)) {
-      await FileUtils.makeDirectory(user_directory_wallpapers)
-    }
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+    const user_directory_images = path.join(__dirname + '/../data/' + user_id + '/').toString();
+    const user_directory_wallpapers = path.join(__dirname + '/../data/' + user_id + '/wallpapers/').toString();
 
+
+    const canvasWidth = request.body.size.width;
+    const canvasHeight = request.body.size.height;
+    const frameScale = request.body.ratio;
+    const fileType = request.body.filetype;
+    const colour = request.body.colour;
+
+    const DAO = new DAOFactory();
+
+
+    //Set up / Clean Directories
+
+
+    if (!directoryExists(user_directory_images)) {
+      await makeDirectory(user_directory_images);
+    }
+    if (!directoryExists(user_directory_wallpapers)) {
+      await makeDirectory(user_directory_wallpapers);
+
+    }
     // await FileUtils.emptyDirectory(user_directory_images)
     // await FileUtils.emptyDirectory(user_directory_wallpapers)
 
     // DAO download images
     await DAO.downloadImages(user_id, user_directory_images)
-    
+
     // await new Promise(r => setTimeout(r, 2000));
-    await WallpaperMaker.generateWallpapers(user_id, user_directory_images, user_directory_wallpapers, canvasWidth, canvasHeight, frameScale, fileType, colour)
+    await generateWallpapers(user_id, user_directory_images, user_directory_wallpapers, canvasWidth, canvasHeight, frameScale, fileType, colour)
     // await new Promise(r => setTimeout(r, 2000));
 
     const zipFile = await Downloader.createZipFile(user_directory_images);
 
-    
+
 
     //send the zip file to the client
     response.set("Content-Type", "application/octect-stream");
@@ -61,7 +60,7 @@ async function createWallpapers(request, response) {
     response.send(zipFile);
     response.status(200);
   }
-  catch(error){
+  catch (error) {
     console.log(error)
     response.status(500)
   }
@@ -70,5 +69,3 @@ async function createWallpapers(request, response) {
   // FileUtils.emptyDirectory(user_directory_wallpapers)
 
 }
-
-export default createWallpapers;

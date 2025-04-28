@@ -21,10 +21,13 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const { login, loginError, loginIsLoading } = useLogin();
 
+  const useRecaptcha = process.env.REACT_APP_USE_RECAPTCHA === 'true' ? true : false;
+  console.log({useRecaptcha})
+  console.log(useRecaptcha == false)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!token) {
+    if (!token && useRecaptcha) {
       setCaptchaError("Please complete the captcha");
       return;
     }
@@ -34,7 +37,8 @@ const Login = () => {
   // guest log in
   const { guestLogin, guestLoginError, guestIsLoading } = useGuestLogin();
   const handleGuestLogin = async () => {
-    if (!token) {
+    console.log("guest logging?")
+    if (!token && useRecaptcha) {
       setCaptchaError("Please complete the captcha");
       return;
     }
@@ -103,12 +107,12 @@ const Login = () => {
                 Continue as Guest
               </MDBBtn>
             </form>
-            <ReCAPTCHA
+            {useRecaptcha ? <ReCAPTCHA
               className="mb-4 mx-5 w-100"
               ref={captchaRef}
               sitekey="6LeBYhkpAAAAABwRVO5QRASROAi0B80JVSs6LHWf"
               onChange={(e) => updateCaptcha(e)}
-            />
+            /> : <br />}
             <p className="ms-5">
               Don't have an account?{" "}
               <Link to="/signup" className="link-info">

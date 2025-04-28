@@ -8,5 +8,5 @@ mongoose
         console.error('Connection error', e.message)
     })
 	
-export default db = mongoose.connection
-
+const db = mongoose.connection
+export default db;

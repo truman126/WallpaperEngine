@@ -2,11 +2,16 @@ import React, { useState, useEffect } from "react";
 import api from "../api";
 import { useFilesContext } from "../hooks/useFilesContext";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { MDBBtn } from "mdb-react-ui-kit";
 
 function File(props) {
+  
   const { files, dispatch } = useFilesContext();
   const { user } = useAuthContext();
-  console.log(props.image)
+
+  if(props.image.url == null){
+    getThumbnailURL(props.image.id);
+  }
 
   async function handleDelete(id) {
     if (!user) {
@@ -15,50 +20,51 @@ function File(props) {
     const response = await api.deleteImage(id, user);
 
     const json = await response.data.data;
-
-    if (response.data.ok) {
+    if (response.status >= 200 && response.status < 300) {
       dispatch({ type: "DELETE_FILES", payload: json });
     }
   }
-  async function reloadThumbnail(id){
+  async function getThumbnailURL(imageId){
     if (!user) {
       return;
     }
-
-    const response = await api.reloadThumbnail(id, user)
-    const json = await response.data.data;
+    console.log({response})
+    const response = await api.reloadThumbnail(imageId, user)
+    const json = await response.data.imageKey;
+    console.log({response})
 
     dispatch({ type: "UPDATE_FILE", payload:json });
-    return json.data.url;
+    return json.imageKey.url;
     
   }
+
   return (
     <div className="file-details container">
       {!props.image.url ? (
         <section className="loader"></section>
       ) : (
         <img src={props.image.url}
-        onError={({currentTarget}) => {
+        // onError={({currentTarget}) => {
+        //   currentTarget.onError = null; // prevents looping
+
+        //   const url = reloadThumbnail(props.image._id, user);
+        //   currentTarget.src= url;
           
-          currentTarget.onError = null; // prevents looping
-          const url = reloadThumbnail(props.image._id, user);
-          currentTarget.src= url;
-          
-        }}
+        // }}
         />
       )}
       <p>{props.image.name}</p>
-      <button
-        variant="danger"
+      <MDBBtn
+        color="danger"
         id={props.image.key}
-        className="delete"
+        className="delete me-1"
         type="button"
         onClick={() => {
           handleDelete(props.image._id);
         }}
       >
         &#x2715;
-      </button>
+      </MDBBtn>
     </div>
   );
 }

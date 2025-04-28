@@ -1,11 +1,11 @@
-import ImageKey from "../models/image-model";
+import ImageKey from "../models/image-model.js";
 import path from "path";
 import fs from "fs";
 import admz from "adm-zip";
 
 
 // POST '/api/submit'
-async function createZipFile(path) {
+export default async function createZipFile(path) {
 
   // Directory where the users wallpapers are stored
   const zipFileName = path + 'wallpapers.zip'
@@ -26,4 +26,3 @@ async function createZipFile(path) {
   return data;
 };
 
-export default createZipFile;

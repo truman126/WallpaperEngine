@@ -1,7 +1,7 @@
-const { v4: uuidv4 } = require('uuid');
-const mongoose = require('mongoose');
-const bcrypt = require ('bcrypt');
-const validator = require('validator');
+import { v4 as uuidv4 } from 'uuid';
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+import validator from 'validator';
 
 
 const Schema = mongoose.Schema
@@ -89,5 +89,6 @@ userSchema.statics.guestLogin = async function(){
     const user = await this.create({guest: true})
     return user;
 }
+const User = mongoose.model('User', userSchema);
 
-module.exports = mongoose.model('User', userSchema)
+export default User;
