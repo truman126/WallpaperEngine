@@ -24,15 +24,6 @@ async function uploadImageKey(user_id, fileInfo) {
         // let thumb_url = null;
         const keyName = file.key;
 
-        // const bucketParams = {
-        //     Key: "thumbnails/resized-" + keyName,
-        //     Bucket: process.env.AWS_S3_BUCKET_NAME_RESIZED,
-        // };
-
-        // await S3Controller.checkHeadObject(bucketParams);
-
-        // thumb_url = await S3Controller.getSignedThumbnailURL(bucketParams);
-
         let newKey = new ImageKey({
             key: keyName,
             user_id,
@@ -180,28 +171,24 @@ async function downloadImages(user_id, download_path) {
 };
 //TODO:implement
 async function getThumbnail(userId, imageId) {
-    return null;
-    // console.log("CALLING THUMBNAIL THING");
-    // const key = await ImageKey.findOne({ _id: imageId });
+    const imageKey = await ImageKey.findOne({ _id: imageId });
 
-    // const bucketParams = {
-    //     Bucket: process.env.AWS_S3_BUCKET_NAME_RESIZED,
-    //     Key: "thumbnails/resized-" + key.key,
-    // };
-    // try {
+    const bucketParams = {
+            Key: "thumbnails/resized-" + imageKey.key,
+            Bucket: process.env.AWS_S3_BUCKET_NAME_RESIZED,
+        };
 
-    //     // returns signed url of thumbnail from s3
-    //     const new_url = await S3Controller.getSignedThumbnailURL(bucketParams);
+    
+    await S3Controller.checkHeadObject(bucketParams);
 
-    //     // update thumbnail url in mongo
-    //     const updatedKey = await ImageKey.findOneAndUpdate(
-    //         { _id: imageId },
-    //         { $set: { url: new_url } }
-    //     );
-    //     return updatedKey;
-    // } catch (e) {
-    //     console.log(e);
-    // }
+    const thumbnail_url = await S3Controller.getSignedThumbnailURL(bucketParams);
+
+    const updatedKey = await ImageKey.findOneAndUpdate(
+        { _id: imageId },
+        { $set: { url: thumbnail_url } }
+    );
+
+    return updatedKey;
 };
 
 const AWSDAO = { uploadImageKey, deleteImage, deleteAllImages, deleteImageKey, deleteAllImageKeys, getAllImages, downloadImages, getThumbnail };

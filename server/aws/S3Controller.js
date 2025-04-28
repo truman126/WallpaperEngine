@@ -38,7 +38,7 @@ async function deleteAllThumbnailImagesFromS3(params) {
   await s3Clients.s3ThumbnailClient.send(new DeleteObjectsCommand(params));
 }
 
-
+//TODO: Move this loop upstream so its more clear that this is happening
 async function checkHeadObject(params) {
 
 
@@ -46,7 +46,7 @@ async function checkHeadObject(params) {
   const headObject = await new HeadObjectCommand(params);
 
   //temp solution to check if the thumbnail exists
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 10; i++) {
     const exists = await s3Clients.s3ThumbnailClient
       .send(headObject)
       .catch((err) => console.log(err));

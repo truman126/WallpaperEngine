@@ -73,16 +73,18 @@ import DAOFactory from '../services/DAOFactory.js';
         }
 
     };
-    export async function getThumbnail(request, response) {
+    export function getThumbnail(request, response) {
         
         try {
             const userId = request.user._id;
             const imageId = request.params.id;
 
-            const updatedKey = await DAO.getThumbnail(userId, imageId);
+
+            const updatedKey = DAO.getThumbnail(userId, imageId);
             
 
-            response.status(200).json({ ok: true, data: updatedKey });
+            response.status(200);
+            response.send({imageKey: updatedKey});
 
 
         }
