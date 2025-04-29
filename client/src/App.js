@@ -14,6 +14,7 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import { UserBar } from "./components";
 import { useAuthContext } from "./hooks/useAuthContext";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   const { user } = useAuthContext()
@@ -27,11 +28,15 @@ function App() {
 
         <div className="pages">
           <Routes>
+            
             <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
 
             <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
 
             <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
+
+            <Route path="/admin" element={!user ? <AdminDashboard /> : <Navigate to="/" />} />
+
           </Routes>
         </div>
       </BrowserRouter>

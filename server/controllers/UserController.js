@@ -17,8 +17,9 @@ const createToken = (_id) => {
 
       res.status(200).json({ email, token });
     } catch (error) {
+      console.log(error)
       res.status(500)
-      res.send({error: "Error signing in guest user."})
+      res.send({error: error.toString()})
     }
   };
 

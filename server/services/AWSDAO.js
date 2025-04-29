@@ -171,8 +171,15 @@ async function downloadImages(user_id, download_path) {
 };
 //TODO:implement
 async function getThumbnail(userId, imageId) {
+    if (!imageId || imageId === 'undefined'){
+        throw new Error("no image id");
+    }
+    if (!userId || userId === 'undefined'){
+        throw new Error("No user")
+    }
+    console.log({imageId, userId})
+    
     const imageKey = await ImageKey.findOne({ _id: imageId });
-
     const bucketParams = {
             Key: "thumbnails/resized-" + imageKey.key,
             Bucket: process.env.AWS_S3_BUCKET_NAME_RESIZED,
@@ -187,7 +194,6 @@ async function getThumbnail(userId, imageId) {
         { _id: imageId },
         { $set: { url: thumbnail_url } }
     );
-
     return updatedKey;
 };
 

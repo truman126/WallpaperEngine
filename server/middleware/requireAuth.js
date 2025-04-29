@@ -10,7 +10,6 @@ export default async function requireAuth(req, res, next){
   }
 
   const token = authorization.split(' ')[1];
-
   try{
     const {_id} = jwt.verify(token, process.env.SECRET);
 

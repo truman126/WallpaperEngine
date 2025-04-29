@@ -1,5 +1,5 @@
 import express from "express";
-
+import { getUsers } from "../controllers/AdminController.js";
 
 // Controllers
 
@@ -14,7 +14,7 @@ router.use(requireAuth)
 
 
 //GETS all image keys to display images
-router.get("/admin/getUsers", );
+router.get("/admin/getUsers", getUsers );
 
 
 export default router;

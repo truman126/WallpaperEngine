@@ -27,7 +27,6 @@ import DAOFactory from '../services/DAOFactory.js';
             await DAO.deleteImage(user_id, id);
             const key = await DAO.deleteImageKey(user_id, id);
 
-            console.log({key})
             response.status(200);
             response.send({data: key});
 
@@ -62,7 +61,6 @@ import DAOFactory from '../services/DAOFactory.js';
         try {
             const user_id = request.user._id;
             const images = await DAO.getAllImages(user_id)
-            console.log(images)
             response.status(200);
             response.send({data:images});
 
@@ -73,16 +71,17 @@ import DAOFactory from '../services/DAOFactory.js';
         }
 
     };
-    export function getThumbnail(request, response) {
+    export async function getThumbnail(request, response) {
         
         try {
+            console.log(request.params)
             const userId = request.user._id;
             const imageId = request.params.id;
 
 
-            const updatedKey = DAO.getThumbnail(userId, imageId);
+            const updatedKey = await DAO.getThumbnail(userId, imageId);
             
-
+            console.log({updatedKey})
             response.status(200);
             response.send({imageKey: updatedKey});
 

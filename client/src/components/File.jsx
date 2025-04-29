@@ -9,9 +9,7 @@ function File(props) {
   const { files, dispatch } = useFilesContext();
   const { user } = useAuthContext();
 
-  if(props.image.url == null){
-    getThumbnailURL(props.image.id);
-  }
+ 
 
   async function handleDelete(id) {
     if (!user) {
@@ -28,16 +26,22 @@ function File(props) {
     if (!user) {
       return;
     }
-    console.log({response})
+    
     const response = await api.reloadThumbnail(imageId, user)
-    const json = await response.data.imageKey;
-    console.log({response})
+    await response.data;
+    if (response.status >= 200 && response.status < 300) {
 
-    dispatch({ type: "UPDATE_FILE", payload:json });
-    return json.imageKey.url;
+      dispatch({ type: "UPDATE_FILE", payload:response.data.imageKey });
+      return response.data.imageKey.url;
+    }
+    
     
   }
-
+ 
+  if(props.image.url == null && props.image._id){
+    
+    getThumbnailURL(props.image._id);
+  }
   return (
     <div className="file-details container">
       {!props.image.url ? (

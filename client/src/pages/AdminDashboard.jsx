@@ -1,9 +1,9 @@
 import api from "../api";
-
-
-function AdminDashBoard(props) {
+import { useAuthContext } from "../hooks/useAuthContext";
+function AdminDashboard(props) {
     const { user } = useAuthContext();
-
+    const userList = []
+    console.log("from ad dash" , user)
 
     async function loadData() {
         const response = await api.getUsers(user);
@@ -12,7 +12,7 @@ function AdminDashBoard(props) {
     async function handleDeleteAll() {
         const response = await api.deleteAllImages(user);
     }
-
+    
     return (
         <>
             <ul>
@@ -28,7 +28,7 @@ function AdminDashBoard(props) {
         </>
     );
 }
-
+export default AdminDashboard;
 /***
  * What to add
  * -list of all users,
