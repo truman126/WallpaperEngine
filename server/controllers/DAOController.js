@@ -60,7 +60,7 @@ import DAOFactory from '../services/DAOFactory.js';
         
         try {
             const user_id = request.user._id;
-            const images = await DAO.getAllImages(user_id)
+            const images = await DAO.getAllImages(user_id);
             response.status(200);
             response.send({data:images});
 

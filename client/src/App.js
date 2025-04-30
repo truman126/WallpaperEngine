@@ -15,10 +15,10 @@ import Login from "./pages/Login";
 import { UserBar } from "./components";
 import { useAuthContext } from "./hooks/useAuthContext";
 import AdminDashboard from "./pages/AdminDashboard";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
-  const { user } = useAuthContext()
-
+  const { user } = useAuthContext();
   return (
     <div className="App">
 
@@ -28,14 +28,31 @@ function App() {
 
         <div className="pages">
           <Routes>
-            
-            <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} />
+
+            {/* <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} /> */}
+            <Route path="/" element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route path="/admin" element={
+                <ProtectedRoute>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
 
             <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
 
             <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
 
-            <Route path="/admin" element={!user ? <AdminDashboard /> : <Navigate to="/" />} />
+            <Route path="*" element={<h1>Page not found</h1>} />
+            <Route path="/nouser" element={<h1>User not authorized</h1>} />
+
+
+
 
           </Routes>
         </div>

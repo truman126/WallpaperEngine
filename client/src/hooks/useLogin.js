@@ -15,8 +15,6 @@ export const useLogin = () => {
       .login(payload)
       .then((res) => {
 
-        console.log("No Login Error")
-        console.log(res)
         const data = res.data
         setIsLoading(false);
 

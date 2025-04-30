@@ -49,12 +49,15 @@ async function checkHeadObject(params) {
   for (let i = 0; i < 10; i++) {
     const exists = await s3Clients.s3ThumbnailClient
       .send(headObject)
-      .catch((err) => console.log(err));
+      .catch((err) =>{console.log(`Failed thumbnail fetch attempt ${i+1}`); });
 
     if (exists) {
       break;
     }
+    console.log("timeout")
     await new Promise((r) => setTimeout(r, 1500));
+    console.log("done timeout")
+
   }
 
 

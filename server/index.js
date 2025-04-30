@@ -3,6 +3,7 @@ import cors from 'cors';
 import bodyParser from "body-parser";
 import db from "./db/index.js";
 import imageRouter from "./routes/image-router.js";
+import adminRouter from "./routes/admin.js";
 import userRouter from "./routes/user.js";
 import dotenv from 'dotenv';  // Import dotenv
 import path from 'path';
@@ -36,6 +37,7 @@ app.get("/", (req, res) => {
   res.send("hello");
 });
 app.use("/api/user", userRouter);
+app.use("/api/admin", adminRouter)
 
 app.use("/api", imageRouter);
 

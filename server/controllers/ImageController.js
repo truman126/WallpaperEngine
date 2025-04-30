@@ -1,4 +1,4 @@
-import Downloader from '../services/Downloader.js';
+import createZipFile from '../services/Downloader.js';
 import {makeDirectory, emptyDirectory, directoryExists} from '../utils/FileUtils.js';
 import generateWallpapers from '../services/WallpaperMaker.js';
 import DAOFactory from '../services/DAOFactory.js';
@@ -36,17 +36,22 @@ export default async function createWallpapers(request, response) {
       await makeDirectory(user_directory_wallpapers);
 
     }
-    // await FileUtils.emptyDirectory(user_directory_images)
-    // await FileUtils.emptyDirectory(user_directory_wallpapers)
+    console.log("emptying directories")
+    await emptyDirectory(user_directory_images);
+    await emptyDirectory(user_directory_wallpapers);
+    console.log("done emptying directories")
 
     // DAO download images
-    await DAO.downloadImages(user_id, user_directory_images)
+    let downloaded = await DAO.downloadImages(user_id, user_directory_images)
+
+    // await downloaded
+
 
     // await new Promise(r => setTimeout(r, 2000));
     await generateWallpapers(user_id, user_directory_images, user_directory_wallpapers, canvasWidth, canvasHeight, frameScale, fileType, colour)
     // await new Promise(r => setTimeout(r, 2000));
 
-    const zipFile = await Downloader.createZipFile(user_directory_images);
+    const zipFile = await createZipFile(user_directory_wallpapers);
 
 
 
@@ -59,13 +64,13 @@ export default async function createWallpapers(request, response) {
     response.set("Content-Length", zipFile.length);
     response.send(zipFile);
     response.status(200);
+
+    emptyDirectory(user_directory_images)
+    emptyDirectory(user_directory_wallpapers)
   }
   catch (error) {
     console.log(error)
     response.status(500)
   }
-
-  // FileUtils.emptyDirectory(user_directory_images)
-  // FileUtils.emptyDirectory(user_directory_wallpapers)
 
 }

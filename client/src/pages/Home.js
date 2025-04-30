@@ -20,10 +20,10 @@ const Home = () => {
         </div>
       )}
       <MDBContainer fluid style={{ visibility: isLoading ? "hidden" : "" }}>
-        
+
         <MDBRow>
           <MDBCol className="sm-6">
- <FileSelector className=" mx-5" setLoading={setIsLoading} />
+            <FileSelector className=" mx-5" setLoading={setIsLoading} />
           </MDBCol>
           <MDBCol className="sm-6">
             <Options className="mx-5 w-100" setLoading={setIsLoading} />

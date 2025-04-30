@@ -58,7 +58,7 @@ userSchema.statics.signup = async function(email, password) {
     if (!validator.isEmail(email)){
         throw Error('Email is not valid.')
     }
-    console.log("mongo was fine")
+    
     // if (!validator.isStrongPassword(password, {minLength: 8})){
     //     throw Error('Password not strong enough. Password must be at least 8 characters long')
     // }
@@ -71,15 +71,12 @@ userSchema.statics.signup = async function(email, password) {
         console.log("just to check this isnt causing error")
         throw Error('Email already in use.')
      }
-    console.log("salt and hashing")
+   
     
-    const salt = await bcrypt.genSalt(10);    
-    console.log("salt is ready? ", salt);
+    const salt = await bcrypt.genSalt(10);   
     const hash = await bcrypt.hash(password,salt);
-    console.log("seasoned")
 
     const user = await this.create({ email, password: hash })
-    console.log("USER###", user)
 
     return user;
 }

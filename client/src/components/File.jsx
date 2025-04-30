@@ -9,8 +9,6 @@ function File(props) {
   const { files, dispatch } = useFilesContext();
   const { user } = useAuthContext();
 
- 
-
   async function handleDelete(id) {
     if (!user) {
       return;

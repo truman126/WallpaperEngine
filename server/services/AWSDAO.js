@@ -133,7 +133,7 @@ async function downloadImages(user_id, download_path) {
         return new Promise((resolve, reject) => {
 
             const file = Body.pipe(
-                fs.createWriteStream(path + key)
+                fs.createWriteStream(download_path + key)
             );
 
             file.on("finish", () => {
@@ -141,6 +141,8 @@ async function downloadImages(user_id, download_path) {
             });
             file.on("error", reject);
         });
+
+
     };
 
 
@@ -156,15 +158,7 @@ async function downloadImages(user_id, download_path) {
         promises.push(make_promise(image.key));
 
     }
-    const all = Promise.all(promises);
-
-    all
-        .then((values) => {
-            console.log("images downloaded")
-        })
-        .catch((error) => {
-            console.log(error); // rejectReason of any first rejected promise
-        });
+    const all = await Promise.all(promises);
 
     return true;
 

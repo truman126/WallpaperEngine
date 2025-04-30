@@ -28,7 +28,7 @@ export default async function generateWallpapers(user_id, user_directory_images,
       const canvas = createCanvas(canvasWidth, canvasHeight);
       const context = canvas.getContext("2d");
 
-
+      console.log("loading + ", user_directory_images + keys[i].key)
       let image = await loadImage(user_directory_images + keys[i].key).then((image) => {
         return image;
       });
