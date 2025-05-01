@@ -21,6 +21,10 @@ const userSchema = new Schema({
     guest: {
         type: Boolean,
         required:false,
+    },
+    admin: {
+        type: Boolean,
+        required:true
     }
 })
 
@@ -66,17 +70,17 @@ userSchema.statics.signup = async function(email, password) {
 
     const exists = await this.findOne({ email })
 
-    console.log(exists, password);
     if (exists){
-        console.log("just to check this isnt causing error")
         throw Error('Email already in use.')
-     }
-   
-    
+    }
+    console.log(process.env.ROOT_USER_EMAIL)
+    console.log(email === process.env.ROOT_USER_EMAIL)
+    const isAdmin = (email === process.env.ROOT_USER_EMAIL ? true : false);
+    console.log({isAdmin})
     const salt = await bcrypt.genSalt(10);   
     const hash = await bcrypt.hash(password,salt);
 
-    const user = await this.create({ email, password: hash })
+    const user = await this.create({ email, password: hash , admin: isAdmin })
 
     return user;
 }

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
+// import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
 
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./index.css";
+// import "bootstrap/dist/css/bootstrap.min.css";
+// import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+
 import 'react-tooltip/dist/react-tooltip.css'
 import "react-toggle/style.css";
-import 'mdb-react-ui-kit/dist/css/mdb.min.css';
-// import "@fortawesome/fontawesome-free/css/all.min.css";
 
+import "./index.css";
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
