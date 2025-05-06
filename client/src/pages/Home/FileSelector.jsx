@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import File from "./File";
-import api from "../api";
-import { useFilesContext } from "../hooks/useFilesContext";
-import { useAuthContext } from "../hooks/useAuthContext";
+import api from "../../api";
+import { useFilesContext } from "../../hooks/useFilesContext";
+import { useAuthContext } from "../../hooks/useAuthContext";
 import { Tooltip } from "react-tooltip";
 import { MDBBtn, MDBFile } from "mdb-react-ui-kit";
 

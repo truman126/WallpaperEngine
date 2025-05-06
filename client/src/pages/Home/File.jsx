@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import api from "../api";
-import { useFilesContext } from "../hooks/useFilesContext";
-import { useAuthContext } from "../hooks/useAuthContext";
+import api from "../../api";
+import { useFilesContext } from "../../hooks/useFilesContext";
+import { useAuthContext } from "../../hooks/useAuthContext";
 import { MDBBtn } from "mdb-react-ui-kit";
 
 function File(props) {

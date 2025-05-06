@@ -57,8 +57,9 @@ import DAOFactory from '../services/DAOFactory.js';
         }
     };
     export async function getAllImages(request, response) {
-        
+
         try {
+            console.log(request.user)
             const user_id = request.user._id;
             const images = await DAO.getAllImages(user_id);
             response.status(200);
@@ -66,6 +67,7 @@ import DAOFactory from '../services/DAOFactory.js';
 
         }
         catch (error) {
+            console.log(error)
             response.sendStatus(500, "Error getting all images")
 
         }

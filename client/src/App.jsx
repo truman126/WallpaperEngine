@@ -4,16 +4,21 @@ import React, { useState } from "react";
 // import "bootstrap/dist/css/bootstrap.min.css";
 // import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 
-import 'react-tooltip/dist/react-tooltip.css'
-import "react-toggle/style.css";
+// import 'react-tooltip/dist/react-tooltip.css'
+// import "react-toggle/style.css";
 
-import "./index.css";
+// import "./index.css";
+import "./styles.css";
+
+
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Home from "./pages/Home";
+import Home from "./pages/Home/Home";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
-import { UserBar } from "./components";
+import UserBar from "./components/UserBar";
+import Header from "./components/Header";
+
 import { useAuthContext } from "./hooks/useAuthContext";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
@@ -25,7 +30,7 @@ function App() {
 
       <BrowserRouter basename="/">
 
-        <UserBar />
+        <Header />
 
         <div className="pages">
           <Routes>

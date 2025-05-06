@@ -1,8 +1,8 @@
 import { useState, useRef } from "react";
-import { useLogin } from "../hooks/useLogin";
-import { Link } from "react-router-dom";
+import { useSignup } from "../hooks/useSignup";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useGuestLogin } from "../hooks/useGuestLogin";
+import { Link } from "react-router-dom";
 import {
   MDBBtn,
   MDBContainer,
@@ -12,18 +12,22 @@ import {
 } from "mdb-react-ui-kit";
 import {
   example1,
-  example2
+  example2,
+  example3,
+  example4,
+  example5,
 } from "../img/carousel";
 
-const Login = () => {
-  // log in
+
+const Signup = () => {
+  //sign up
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, loginError, loginIsLoading } = useLogin();
+  const { signup, signupError, signupIsLoading } = useSignup();
 
-  const useRecaptcha = process.env.REACT_APP_USE_RECAPTCHA === 'true' ? true : false;
-  console.log({useRecaptcha})
-  console.log(useRecaptcha == false)
+  const useRecaptcha = import.meta.env.VITE_USE_RECAPTCHA === 'true' ? true : false;
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -31,13 +35,13 @@ const Login = () => {
       setCaptchaError("Please complete the captcha");
       return;
     }
-    await login(email, password, token);
+
+    await signup(email, password, token);
   };
 
   // guest log in
   const { guestLogin, guestLoginError, guestIsLoading } = useGuestLogin();
   const handleGuestLogin = async () => {
-    console.log("guest logging?")
     if (!token && useRecaptcha) {
       setCaptchaError("Please complete the captcha");
       return;
@@ -61,8 +65,8 @@ const Login = () => {
             {captchaError && (
               <div className="error mb-4 mx-5 w-100">{captchaError}</div>
             )}
-            {loginError && (
-              <div className="error mb-4 mx-5 w-100">{loginError}</div>
+            {signupError && (
+              <div className="error mb-4 mx-5 w-100">{signupError}</div>
             )}
             {guestLoginError && (
               <div className="error mb-4 mx-5 w-100">{guestLoginError}</div>
@@ -71,7 +75,7 @@ const Login = () => {
               className="fw-normal mb-3 ps-5 pb-3"
               style={{ letterSpacing: "1px" }}
             >
-              Log in
+              Sign up
             </h3>
             <form onSubmit={handleSubmit}>
               <MDBInput
@@ -94,11 +98,11 @@ const Login = () => {
               />
 
               <MDBBtn type="submit" className="mb-4 px-5 mx-5 w-100" color="info" size="lg">
-                Login
+                Sign up
               </MDBBtn>
               <hr className="hr mb-4 px-5 mx-5 w-100" />
               <MDBBtn
-              type="button"
+                type="button"
                 className="mb-4 px-5 mx-5 w-100"
                 color="info"
                 size="lg"
@@ -114,10 +118,9 @@ const Login = () => {
               onChange={(e) => updateCaptcha(e)}
             /> : <br />}
             <p className="ms-5">
-              Don't have an account?{" "}
-              <Link to="/signup" className="link-info">
-                  Register here
-                
+              Already have an account?{" "}
+              <Link to="/login" className="link-info">
+                Log in here
               </Link>
             </p>
           </div>
@@ -142,4 +145,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

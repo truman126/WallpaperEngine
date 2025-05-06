@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import api from "../api";
-import { useAuthContext } from "../hooks/useAuthContext";
+import api from "../../api";
+import { useAuthContext } from "../../hooks/useAuthContext";
 import {
   MDBBtn,
   MDBContainer,
@@ -9,7 +9,6 @@ import {
   MDBRadio,
   MDBInput,
 } from "mdb-react-ui-kit";
-import * as ratioExampleImages from "../img/ratioexamples/ratios.js";
 
 function Options(props) {
   const [customColourPicker, setCustomColourPicker] = useState(false);
@@ -189,7 +188,7 @@ function Options(props) {
           <MDBRow>
             <MDBRow className="w-auto">
               <img
-                src={require(`../img/ratioexamples/${borderRatio}.png`)}
+                // src={import.meta.glob(`../../img/ratioexamples/${borderRatio}.png`)}
                 style={{ height: "100px" }}
               />
             </MDBRow>
