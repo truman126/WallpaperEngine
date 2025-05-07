@@ -50,7 +50,7 @@ const Login = () => {
     <div className='flex'>
 
       <div className='flex w-1/2 justify-center'>
-        <div className='flex flex-col w-96 space-y-8 m-10'>
+        <div className='flex flex-col w-1/2 space-y-8 m-10'>
           {captchaError && (
             <Error className="error mb-4 mx-5 w-full" message={captchaError} />
           )}
