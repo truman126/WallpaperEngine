@@ -86,8 +86,9 @@ userSchema.statics.signup = async function(email, password) {
 }
 
 userSchema.statics.guestLogin = async function(){
-
-    const user = await this.create({guest: true})
+    console.log("creating")
+    const user = await this.create({guest: true, admin:false})
+    console.log({user})
     return user;
 }
 const User = mongoose.model('User', userSchema);

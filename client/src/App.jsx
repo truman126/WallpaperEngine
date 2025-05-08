@@ -14,8 +14,8 @@ import "./styles.css";
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home/Home";
-import Signup from "./pages/Signup";
-import Login from "./pages/Login";
+import AuthPage from "./pages/AuthPage";
+
 import UserBar from "./components/UserBar";
 import Header from "./components/Header";
 
@@ -50,9 +50,9 @@ function App() {
               }
             />
 
-            <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
+            <Route path="/login" element={!user ? <AuthPage type="Login" /> : <Navigate to="/" />} />
 
-            <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
+            <Route path="/signup" element={!user ? <AuthPage type="Signup" /> : <Navigate to="/" />} />
 
             <Route path="*" element={<h1>Page not found</h1>} />
             <Route path="/nouser" element={<h1>User not authorized</h1>} />

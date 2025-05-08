@@ -61,7 +61,9 @@ import DAOFactory from '../services/DAOFactory.js';
         try {
             console.log(request.user)
             const user_id = request.user._id;
+            console.log({DAO})
             const images = await DAO.getAllImages(user_id);
+            console.log({images})
             response.status(200);
             response.send({data:images});
 

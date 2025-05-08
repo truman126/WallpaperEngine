@@ -4,7 +4,6 @@ import api from "../../api";
 import { useFilesContext } from "../../hooks/useFilesContext";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { Tooltip } from "react-tooltip";
-import { MDBBtn, MDBFile } from "mdb-react-ui-kit";
 
 function FileSelector(props) {
   const [error, setError] = useState();
@@ -86,24 +85,24 @@ function FileSelector(props) {
         </h3>
 
         {files && files.length > 0 && (
-          <MDBBtn
-            className="delete me-1"
+          <button
+            className="btn btn-secondary delete me-1"
             color="danger"
             onClick={() => {
               handleDeleteAll();
             }}
           >
             Delete all
-          </MDBBtn>
+          </button>
         )}
 
-        <Tooltip
+        {/* <Tooltip
           className="reacttooltip"
           id="file-types"
           place="bottom"
           style={{ backgroundColor: "var(--primary)" }}
           content="Currently supporting JPEG and PNG image types."
-        />
+        /> */}
       </div>
 
       <div className="px-4 py-4 mx-2 file-list">
@@ -116,7 +115,7 @@ function FileSelector(props) {
             </div>
           
       </div>
-      <MDBBtn as="form" onClick={()=>fileInputRef.current.click()}>
+      <button className="btn btn-primary" as="form" onClick={()=>fileInputRef.current.click()}>
         <label className="">
           Upload Files
           <input
@@ -129,7 +128,7 @@ function FileSelector(props) {
             ref={fileInputRef}
           />
         </label>
-      </MDBBtn>
+      </button>
       
       </>
         )}

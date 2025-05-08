@@ -41,32 +41,36 @@ function File(props) {
     getThumbnailURL(props.image._id);
   }
   return (
-    <div className="file-details container">
-      {!props.image.url ? (
-        <section className="loader"></section>
-      ) : (
-        <img src={props.image.url}
-        // onError={({currentTarget}) => {
-        //   currentTarget.onError = null; // prevents looping
-
-        //   const url = reloadThumbnail(props.image._id, user);
-        //   currentTarget.src= url;
-          
-        // }}
-        />
-      )}
-      <p>{props.image.name}</p>
-      <MDBBtn
-        color="danger"
-        id={props.image.key}
-        className="delete me-1"
-        type="button"
-        onClick={() => {
-          handleDelete(props.image._id);
-        }}
-      >
-        &#x2715;
-      </MDBBtn>
+    <div className="flex justify-between">
+      <div className="flex">
+        {!props.image.url ? (
+          <section className="loader"></section>
+        ) : (
+          <img src={props.image.url}
+          // onError={({currentTarget}) => {
+          //   currentTarget.onError = null; // prevents looping
+          //   const url = reloadThumbnail(props.image._id, user);
+          //   currentTarget.src= url;
+        
+          // }}
+          />
+        )}
+      </div>
+      <div className="flex">
+        <p>{props.image.name}</p>
+      </div>
+      <div className="flex">
+        <button
+          id={props.image.key}
+          className="btn btn-secondary delete me-1"
+          type="button"
+          onClick={() => {
+            handleDelete(props.image._id);
+          }}
+        >
+          &#x2715;
+        </button>
+      </div>
     </div>
   );
 }

@@ -45,14 +45,15 @@ const createToken = (_id) => {
 
   export async function guestLoginUser(req,res){
     try {
-      
+      console.log("creating user")
       const user = await User.guestLogin();
-
+      console.log({user})
       //create a token
       const token = createToken(user._id);
       res.status(200).json({ token });
     } catch (error) {
       res.status(500)
+      console.log(error)
       res.send({error: "Error signing in guest user."})
     }
   };
