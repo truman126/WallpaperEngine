@@ -9,7 +9,7 @@ import { Captcha } from "./Captcha";
 import {
   example1,
   example2
-} from "../img/carousel";
+} from "../assets/images/carousel";
 import InputAnimated from "../components/InputAnimated";
 
 function AuthPage(props) {

@@ -7,6 +7,8 @@
 }
 :root {
   --primary: #3B71CA;
+  --secondary: #DC4C64;
+
   --light-background: #fafafa; /*background*/
   --dark-background: #1f2023;
 }
@@ -19,14 +21,26 @@ body{
 
 } 
 
-
-h2 {
-  @apply text-2xl;
+h1{
+  @apply text-3xl max-sm:text-base;
 }
+h2 {
+  @apply text-3xl;
+}
+h3{
+  @apply text-2xl;
 
+}
+h4{
+  @apply text-xl;
 
+}
 .btn-primary {
   background-color:var(--primary);
+  color:white;
+}
+.btn-secondary {
+  background-color: var(--secondary);
   color:white;
 }
 

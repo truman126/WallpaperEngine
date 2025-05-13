@@ -10,26 +10,26 @@ const Home = () => {
   }, [isLoading]);
 
   return (
-    <>
+    <div className="h-full">
       {isLoading && (
-        <div className="loading">
-          <section className="loader"></section>
+        <div className="h-1/2 flex justify-center items-center">
+          <div className="flex-none loading loading-spinner w-24 h-24"></div>
         </div>
       )}
-      <div className="flex w-full" style={{ visibility: isLoading ? "hidden" : "" }}>
+      <div className="flex flex-row flex-wrap justify-evenly h-full" style={{ visibility: isLoading ? "hidden" : "" }}>
 
-        
-            <div className="card rounded-box grid h-20 grow place-items-center">
-              <FileSelector className=" mx-5" setLoading={setIsLoading} />
-            </div>
-            <div className="divider divider-horizontal"></div>
-            <div className="card rounded-box grid h-20 grow place-items-center">
-              <Options className="mx-5 w-100" setLoading={setIsLoading} />
-            </div>
-          
-        
+
+
+        <FileSelector setLoading={setIsLoading} />
+
+        {/* <div className="divider divider-horizontal"></div> */}
+
+        <Options setLoading={setIsLoading} />
+
+
+
       </div>
-    </>
+    </div>
   );
 };
 

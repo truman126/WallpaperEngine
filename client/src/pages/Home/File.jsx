@@ -41,12 +41,12 @@ function File(props) {
     getThumbnailURL(props.image._id);
   }
   return (
-    <div className="flex justify-between">
-      <div className="flex">
+    <div className="flex bg-base-100 p-2 my-1 rounded-md justify-between border border-slate-300">
+      <div className="h-16 w-16 flex-none bg-red my-auto">
         {!props.image.url ? (
-          <section className="loader"></section>
+          <span className="loading loading-spinner h-full w-2/3"></span>
         ) : (
-          <img src={props.image.url}
+          <img className='h-full w-full object-scale-down' src={props.image.url}
           // onError={({currentTarget}) => {
           //   currentTarget.onError = null; // prevents looping
           //   const url = reloadThumbnail(props.image._id, user);
@@ -56,19 +56,19 @@ function File(props) {
           />
         )}
       </div>
-      <div className="flex">
-        <p>{props.image.name}</p>
-      </div>
-      <div className="flex">
+      <span className=" my-auto items-center overflow-x-hidden">
+        {props.image.name}
+      </span>
+      <div className="flex-none my-auto">
         <button
           id={props.image.key}
-          className="btn btn-secondary delete me-1"
+          className="btn btn-secondary btn-square"
           type="button"
           onClick={() => {
             handleDelete(props.image._id);
           }}
         >
-          &#x2715;
+          X
         </button>
       </div>
     </div>

@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import "./styles.css";
+
 // import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
 
 // import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,7 +10,6 @@ import React, { useState } from "react";
 // import "react-toggle/style.css";
 
 // import "./index.css";
-import "./styles.css";
 
 
 
@@ -26,18 +27,18 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 function App() {
   const { user } = useAuthContext();
   return (
-    <div className="App">
+    <div className="App h-screen flex flex-col">
 
       <BrowserRouter basename="/">
 
         <Header />
 
-        <div className="pages">
+        <div className="flex-1 overflow-y-auto">
           <Routes>
 
             {/* <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} /> */}
             <Route path="/" element={
-                <ProtectedRoute>
+                <ProtectedRoute className="bg-green-100">
                   <Home />
                 </ProtectedRoute>
               }

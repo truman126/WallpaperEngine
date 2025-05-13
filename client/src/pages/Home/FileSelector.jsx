@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import File from "./File";
 import api from "../../api";
 import { useFilesContext } from "../../hooks/useFilesContext";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { Tooltip } from "react-tooltip";
 
 function FileSelector(props) {
   const [error, setError] = useState();
@@ -38,16 +37,16 @@ function FileSelector(props) {
         setError("Only files sizes under 10MB are allowed.");
         return;
       } else if (image.type != "image/jpeg" && image.type != "image/png") {
-        
+
         setError("Unsupported file type");
         return;
       }
 
       formData.append("images", image);
       tempImages.push({ key: image.name });
-      
+
     }
-    
+
     dispatch({ type: "CREATE_FILES", payload: tempImages });
 
     const response = await api.uploadImage(formData, user);
@@ -64,7 +63,7 @@ function FileSelector(props) {
     const getData = async () => {
       const response = await api.fetchImages(user);
       const json = await response.data.data;
-      
+
       if (response.status >= 200 && response.status < 300) {
         dispatch({ type: "SET_FILES", payload: json });
       }
@@ -75,70 +74,57 @@ function FileSelector(props) {
   }, [dispatch, user]);
 
   return (
-    <div>
-    {files && (
-      <>
-      <div className="py-3">
-        <h3>
-          Files ({files && files.length})
-          <div data-tooltip-id="file-types" className="help-tip"></div>
-        </h3>
+    <div className="bg-base-300 h-5/6 min-w-1/3 rounded-xl m-5 p-5 border border-slate-200">
+      {files && (
+        <>
+          <div className="py-3">
+            <div className='flex justify-between'>
+              <h3>
+                Files ({files && files.length})
+                <div data-tooltip-id="file-types" className="help-tip"></div>
+              </h3>
+              {files && files.length > 0 && (
+                <button
+                  className="btn btn-secondary"
+                  color="danger"
+                  onClick={() => {
+                    handleDeleteAll();
+                  }}
+                >
+                  Delete all
+                </button>
+              )}
+            </div>
+          </div>
 
-        {files && files.length > 0 && (
-          <button
-            className="btn btn-secondary delete me-1"
-            color="danger"
-            onClick={() => {
-              handleDeleteAll();
-            }}
-          >
-            Delete all
-          </button>
-        )}
+          <div className="px-4 py-4 mx-2 max-h-3/4 min-h-2/3 overflow-y-scroll">
 
-        {/* <Tooltip
-          className="reacttooltip"
-          id="file-types"
-          place="bottom"
-          style={{ backgroundColor: "var(--primary)" }}
-          content="Currently supporting JPEG and PNG image types."
-        /> */}
-      </div>
-
-      <div className="px-4 py-4 mx-2 file-list">
-        
             {error && <div className="error">{error}</div>}
 
             <div className="">
               {files &&
                 files.map((file) => <File image={file} key={file.key} />)}
             </div>
-          
-      </div>
-      <button className="btn btn-primary" as="form" onClick={()=>fileInputRef.current.click()}>
-        <label className="">
-          Upload Files
-          <input
-            type="file"
-            accept="image/jpeg,image/png"
-            multiple={true}
-            onChange={
+
+          </div>
+
+
+          <fieldset className="fieldset">
+            <legend onClick={() => fileInputRef.current.click()} className="fieldset-legend">Pick a file</legend>
+            <input onChange={
               handleFileUpload
-            }
-            ref={fileInputRef}
-          />
-        </label>
-      </button>
-      
-      </>
-        )}
-        {!files && (
+            } ref={fileInputRef} multiple={true} type="file" accept="image/jpeg,image/png" className="file-input" />
+            <label className="label">Max size 10MB. JPEG/PNG only.</label>
+          </fieldset>
+        </>
+      )}
+      {!files && (
         <div className="loading">
           <section className="loader"></section>
         </div>
       )}
     </div>
-    
+
   );
 }
 

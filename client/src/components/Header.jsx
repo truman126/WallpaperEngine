@@ -8,12 +8,12 @@ function UserBar(props) {
 
     return (
 
-        <div className="navbar h-24 bg-base-100 shadow-sm px-15">
-            <div className="flex-1">
-                <Link to="/" className="min-lg:text-3xl max-sm:text-sm"><h1>Truman's Wallpaper Engine</h1></Link>
+        <div className="navbar h-24 bg-base-100 shadow-sm flex justify-between px-16">
+            <div className="overflow-hidden">
+                <Link to="/" ><h1 className="max-sm:text-sm">Truman's Wallpaper Engine</h1></Link>
             </div>
-            <div className="flex-none">
-                <ul className="menu menu-horizontal max-sm:menu-vertical gap-x-2 mx-20 align-baseline">
+            <div className="flex min-w-1/3 justify-end ">
+                <ul className="menu menu-horizontal gap-x-2">
 
                     <LightToggle />
 

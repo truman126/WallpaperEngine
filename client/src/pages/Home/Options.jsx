@@ -1,14 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import api from "../../api";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import {
-  MDBBtn,
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBRadio,
-  MDBInput,
-} from "mdb-react-ui-kit";
+const ratioImages = import.meta.glob("../../assets/images/ratioexamples/*.png", { eager: true });
 
 function Options(props) {
   const [customColourPicker, setCustomColourPicker] = useState(false);
@@ -35,6 +28,7 @@ function Options(props) {
     [1536, 864],
     [1280, 720],
   ];
+  console.log(ratioImages)
 
   function changeSizeInput(e) {
     if (e.target.name == "size") {
@@ -75,7 +69,7 @@ function Options(props) {
     props.setLoading(true);
 
     e.preventDefault();
-    
+
 
     const { colour, size, ratio, filetype } = {
       colour: customColourPicker ? customColour : "average",
@@ -85,7 +79,7 @@ function Options(props) {
     };
 
     const payload = { colour, size, ratio, filetype };
-    
+
     const response = await api.generateWallpapers(payload, user);
 
     var blob = new Blob([response.data], { type: "application/zip" });
@@ -99,135 +93,161 @@ function Options(props) {
     props.setLoading(false);
   }
 
-  const rowMargin = "py-1 my-4 mx-3";
-
+  const row = "flex flex-row flex-wrap py-2 justify-between content-center";
+  const optionTitle = 'mb-2';
+  const optionItem = 'flex flex-col mb-2';
+  const radioGroup = 'radio radio-neutral mx-2 my-1';
   return (
-    <MDBContainer className="p-3 mx-2">
-      <h3>Options</h3>
+    <div className="p-5 m-5 rounded-xl h-5/6 min-w-1/3 border border-slate-200 bg-base-300 overflow-x-auto ">
+      <h3 className='mb-4'>Options</h3>
 
       <form onSubmit={handleSubmit}>
-        <MDBRow className={rowMargin}></MDBRow>
-        <MDBRow className={rowMargin + "py-1"}>
-          <h4>Background Colour</h4>
-          <MDBRow className={rowMargin}>
-       
-       
-          <MDBCol>
-            <MDBRadio
-              name='colour'
-              type="radio"
-              id='colour1'
-              label="Use Average Colour"
-              inline
-              value="average"
-              onChange={(e) => {
-                setCustomColourPicker(false);
-              }}
-              checked={!customColourPicker}
-            />
-          </MDBCol>
-          <MDBCol>
-            <MDBRadio
-              name='colour'
-              type="radio"
-              id='colour2'
-              label="Select Colour"
-              inline
-              onChange={(e) => {
-                {
-                  setCustomColourPicker(true);
-                }
-              }}
-              checked={customColourPicker}
-            />
-          
-          {customColourPicker ? (
-            <input
-              className="w-25"
-              name="customcolour"
-              type="color"
-            
+        <div className={`${optionItem}`}>
+          <h4 className={optionTitle}>Background Colour</h4>
 
-              value={customColour}
-              onChange={(e) => setCustomColour(e.target.value)}
-            />
-          ) : null}
-          </MDBCol>
-          </MDBRow>
-        </MDBRow>
 
-        <MDBRow className={rowMargin}>
-          <h4>Image Size</h4>
-          <MDBRow className={"w-auto"}>
-            <select name="size" onChange={(e) => changeSizeInput(e)}>
+          <div className={`${row} min-h-28`} >
+            <div className="flex flex-col justify-center">
+              <div >
+
+                <input
+                  className={radioGroup}
+                  name='colour'
+                  type="radio"
+                  id='colour1'
+                  inline
+                  value="average"
+                  onChange={(e) => {
+                    setCustomColourPicker(false);
+                  }}
+                  checked={!customColourPicker}
+                /><label htmlFor="colour1" >Use Average Colour</label>
+
+              </div>
+              <div>
+
+                <input
+                  name='colour'
+                  type="radio"
+                  id='colour2'
+                  className={radioGroup}
+                  onChange={(e) => {
+                    {
+                      setCustomColourPicker(true);
+                    }
+                  }}
+                  checked={customColourPicker}
+                />
+                <label htmlFor="colour2">Custom Colour</label>
+              </div>
+            </div>
+
+
+            <div className='flex flex-col justify-center place-items-center'>
+              {customColourPicker ? (
+
+                <><p>Select colour</p>
+                  <span className="h-16 w-16 rounded-full overflow-hidden">
+                    <input
+                      className="w-16 h-16 m-0 p-0 scale-110"
+                      name="customcolour"
+                      type="color"
+                      value={customColour}
+                      onChange={(e) => setCustomColour(e.target.value)}
+                    />
+                  </span></>
+
+
+              ) : null}
+            </div>
+
+          </div>
+        </div>
+
+        <div className={optionItem}>
+          <h4 className={optionTitle}>Image Size</h4>
+          <div className={row}>
+            <select name="size" className="select select-neutral w-auto" onChange={(e) => changeSizeInput(e)}>
               {commonResolutions.map(([w, h], index) => (
                 <option name="size" value={index} key={index}>
                   {w} x {h}
                 </option>
               ))}
             </select>
-          </MDBRow>
-        </MDBRow>
-        <MDBRow className={rowMargin}>
-          <h4>Border Size</h4>
+          </div>
+        </div>
+        <div className={optionItem}>
+          <h4 className={optionTitle}>Border Size</h4>
 
-          <MDBRow className={rowMargin}>
-            <MDBRow className="w-auto px-1">
+          <div className={row}>
+
+            <div className="w-auto pr-1 content-center mr-2">
               <input
                 onChange={(e) => setRatio(e.target.value)}
                 type="range"
-                min="1"
+                min="1.5"
                 max="5"
                 step="0.5"
                 value={borderRatio}
-                className="slider"
+                className="range range-sm"
                 id="myRange"
               />
-            </MDBRow>
-          </MDBRow>
-          <MDBRow>
-            <MDBRow className="w-auto">
+            </div>
+
+
               <img
-                // src={import.meta.glob(`../../img/ratioexamples/${borderRatio}.png`)}
-                style={{ height: "100px" }}
+
+                src={ratioImages[`../../assets/images/ratioexamples/${borderRatio}.png`].default}
+                className="w-48 h-auto"
               />
-            </MDBRow>
-          </MDBRow>
-        </MDBRow>
 
-        <MDBRow className={rowMargin}>
-          <h4>Output Filetype</h4>
-          <MDBCol>
-            <MDBRadio
-            name='ftype'
-              type="radio"
-              id='ftype3'
-              checked={outputFiletype == "jpeg"}
-              onChange={(e) => setFileType("jpeg")}
-              label="JPEG"
-              inline
-            />
-          </MDBCol>
-          <MDBCol>
-            <MDBRadio
-              name='ftype'
-              type="radio"
-              id='ftype2'
-              checked={outputFiletype == "png"}
-              onChange={() => setFileType("png")}
-              label="PNG"
-              inline
-            />
-          </MDBCol>
-        </MDBRow>
+          </div>
 
-        <MDBRow>
-          <MDBBtn disabled={isDownloading} type="submit" value="submit">
+
+
+        </div>
+
+        <div className={optionItem}>
+          <h4 className={optionTitle}>Output Filetype</h4>
+          
+            <div className={row}>
+              <div className="flex flex-col justify-evenly">
+                <div>
+                  <input
+                    name='ftype'
+                    className={radioGroup}
+                    type="radio"
+                    id='ftype3'
+                    checked={outputFiletype == "jpeg"}
+                    onChange={(e) => setFileType("jpeg")}
+              
+                    inline
+                  /><label htmlFor="ftype3">JPEG</label>
+                </div>
+                <div>
+                  <input
+                    name='ftype'
+                    className={radioGroup}
+                    type="radio"
+                    id='ftype2'
+                    checked={outputFiletype == "png"}
+                    onChange={() => setFileType("png")}
+                    label="PNG"
+                    inline
+                  /><label htmlFor="ftype2">PNG</label>
+                </div>
+              </div>
+            </div>
+          
+        </div>
+
+        <div>
+          <button className='btn btn-primary' disabled={isDownloading} type="submit" value="submit">
             Create Wallpapers
-          </MDBBtn>
-        </MDBRow>
+          </button>
+        </div>
       </form>
-    </MDBContainer>
+    </div>
   );
 }
 
