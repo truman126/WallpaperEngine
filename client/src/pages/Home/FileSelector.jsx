@@ -3,11 +3,13 @@ import File from "./File";
 import api from "../../api";
 import { useFilesContext } from "../../hooks/useFilesContext";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { useBusyContext } from "../../hooks/useBusyContext"
 
 function FileSelector(props) {
   const [error, setError] = useState();
   const { files, dispatch } = useFilesContext();
   const { user } = useAuthContext();
+  const { busy , dispatchBusy } = useBusyContext();
   const fileInputRef = useRef();
 
   async function handleDeleteAll() {
@@ -28,6 +30,7 @@ function FileSelector(props) {
       setError("You must be logged in.");
       return;
     }
+    dispatchBusy({type : "BUSY"})
     var formData = new FormData();
     const images = e.target.files;
     let tempImages = [];
@@ -35,10 +38,14 @@ function FileSelector(props) {
     for (const image of images) {
       if (image.size > 10000000) {
         setError("Only files sizes under 10MB are allowed.");
+        dispatchBusy({type : "FREE"})
+
         return;
       } else if (image.type != "image/jpeg" && image.type != "image/png") {
 
         setError("Unsupported file type");
+        dispatchBusy({type : "FREE"})
+
         return;
       }
 
@@ -56,6 +63,7 @@ function FileSelector(props) {
       dispatch({ type: "DELETE_FILES", payload: tempImages });
       dispatch({ type: "CREATE_FILES", payload: json });
     }
+    dispatchBusy({type : "FREE"})
   }
 
   //used for the initial setting of the list

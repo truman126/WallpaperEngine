@@ -1,6 +1,8 @@
 import { useState } from "react";
 import api from "../../api";
 import { useAuthContext } from "../../hooks/useAuthContext";
+import { useBusyContext } from "../../hooks/useBusyContext";
+
 const ratioImages = import.meta.glob("../../assets/images/ratioexamples/*.png", { eager: true });
 
 function Options(props) {
@@ -10,6 +12,8 @@ function Options(props) {
   const [isDownloading, setIsDownloading] = useState(false);
   const [borderRatio, setRatio] = useState(4);
   const [outputFiletype, setFileType] = useState("jpeg");
+  const { busy , dispatchBusy } = useBusyContext();
+  console.log({busy})
   const [config, setConfig] = useState({
     colour: "average",
     size: {
@@ -28,7 +32,6 @@ function Options(props) {
     [1536, 864],
     [1280, 720],
   ];
-  console.log(ratioImages)
 
   function changeSizeInput(e) {
     if (e.target.name == "size") {
@@ -242,7 +245,7 @@ function Options(props) {
         </div>
 
         <div>
-          <button className='btn btn-primary' disabled={isDownloading} type="submit" value="submit">
+          <button className={`btn ${isDownloading || busy ? 'btn-disabled' : 'btn-primary'}`} type="submit" value="submit">
             Create Wallpapers
           </button>
         </div>

@@ -4,6 +4,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { FilesContextProvider } from "./context/FileContext";
 import { AuthContextProvider } from "./context/AuthContext";
+import { BusyContextProvider } from "./context/BusyContext";
 
 
 //this is a test to see if changes are made2
@@ -13,7 +14,7 @@ root.render(
   <React.StrictMode>
     <AuthContextProvider>
       <FilesContextProvider>
-        <App />
+        <BusyContextProvider><App /></BusyContextProvider>
       </FilesContextProvider>
     </AuthContextProvider>
   </React.StrictMode>
