@@ -45,18 +45,36 @@ const createToken = (_id) => {
 
   export async function guestLoginUser(req,res){
     try {
-      console.log("creating user")
+      
       const user = await User.guestLogin();
-      console.log({user})
+      
       //create a token
       const token = createToken(user._id);
       res.status(200).json({ token });
     } catch (error) {
       res.status(500)
-      console.log(error)
+      
       res.send({error: "Error signing in guest user."})
     }
   };
   
+  export async function getUserDetails(request, response){
+    try{
+      
+      const user_id = request.user._id;
+      
+      const user = await User.findOne({_id: user_id})
+
+      response.status(200);
+
+      response.send({user: user});
+
+    }
+    catch(error) {
+      response.status(500);
+      response.send({error: "Error getting user details"});
+      
+    }
+  }
 
 export default {guestLoginUser, signupUser, loginUser}

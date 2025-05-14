@@ -13,7 +13,7 @@ export default async function recaptcha (req, res, next){
     const response = await axios.post(
       `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`
     );
-    console.log("google response" , response.data);
+    
     // Check response status and send back to the client-side
     if (response.data.success) {
       console.log("captcha success")

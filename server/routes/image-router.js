@@ -8,7 +8,7 @@ import createWallpapers from "../controllers/ImageController.js";
 import requireAuth from "../middleware/requireAuth.js";
 import {uploadImageKey, deleteImage, deleteAllImages, getAllImages, getThumbnail } from "../controllers/DAOController.js";
 import upload from "../middleware/multer.js"
-import multer from "multer";
+
  
 const router = express.Router(); 
 

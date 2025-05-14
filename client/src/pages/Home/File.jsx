@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import api from "../../api";
+import api, { userDetails } from "../../api";
 import { useFilesContext } from "../../hooks/useFilesContext";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { MDBBtn } from "mdb-react-ui-kit";
@@ -9,6 +9,7 @@ function File(props) {
   const { files, dispatch } = useFilesContext();
   const { user } = useAuthContext();
 
+ 
   async function handleDelete(id) {
     if (!user) {
       return;

@@ -4,10 +4,11 @@ import express from 'express';
 import {loginUser, signupUser, guestLoginUser} from "../controllers/UserController.js";
 import recaptcha from "../middleware/recaptcha.js";
 
+
 //  route : /api/user
 
 const router = express.Router()
-
+router.use(recaptcha);
 
 //log in route
 router.post('/login', loginUser);

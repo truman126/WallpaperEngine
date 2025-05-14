@@ -38,17 +38,17 @@ function App() {
 
             {/* <Route path="/" element={user ? <Home /> : <Navigate to="/login" />} /> */}
             <Route path="/" element={
-                <ProtectedRoute className="bg-green-100">
-                  <Home />
-                </ProtectedRoute>
-              }
+
+              user ? <Home /> : <Navigate to="/login" />
+
+            }
             />
 
             <Route path="/admin" element={
-                <ProtectedRoute>
-                  <AdminDashboard />
-                </ProtectedRoute>
-              }
+              <ProtectedRoute>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
             />
 
             <Route path="/login" element={!user ? <AuthPage type="Login" /> : <Navigate to="/" />} />

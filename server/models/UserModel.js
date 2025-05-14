@@ -73,10 +73,8 @@ userSchema.statics.signup = async function(email, password) {
     if (exists){
         throw Error('Email already in use.')
     }
-    console.log(process.env.ROOT_USER_EMAIL)
-    console.log(email === process.env.ROOT_USER_EMAIL)
     const isAdmin = (email === process.env.ROOT_USER_EMAIL ? true : false);
-    console.log({isAdmin})
+
     const salt = await bcrypt.genSalt(10);   
     const hash = await bcrypt.hash(password,salt);
 
@@ -86,9 +84,8 @@ userSchema.statics.signup = async function(email, password) {
 }
 
 userSchema.statics.guestLogin = async function(){
-    console.log("creating")
+    
     const user = await this.create({guest: true, admin:false})
-    console.log({user})
     return user;
 }
 const User = mongoose.model('User', userSchema);

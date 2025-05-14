@@ -18,6 +18,7 @@ export const reloadThumbnail = (id, user) => api.get(`/reloadThumbnail/${id}`,  
 export const signup = (payload) => api.post(`/user/signup`, payload)
 export const login = (payload) => api.post(`/user/login`, payload)
 export const guestLogin = (payload) => api.post(`/user/guestlogin`, payload)
+export const userDetails = (user) => api.get(`/useraction/userdetails`, {headers : {'Authorization' : `Bearer ${user.token}`}})
 
 export const getUsers = (user) => api.get(`/admin/getUsers`, {headers : {'Authorization' : `Bearer ${user.token}`}})
 
@@ -32,6 +33,7 @@ const apis = {
     login,
     reloadThumbnail,
     guestLogin,
-    getUsers
+    getUsers,
+    userDetails
 }
 export default apis

@@ -5,6 +5,8 @@ import db from "./db/index.js";
 import imageRouter from "./routes/image-router.js";
 import adminRouter from "./routes/admin.js";
 import userRouter from "./routes/user.js";
+import userActionRouter from "./routes/userAction.js";
+
 import dotenv from 'dotenv';  // Import dotenv
 import path from 'path';
 dotenv.config();
@@ -37,6 +39,8 @@ app.get("/", (req, res) => {
   res.send("hello");
 });
 app.use("/api/user", userRouter);
+app.use("/api/useraction", userActionRouter);
+
 app.use("/api/admin", adminRouter)
 
 app.use("/api", imageRouter);
