@@ -12,9 +12,7 @@ function ProtectedRoute({ children }) {
 
     async function isAdmin() {
         const response = await api.userDetails(user);
-        console.log(response.data.user.admin)
         if (response.status >= 200 && response.status < 300) {
-            console.log(response.data.user)
             return (response.data.user.admin)
         }
         else return false

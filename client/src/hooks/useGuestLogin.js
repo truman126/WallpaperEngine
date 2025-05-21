@@ -11,7 +11,6 @@ export const useGuestLogin = () => {
     setIsLoading(true);
     setError(null);
     const payload = { token }
-    console.log("payload", payload);
 
     await api
       .guestLogin(payload)
@@ -28,7 +27,6 @@ export const useGuestLogin = () => {
       })
       
       .catch((axiosRes) => {
-        console.log(axiosRes)
         if (axiosRes.message === 'Network Error' ){
           setError('Network Error.')
         }

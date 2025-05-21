@@ -11,11 +11,12 @@ const createToken = (_id) => {
 
     try {
       const user = await User.login(email, password);
+      const id = user._id
 
       //create a token
       const token = createToken(user._id);
 
-      res.status(200).json({ email, token });
+      res.status(200).json({ email, token, id});
     } catch (error) {
       console.log(error)
       res.status(500)
@@ -30,11 +31,11 @@ const createToken = (_id) => {
 
     try {
       const user = await User.signup(email, password);
+      const id = user._id
 
       //create a token
-      
-      const token = createToken(user._id);
-      res.status(200).json({ email, token });
+      const token = createToken(id);
+      res.status(200).json({ email, token, id});
     } catch (error) {
       res.status(500)
       res.send({error: "Error signing in guest user."})
@@ -47,10 +48,11 @@ const createToken = (_id) => {
     try {
       
       const user = await User.guestLogin();
+      const id = user._id
       
       //create a token
-      const token = createToken(user._id);
-      res.status(200).json({ token });
+      const token = createToken(id);
+      res.status(200).json({ token, id });
     } catch (error) {
       res.status(500)
       

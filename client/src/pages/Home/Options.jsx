@@ -13,7 +13,6 @@ function Options(props) {
   const [borderRatio, setRatio] = useState(4);
   const [outputFiletype, setFileType] = useState("jpeg");
   const { busy , dispatchBusy } = useBusyContext();
-  console.log({busy})
   const [config, setConfig] = useState({
     colour: "average",
     size: {

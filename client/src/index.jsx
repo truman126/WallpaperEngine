@@ -5,6 +5,7 @@ import reportWebVitals from "./reportWebVitals";
 import { FilesContextProvider } from "./context/FileContext";
 import { AuthContextProvider } from "./context/AuthContext";
 import { BusyContextProvider } from "./context/BusyContext";
+import "./styles.css";
 
 
 //this is a test to see if changes are made2

@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
-import api, { userDetails } from "../../api";
+import api from "../../api";
 import { useFilesContext } from "../../hooks/useFilesContext";
 import { useAuthContext } from "../../hooks/useAuthContext";
-import { MDBBtn } from "mdb-react-ui-kit";
 
 function File(props) {
   
@@ -47,14 +45,7 @@ function File(props) {
         {!props.image.url ? (
           <span className="loading loading-spinner h-full w-2/3"></span>
         ) : (
-          <img className='h-full w-full object-scale-down' src={props.image.url}
-          // onError={({currentTarget}) => {
-          //   currentTarget.onError = null; // prevents looping
-          //   const url = reloadThumbnail(props.image._id, user);
-          //   currentTarget.src= url;
-        
-          // }}
-          />
+          <img className='h-full w-full object-scale-down' src={props.image.url}/>
         )}
       </div>
       <span className=" my-auto items-center overflow-x-hidden">

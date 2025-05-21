@@ -1,23 +1,7 @@
-import React, { useState } from "react";
-import "./styles.css";
-
-// import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
-
-// import "bootstrap/dist/css/bootstrap.min.css";
-// import 'mdb-react-ui-kit/dist/css/mdb.min.css';
-
-// import 'react-tooltip/dist/react-tooltip.css'
-// import "react-toggle/style.css";
-
-// import "./index.css";
-
-
-
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import AuthPage from "./pages/AuthPage";
 
-import UserBar from "./components/UserBar";
 import Header from "./components/Header";
 
 import { useAuthContext } from "./hooks/useAuthContext";

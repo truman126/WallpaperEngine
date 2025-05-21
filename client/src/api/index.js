@@ -8,7 +8,7 @@ const api = axios.create({
 
 export const fetchImages = (user) => api.get(`/allimages`, {headers : {'Authorization' : `Bearer ${user.token}`}} )
 export const deleteImage = (id, user) => api.delete(`/images/${id}`, {headers : {'Authorization' : `Bearer ${user.token}`}})
-export const deleteAllImages = (user) => api.delete(`/allimages`, {headers : {'Authorization' : `Bearer ${user.token}`}})
+export const deleteAllImages = (id, user) => api.delete(`/allimages/${id}`, {headers : {'Authorization' : `Bearer ${user.token}`}})
 
 export const generateWallpapers = (payload, user) => api.post(`/submit`,payload ,{responseType: 'arraybuffer', headers : {'Authorization' : `Bearer ${user.token}`}} )
 export const uploadImage = (payload, user) => api.post(`/upload`, payload, {headers : {'Authorization' : `Bearer ${user.token}`}} )
@@ -21,6 +21,7 @@ export const guestLogin = (payload) => api.post(`/user/guestlogin`, payload)
 export const userDetails = (user) => api.get(`/useraction/userdetails`, {headers : {'Authorization' : `Bearer ${user.token}`}})
 
 export const getUsers = (user) => api.get(`/admin/getUsers`, {headers : {'Authorization' : `Bearer ${user.token}`}})
+export const deleteUser = (id, user) => api.delete(`/admin/deleteUser/${id}`, {headers : {'Authorization' : `Bearer ${user.token}`}})
 
 
 const apis = {
@@ -34,6 +35,7 @@ const apis = {
     reloadThumbnail,
     guestLogin,
     getUsers,
-    userDetails
+    userDetails,
+    deleteUser
 }
 export default apis

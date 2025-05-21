@@ -1,24 +1,54 @@
 import api from "../api";
 import { useAuthContext } from "../hooks/useAuthContext";
-import React, { useState, useEffect, useRef } from "react";
-import { MDBBtn, MDBFile, MDBPopover } from "mdb-react-ui-kit";
-import { Toast } from 'primereact/toast';
-import { confirmPopup } from 'primereact/confirmpopup'; // To use confirmPopup method
-import { ConfirmPopup } from 'primereact/confirmpopup'; // To use <ConfirmPopup> tag
-import { Button } from 'primereact/button'; // To use <ConfirmPopup> tag
-
+import { useState, useEffect, useRef } from "react";
+import PopConfirm from "../components/PopConfirm";
+import { Error } from "../components/Error";
+import { Success } from "../components/Success";
 
 function AdminDashboard(props) {
     const { user } = useAuthContext();
     const [userList, setUserList] = useState([]);
     const [visible, setVisible] = useState(false);
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
 
-    async function handleDeleteAll() {
-        const response = await api.deleteAllImages(user);
+    async function handleDeleteAll(userId) {
+
+        if (!user) {
+            return;
+        }
+        const response = await api.deleteAllImages(userId, user);
+
+        if (response.status >= 200 && response.status < 300) {
+            setSuccess('Deleted items.')
+        }
+        else {
+            setError(response.data.error)
+        }
+        window.location.reload();
     }
-    async function handleDeleteUser() {
-        console.log("user is gone")
+    async function handleDeleteUser(userId) {
+
+        if (!user) {
+            return;
+        }
+
+        
+        const response = await api.deleteUser(userId, user);
+
+
+
+
+        if (response.status >= 200 && response.status < 300) {
+            setSuccess("Deleted User")
+        }
+        else {
+            setError(response.data.error)
+        }
+
+        window.location.reload();
+
     }
 
     useEffect(() => {
@@ -33,37 +63,40 @@ function AdminDashboard(props) {
     }, []);
 
     return (
-        <div className="block space-y-16">
-            
-                <div className="flex justify-center">
-                    <h3>User Stats:</h3>
-                </div>
-            
-            
+        <div className="justify-center space-y-16">
 
-            <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-                <table className=" table " >
+            <div className="flex justify-center">
+                <h3>User Stats:</h3>
+            </div>
+
+            {error && (
+                <Error className="mb-4 mx-5 w-150" message={error} />
+            )}
+            {success && (
+                <Success className="mb-4 mx-5 w-150" message={success} />
+            )}
+
+
+            <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 flex justify-center">
+                <table className="table w-auto" >
                     <thead>
-                        <tr><th>User Email</th><th>Image Count</th></tr>
+                        <tr><th>user id</th><th>User Email</th><th>Image Count</th><th>User Type</th><th>Actions</th></tr>
                     </thead>
-                    {userList &&
-                        userList.map((user) => <tr><td>{user.email}</td><td>{user.imageCount}</td><td><button
-                            className="btn btn-secondary"
-                            
-                            onClick={() => {
-                                handleDeleteAll();
-                            }}
-                        >
-                            Delete all images
-                        </button></td><td><button
-                            className="btn btn-secondary"
-                            
-                            onClick={() => {
-                                handleDeleteUser();
-                            }}
-                        >
-                            Delete User
-                        </button></td></tr>)}
+
+                    <tbody>
+                        {userList &&
+                            userList.map((profile) => <tr key={profile.id}>
+                                <td>{profile.id}</td>
+                                <td>{(!profile.guest ? profile.email : 'Guest')}{profile.email == user.email && ' (self)'}</td>
+                                <td>{profile.imageCount}</td>
+                                <td>{profile.admin ? 'admin' : 'user'}</td>
+                                <td className="space-x-4">
+                                    {profile.imageCount > 0 && <PopConfirm text="Delete All Images" id={profile.id} confirmAction={handleDeleteAll} />}
+                                    {(profile.imageCount == 0 && profile.email != user.email) && <PopConfirm text="Delete User" id={profile.id} confirmAction={handleDeleteUser} />}
+                                </td>
+                            </tr>
+                            )}</tbody>
+
                 </table>
             </div>
         </div>

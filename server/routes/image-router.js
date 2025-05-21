@@ -27,7 +27,7 @@ router.delete("/images/:id", deleteImage); //remove the wallpaper from the list
 router.get("/allimages", getAllImages);
 
 // //DELETES all images
-router.delete("/allimages", deleteAllImages);
+router.delete("/allimages/:id", deleteAllImages);
 
 // //submits the form to create the wallpapers
 router.post("/submit", createWallpapers);

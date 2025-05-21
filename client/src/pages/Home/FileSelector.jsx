@@ -11,12 +11,12 @@ function FileSelector(props) {
   const { user } = useAuthContext();
   const { busy, dispatchBusy } = useBusyContext();
   const fileInputRef = useRef();
-
+console.log({user})
   async function handleDeleteAll() {
     if (!user) {
       return;
     }
-    const response = await api.deleteAllImages(user);
+    const response = await api.deleteAllImages(user.id, user);
 
     if (response.status >= 200 && response.status < 300) {
       dispatch({ type: "DELETE_ALL" });

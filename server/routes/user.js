@@ -8,8 +8,11 @@ import recaptcha from "../middleware/recaptcha.js";
 //  route : /api/user
 
 const router = express.Router()
-router.use(recaptcha);
 
+if (process.env.USE_RECAPTCHA == true){
+    router.use(recaptcha);
+  }
+console.log(process.env.USE_RECAPTCHA)
 //log in route
 router.post('/login', loginUser);
 
