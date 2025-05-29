@@ -56,14 +56,18 @@ export function Navigation() {
                             <li onClick={(e) => setMenu(false)}><Link to="/signup">Register</Link></li></ul>
                         </div>
                         </div>
+                        
                 </>
 
                 :
 
                 <>
+                
                     <div className="flex flex-row max-md:hidden">
                         <li className="flex text-theme menu-disabled"><h5>{user.email != null ? user.email : "Guest"}</h5></li>
                         <li className="flex"><button onClick={(e) => {handleLogoutButtonClick();}} className="btn btn-secondary">Log out</button></li>
+                        <div className="flex space-x-2">{['admin', 'root'].includes(user.userType) && <li><Link className="my-0 py-0" to="/admin"><button className="btn btn-secondary">Admin Panel</button></Link></li>}</div>
+                    
                     </div> 
                     <div className="relative z-10 min-md:hidden">
                         <label className="btn btn-circle swap swap-rotate">
@@ -98,6 +102,7 @@ export function Navigation() {
                         <li ><button onClick={(e) => {handleLogoutButtonClick();}} className="btn">Log out</button></li>
                         </div>
                         </div>
+                        
                 </>
 
         } </>

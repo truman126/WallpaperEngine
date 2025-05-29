@@ -11,7 +11,7 @@ function FileSelector(props) {
   const { user } = useAuthContext();
   const { busy, dispatchBusy } = useBusyContext();
   const fileInputRef = useRef();
-console.log({user})
+
   async function handleDeleteAll() {
     if (!user) {
       return;
@@ -57,11 +57,11 @@ console.log({user})
     dispatch({ type: "CREATE_FILES", payload: tempImages });
 
     const response = await api.uploadImage(formData, user);
-    const json = await response.data.data;
+    
 
     if (response.status >= 200 && response.status < 300) {
       dispatch({ type: "DELETE_FILES", payload: tempImages });
-      dispatch({ type: "CREATE_FILES", payload: json });
+      dispatch({ type: "CREATE_FILES", payload: response.data.images });
     }
     dispatchBusy({ type: "FREE" })
   }
@@ -69,11 +69,15 @@ console.log({user})
   //used for the initial setting of the list
   useEffect(() => {
     const getData = async () => {
+      if(!user){
+        setError("No user, signing out...")
+        return;
+      }
+      console.log({user})
       const response = await api.fetchImages(user);
-      const json = await response.data.data;
 
       if (response.status >= 200 && response.status < 300) {
-        dispatch({ type: "SET_FILES", payload: json });
+        dispatch({ type: "SET_FILES", payload: response.data.images });
       }
     };
     if (user) {

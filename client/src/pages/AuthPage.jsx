@@ -24,7 +24,7 @@ function AuthPage(props) {
 
   const useRecaptcha = import.meta.env.VITE_USE_RECAPTCHA === 'true' ? true : false;
 
-  const pageTypePretty = props.type === "Login" ? "Log in" : "Sign up"
+  const pageType = props.type === "Login" ? "Log in" : "Sign up"
 
 
 
@@ -80,7 +80,7 @@ function AuthPage(props) {
             className="text-2xl"
             style={{ letterSpacing: "1px" }}
           >
-            {pageTypePretty}
+            {pageType}
           </h2>
           <form onSubmit={handleSubmit} className="mb-0">
 
@@ -91,7 +91,6 @@ function AuthPage(props) {
               changeFunction={setEmail}
               label="Email Address"
               type="email"
-              
             />
 
 
@@ -108,7 +107,7 @@ function AuthPage(props) {
 
 
             <button type="submit" className="btn w-full btn-primary mb-4">
-              {pageTypePretty}
+              {pageType}
             </button>
 
           </form>

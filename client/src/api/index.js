@@ -22,7 +22,7 @@ export const userDetails = (user) => api.get(`/useraction/userdetails`, {headers
 
 export const getUsers = (user) => api.get(`/admin/getUsers`, {headers : {'Authorization' : `Bearer ${user.token}`}})
 export const deleteUser = (id, user) => api.delete(`/admin/deleteUser/${id}`, {headers : {'Authorization' : `Bearer ${user.token}`}})
-
+export const updateRole = (id, role, user) => api.put(`/admin/updateRole/${id}/${role}`, {} ,{headers : {'Authorization' : `Bearer ${user.token}`}})
 
 const apis = {
     fetchImages,
@@ -36,6 +36,7 @@ const apis = {
     guestLogin,
     getUsers,
     userDetails,
-    deleteUser
+    deleteUser,
+    updateRole
 }
 export default apis

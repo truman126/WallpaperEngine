@@ -31,12 +31,8 @@ router.delete("/allimages/:id", deleteAllImages);
 
 // //submits the form to create the wallpapers
 router.post("/submit", createWallpapers);
-
-
-// // router.get("/images/:id", FileController.getImage);
+;
 
 router.get("/reloadThumbnail/:id", getThumbnail);
-
-
 
 export default router;

@@ -6,8 +6,8 @@
   themes: light --default --preferslight, dark --prefersdark;
 }
 :root {
-  --primary: #3B71CA;
-  --secondary: #DC4C64;
+  --color-primary: #3B71CA;
+  --color-secondary: #DC4C64;
 
   --light-background: #fafafa; /*background*/
   --dark-background: #1f2023;
@@ -35,14 +35,14 @@ h4{
   @apply text-xl;
 
 }
-.btn-primary {
+/* .btn-primary {
   background-color:var(--primary);
   color:white;
 }
 .btn-secondary {
   background-color: var(--secondary);
   color:white;
-}
+} */
 
 @layer utilities {
   [data-theme="light"] .custom-light-bg {

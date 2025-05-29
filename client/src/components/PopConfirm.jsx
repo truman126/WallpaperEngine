@@ -8,20 +8,24 @@ function PopConfirm(props) {
     }
 
     return (<>
-        <button className="btn btn-secondary" onClick={() => document.getElementById(props.id).showModal()}>{props.text}</button>
+        <span onClick={() => document.getElementById(props.id).showModal()} >{props.children}</span>
         <dialog id={props.id} className="modal">
 
-            <div className="modal-box w-100 h-36">
+            <div className="absolute modal-box w-100 h-36">
+                <form method="dialog">
+                    {/* if there is a button in form, it will close the modal */}
+                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                </form>
                 <h3>Are you sure?</h3>
-                <form method="dialog" className="modal-backdrop">
-                    <div className="flex justify-end mt-4 space-x-2">{props.id}
+               
+                    <div className="flex justify-end mt-4 space-x-2">
 
                         <button className="btn btn-secondary" onClick={handleAction}>Yes</button>
 
                         <button className="btn btn-primary" >No</button>
 
 
-                    </div></form>
+                    </div>
             </div>
             <form method="dialog" className="modal-backdrop">
                 <button>close</button>

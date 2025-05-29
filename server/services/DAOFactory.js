@@ -1,4 +1,5 @@
 import AWSDAO from './AWSDAO.js';
+import LocalDAO from './LocalDAO.js';
 
 
 export default function DAO() {
@@ -13,7 +14,7 @@ export default function DAO() {
         return AWSDAO
     }
     else {
-        //use local, add other options here;
+        return LocalDAO;
     }
 
 }

@@ -1,3 +1,4 @@
+import path from 'path';
 import DAOFactory from '../services/DAOFactory.js';
 //TODO: hide error messages from frontend?
 
@@ -12,7 +13,7 @@ export async function uploadImageKey(request, response) {
 
         const savedKeys = await DAO.uploadImageKey(user_id, files);
         response.status(201);
-        response.send({ data: savedKeys })
+        response.send({ images : savedKeys })
     }
     catch (error) {
         response.status(500);
@@ -32,6 +33,7 @@ export async function deleteImage(request, response) {
 
     }
     catch (error) {
+        console.log(error)
         response.status(500);
         response.send({ error: error.toString() });
 
@@ -63,7 +65,7 @@ export async function getAllImages(request, response) {
         const images = await DAO.getAllImages(user_id);
 
         response.status(200);
-        response.send({ data: images });
+        response.send({ images: images });
 
     }
     catch (error) {
@@ -84,6 +86,7 @@ export async function getThumbnail(request, response) {
 
         response.status(200);
         response.send({ imageKey: updatedKey });
+        // response.sendFile(path.resolve(import.meta.dirname + '/../data/6837a1819f78c6002c6c0b93/thumbnails/1748522531371IMG_0886.JPG'));
 
 
     }

@@ -1,5 +1,5 @@
 import express from "express";
-import { getUsers, deleteUser} from "../controllers/AdminController.js";
+import { getUsers, deleteUser, updateRole} from "../controllers/AdminController.js";
 
 // Controllers
 
@@ -17,6 +17,8 @@ router.use(requireAdmin);
 router.get("/getUsers", getUsers );
 
 router.delete("/deleteUser/:id", deleteUser);
+
+router.put("/updateRole/:id/:role", updateRole);
 
 
 export default router;

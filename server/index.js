@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 const __dirname = path.resolve();
-app.use(express.static(__dirname + "/data"));
+app.use(express.static(__dirname + "/data/"));
 
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 

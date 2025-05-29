@@ -8,9 +8,9 @@ export default async function requireAdmin(req, res, next){
 
   try{
 
-    const isAdmin = await User.findOne({ _id: req.user._id });
-    
-    if (isAdmin){
+    const user = await User.findOne({ _id: req.user._id });
+
+    if (['admin', 'root'].includes(user.userType) ){
       next();
     }
     else{

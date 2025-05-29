@@ -12,6 +12,17 @@ function AdminDashboard(props) {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
 
+    async function loadData() {
+        const response = await api.getUsers(user);
+        if (response.status >= 200 && response.status < 300) {
+            setUserList(response.data.userList);
+
+        }
+        else {
+
+            setError(response.data.error);
+        }
+    }
 
     async function handleDeleteAll(userId) {
 
@@ -26,7 +37,7 @@ function AdminDashboard(props) {
         else {
             setError(response.data.error)
         }
-        window.location.reload();
+        loadData();
     }
     async function handleDeleteUser(userId) {
 
@@ -34,11 +45,8 @@ function AdminDashboard(props) {
             return;
         }
 
-        
+
         const response = await api.deleteUser(userId, user);
-
-
-
 
         if (response.status >= 200 && response.status < 300) {
             setSuccess("Deleted User")
@@ -47,16 +55,32 @@ function AdminDashboard(props) {
             setError(response.data.error)
         }
 
-        window.location.reload();
+        loadData();
 
     }
+    async function handleRoleUpdate(userId, role) {
+        try {
+            if (!user) {
+                return;
+            }
 
-    useEffect(() => {
+            const response = await api.updateRole(userId, role, user);
 
-        async function loadData() {
-            const response = await api.getUsers(user);
-            setUserList(response.data.userList);
+            if (response.status >= 200 && response.status < 300) {
+                setSuccess("Role Updated")
+            }
+            else {
+                setError(response.data.error)
+            }
+
+            loadData();
+
         }
+        catch (error) {
+            setError(error.response.data.error);
+        }
+    }
+    useEffect(() => {
 
         loadData(); // Call the function
 
@@ -77,25 +101,56 @@ function AdminDashboard(props) {
             )}
 
 
-            <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100 flex justify-center">
+            <div className=" rounded-box border border-base-content/5 bg-base-100 flex justify-center">
                 <table className="table w-auto" >
                     <thead>
-                        <tr><th>user id</th><th>User Email</th><th>Image Count</th><th>User Type</th><th>Actions</th></tr>
+                        <tr><th>User ID</th><th>User Email</th><th>Image Count</th><th>User Type</th><th>Actions</th></tr>
                     </thead>
 
-                    <tbody>
+                    <tbody >
                         {userList &&
                             userList.map((profile) => <tr key={profile.id}>
                                 <td>{profile.id}</td>
-                                <td>{(!profile.guest ? profile.email : 'Guest')}{profile.email == user.email && ' (self)'}</td>
+                                <td>{(profile.userType != 'guest' ? profile.email : 'Guest')}{profile.email == user.email && ' (self)'}</td>
                                 <td>{profile.imageCount}</td>
-                                <td>{profile.admin ? 'admin' : 'user'}</td>
+                                <td>{profile.userType}</td>
+                                <td className="space-x-4"><div className="dropdown dropdown-center">
+                                    <div tabIndex={0} role="button" className="btn m-1">&hellip;</div>
+                                    <ul tabIndex={0} className="z-10 dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                                        {profile.imageCount > 0 ?
+                                            <li>
+                                                <PopConfirm id={profile.id} confirmAction={handleDeleteAll}>
+                                                    <a>Delete All Images</a>
+                                                </PopConfirm>
+                                            </li>
+                                            :
+                                            <li className="menu-disabled"><a>Delete All Images</a></li>}
+                                        {(profile.imageCount == 0 && profile.email != user.email) ?
+                                            <li>
+                                                <PopConfirm id={profile.id} confirmAction={handleDeleteUser}>
+                                                    <a>Delete User</a>
+                                                </PopConfirm>
+                                            </li>
+                                            :
+                                            <li className="menu-disabled">
+                                                <p className="disabled">Delete User</p>
+                                            </li>}
+                                        {(profile.userType == 'admin') &&
+                                            <li><a onClick={() => handleRoleUpdate(profile.id, 'user')}>Demote</a></li>}
+                                        {(profile.userType == 'user') &&
+                                            <li><a onClick={() => handleRoleUpdate(profile.id, 'admin')}>Promote</a></li>}
+                                    </ul>
+                                </div></td>
                                 <td className="space-x-4">
-                                    {profile.imageCount > 0 && <PopConfirm text="Delete All Images" id={profile.id} confirmAction={handleDeleteAll} />}
-                                    {(profile.imageCount == 0 && profile.email != user.email) && <PopConfirm text="Delete User" id={profile.id} confirmAction={handleDeleteUser} />}
+
+
+
+
+
                                 </td>
                             </tr>
-                            )}</tbody>
+                            )}
+                    </tbody>
 
                 </table>
             </div>

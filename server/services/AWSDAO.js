@@ -21,6 +21,7 @@ async function uploadImageKey(user_id, fileInfo) {
 
 
     for (const file of fileInfo) {
+        console.log({file})
         // let thumb_url = null;
         const keyName = file.key;
 
@@ -163,7 +164,7 @@ async function downloadImages(user_id, download_path) {
     return true;
 
 };
-//TODO:implement
+
 async function getThumbnail(userId, imageId) {
     if (!imageId || imageId === 'undefined'){
         throw new Error("no image id");

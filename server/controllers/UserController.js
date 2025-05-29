@@ -1,6 +1,6 @@
 import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
-
+import { initializeUser } from "../utils/FileUtils.js";
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "7d" });
 };
@@ -12,11 +12,11 @@ const createToken = (_id) => {
     try {
       const user = await User.login(email, password);
       const id = user._id
-
+      const userType = user.userType;
       //create a token
       const token = createToken(user._id);
-
-      res.status(200).json({ email, token, id});
+      
+      res.status(200).json({ email, token, id, userType });
     } catch (error) {
       console.log(error)
       res.status(500)
@@ -31,11 +31,12 @@ const createToken = (_id) => {
 
     try {
       const user = await User.signup(email, password);
-      const id = user._id
-
+      const id = user._id;
+      const userType = user.userType;
       //create a token
       const token = createToken(id);
-      res.status(200).json({ email, token, id});
+      initializeUser(id);
+      res.status(200).json({ email, token, id, userType});
     } catch (error) {
       res.status(500)
       res.send({error: "Error signing in guest user."})
@@ -49,10 +50,14 @@ const createToken = (_id) => {
       
       const user = await User.guestLogin();
       const id = user._id
+      const userType = user.userType;
       
       //create a token
       const token = createToken(id);
-      res.status(200).json({ token, id });
+
+      initializeUser(id);
+
+      res.status(200).json({ token, id, userType});
     } catch (error) {
       res.status(500)
       

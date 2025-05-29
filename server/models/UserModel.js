@@ -18,13 +18,10 @@ const userSchema = new Schema({
         type: String,
         required:false
     },
-    guest: {
-        type: Boolean,
-        required:false,
-    },
-    admin: {
-        type: Boolean,
-        required:true
+    userType: {
+        type: String,
+        enum: ['user', 'guest', 'admin', 'root'],
+        required: true
     }
 })
 
@@ -73,19 +70,21 @@ userSchema.statics.signup = async function(email, password) {
     if (exists){
         throw Error('Email already in use.')
     }
-    const isAdmin = (email === process.env.ROOT_USER_EMAIL ? true : false);
+    const userType = (email === process.env.ROOT_USER_EMAIL) ? 'root' : 'user';
 
     const salt = await bcrypt.genSalt(10);   
     const hash = await bcrypt.hash(password,salt);
 
-    const user = await this.create({ email, password: hash , admin: isAdmin })
+    
+
+    const user = await this.create({ email, password: hash , userType })
 
     return user;
 }
 
 userSchema.statics.guestLogin = async function(){
     
-    const user = await this.create({guest: true, admin:false})
+    const user = await this.create({userType:'guest'})
     return user;
 }
 const User = mongoose.model('User', userSchema);

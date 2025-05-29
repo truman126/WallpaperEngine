@@ -42,9 +42,6 @@ function App() {
             <Route path="*" element={<h1>Page not found</h1>} />
             <Route path="/nouser" element={<h1>User not authorized</h1>} />
 
-
-
-
           </Routes>
         </div>
       </BrowserRouter>

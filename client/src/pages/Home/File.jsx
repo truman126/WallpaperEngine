@@ -34,7 +34,7 @@ function File(props) {
     
     
   }
- 
+
   if(props.image.url == null && props.image._id){
     
     getThumbnailURL(props.image._id);
@@ -45,7 +45,7 @@ function File(props) {
         {!props.image.url ? (
           <span className="loading loading-spinner h-full w-2/3"></span>
         ) : (
-          <img className='h-full w-full object-scale-down' src={props.image.url}/>
+          <img className='h-full w-full object-scale-down' src={props.image.url} />
         )}
       </div>
       <span className=" my-auto items-center overflow-x-hidden">
