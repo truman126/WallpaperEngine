@@ -4,7 +4,7 @@ import { getUserPath } from "./UserPaths.js";
 
 
 export function emptyDirectory(path) {
-  console.log(path)
+  
   if (!directoryExists(path)) {
 
     throw new Error("Can't empty directory. Directory does not exist");
@@ -41,8 +41,6 @@ export function makeDirectory(path) {
 }
 
 export function fileExists(path) {
-  console.log('checking if file exists')
-  console.log({path})
   if (fs.existsSync(path)) {
     return true;
   }

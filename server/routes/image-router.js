@@ -1,6 +1,5 @@
 import express from "express";
 
-
 // Controllers
 import createWallpapers from "../controllers/ImageController.js";
 

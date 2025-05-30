@@ -73,7 +73,6 @@ function FileSelector(props) {
         setError("No user, signing out...")
         return;
       }
-      console.log({user})
       const response = await api.fetchImages(user);
 
       if (response.status >= 200 && response.status < 300) {

@@ -21,7 +21,6 @@ export const filesReducer = (state, action) => {
         files: []
       };
     case "UPDATE_FILE":
-      console.log("action", action.payload.url)
       state.files.map(file => (
         (file._id === action.payload._id && (file.url=action.payload.url))
       ))

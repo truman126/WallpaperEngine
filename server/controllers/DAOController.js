@@ -1,6 +1,6 @@
 import path from 'path';
 import DAOFactory from '../services/DAOFactory.js';
-//TODO: hide error messages from frontend?
+import { getUserPath } from '../utils/UserPaths.js';
 
 const DAO = DAOFactory();
 
@@ -13,7 +13,7 @@ export async function uploadImageKey(request, response) {
 
         const savedKeys = await DAO.uploadImageKey(user_id, files);
         response.status(201);
-        response.send({ images : savedKeys })
+        response.send({ images: savedKeys })
     }
     catch (error) {
         response.status(500);
@@ -83,11 +83,8 @@ export async function getThumbnail(request, response) {
 
         const updatedKey = await DAO.getThumbnail(userId, imageId);
 
-
         response.status(200);
         response.send({ imageKey: updatedKey });
-        // response.sendFile(path.resolve(import.meta.dirname + '/../data/6837a1819f78c6002c6c0b93/thumbnails/1748522531371IMG_0886.JPG'));
-
 
     }
     catch (error) {

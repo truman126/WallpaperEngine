@@ -138,8 +138,9 @@ async function getThumbnail(userId, imageId) {
 
     const updatedKey = await ImageKey.findOneAndUpdate(
         { _id: imageId },
-        { $set: { url: 'http://localhost:8000/' + userId + '/thumbnails/' + imageKey.key } }
+        { $set: { url: `/${userId}/${imageKey.key}` }}
     );
+    
     return updatedKey;
 };
 
