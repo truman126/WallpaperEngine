@@ -46,7 +46,7 @@ return (
       {!props.image.url ? (
           <span className="loading loading-spinner h-full w-2/3"></span>
         ) : (
-          <img className='h-full w-full object-scale-down' src={import.meta.env.VITE_BASE_URL + '/content' + props.image.url} />
+          <img className='h-full w-full object-scale-down' src={import.meta.env.VITE_BASE_URL + '/api/content' + props.image.url} />
           
 
         )}

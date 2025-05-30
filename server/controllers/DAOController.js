@@ -80,7 +80,6 @@ export async function getThumbnail(request, response) {
         const userId = request.user._id;
         const imageId = request.params.id;
 
-
         const updatedKey = await DAO.getThumbnail(userId, imageId);
 
         response.status(200);
