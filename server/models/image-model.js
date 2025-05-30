@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const colorValidator = (v) => /^#([0-9a-f]{3}){1,2}$/i.test(v);
@@ -25,4 +25,4 @@ const imageKey = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("ImageKey", imageKey);
+export default mongoose.model("ImageKey", imageKey);

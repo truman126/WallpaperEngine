@@ -13,7 +13,6 @@
   --white-text: #efefef; /*text*/
   --two-tone-grey: #f1f1f1;
 }
-
 body {
   margin: 0;
   background-color: var(--light-background);
@@ -194,7 +193,7 @@ header a {
 input[type="file"] {
   display: none;
 }
-body button {
+/* body button {
   background: var(--primary);
   color: #fff;
   border:0;
@@ -202,26 +201,23 @@ body button {
   font-family: "Poppins";
   border-radius: 4px;
   cursor: pointer;
-}
-button:active {
+} */
+/* button:active {
   box-shadow: inset 0px 0px 5px #f5f5f5;
-}
-button:disabled, button:disabled:hover { 
+} */
+/* button:disabled, button:disabled:hover { 
   opacity: 40%;
   background-color:grey;
-}
+} */
 
-button:hover{
+/* button:hover{
   background: var(--primary-hover)
 
-}
-button.delete:hover{
-  background: var(--error-hover)
-}
-button.delete{
+} */
+
+/* button.delete{
   padding: 5px 15px 5px 15px;
-  background-color:var(--error);
-}
+} */
 div.error {
   padding: 10px;
   border: 1px solid var(--error);

@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@100..900&display=swap');
+
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@plugin "daisyui"{
+  themes: light --default --preferslight, dark --prefersdark;
+}
+:root {
+  --color-primary: #3B71CA;
+  --color-secondary: #DC4C64;
+
+  --light-background: #fafafa; /*background*/
+  --dark-background: #1f2023;
+}
+
+body{
+  font-family: "Libre Franklin", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+
+} 
+
+h1{
+  @apply text-3xl max-sm:text-base;
+}
+h2 {
+  @apply text-3xl;
+}
+h3{
+  @apply text-2xl;
+
+}
+h4{
+  @apply text-xl;
+
+}
+/* .btn-primary {
+  background-color:var(--primary);
+  color:white;
+}
+.btn-secondary {
+  background-color: var(--secondary);
+  color:white;
+} */
+
+@layer utilities {
+  [data-theme="light"] .custom-light-bg {
+    background-color: var(--color-base-100);
+  }
+}
+@layer utilities {
+  [data-theme="dark"] .custom-light-bg {
+    background-color: var(--color-base-100);
+  }
+}
+@layer utilities {
+  [data-theme="light"] .text-theme {
+    color: var(--color-base-content);
+  }
+}
+@layer utilities {
+  [data-theme="dark"] .text-theme {
+    color: var(--color-base-content);
+  }
+}

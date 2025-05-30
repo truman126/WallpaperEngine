@@ -1,7 +1,7 @@
-const { v4: uuidv4 } = require('uuid');
-const mongoose = require('mongoose');
-const bcrypt = require ('bcrypt');
-const validator = require('validator');
+import { v4 as uuidv4 } from 'uuid';
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+import validator from 'validator';
 
 
 const Schema = mongoose.Schema
@@ -18,9 +18,10 @@ const userSchema = new Schema({
         type: String,
         required:false
     },
-    guest: {
-        type: Boolean,
-        required:false,
+    userType: {
+        type: String,
+        enum: ['user', 'guest', 'admin', 'root'],
+        required: true
     }
 })
 
@@ -58,7 +59,7 @@ userSchema.statics.signup = async function(email, password) {
     if (!validator.isEmail(email)){
         throw Error('Email is not valid.')
     }
-    console.log("mongo was fine")
+    
     // if (!validator.isStrongPassword(password, {minLength: 8})){
     //     throw Error('Password not strong enough. Password must be at least 8 characters long')
     // }
@@ -66,28 +67,26 @@ userSchema.statics.signup = async function(email, password) {
 
     const exists = await this.findOne({ email })
 
-    console.log(exists, password);
     if (exists){
-        console.log("just to check this isnt causing error")
         throw Error('Email already in use.')
-     }
-    console.log("salt and hashing")
-    
-    const salt = await bcrypt.genSalt(10);    
-    console.log("salt is ready? ", salt);
-    const hash = await bcrypt.hash(password,salt);
-    console.log("seasoned")
+    }
+    const userType = (email === process.env.ROOT_USER_EMAIL) ? 'root' : 'user';
 
-    const user = await this.create({ email, password: hash })
-    console.log("USER###", user)
+    const salt = await bcrypt.genSalt(10);   
+    const hash = await bcrypt.hash(password,salt);
+
+    
+
+    const user = await this.create({ email, password: hash , userType })
 
     return user;
 }
 
 userSchema.statics.guestLogin = async function(){
-
-    const user = await this.create({guest: true})
+    
+    const user = await this.create({userType:'guest'})
     return user;
 }
+const User = mongoose.model('User', userSchema);
 
-module.exports = mongoose.model('User', userSchema)
+export default User;

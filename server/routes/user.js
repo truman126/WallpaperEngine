@@ -1,23 +1,27 @@
-const express = require('express')
+import express from 'express';
 
 //controllers
-const UserController = require("../controllers/UserController");
-const recaptcha = require("../middleware/recaptcha")
+import {loginUser, signupUser, guestLoginUser} from "../controllers/UserController.js";
+import recaptcha from "../middleware/recaptcha.js";
+
 
 //  route : /api/user
 
 const router = express.Router()
 
-
+if (process.env.USE_RECAPTCHA == true){
+    router.use(recaptcha);
+  }
+console.log(process.env.USE_RECAPTCHA)
 //log in route
-router.post('/login', UserController.loginUser)
+router.post('/login', loginUser);
 
 // sign up route
-router.post('/signup', UserController.signupUser)
+router.post('/signup', signupUser);
 
 // guest log in
-router.post('/guestlogin', UserController.guestLoginUser)
+router.post('/guestlogin', guestLoginUser);
 
 
 
-module.exports = router
+export default router;

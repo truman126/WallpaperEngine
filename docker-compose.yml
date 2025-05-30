@@ -23,7 +23,7 @@ services:
     build: ./client
     container_name: client_c
     environment:
-      - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
     ports:
       - '3000:3000'
     volumes:
