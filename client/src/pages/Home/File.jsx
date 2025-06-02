@@ -2,6 +2,7 @@ import api from "../../api";
 import { useFilesContext } from "../../hooks/useFilesContext";
 import { useAuthContext } from "../../hooks/useAuthContext";
 import { useState } from "react";
+import isURL from 'validator/lib/isURL'
 
 function File(props) {
 
@@ -46,7 +47,7 @@ return (
       {!props.image.url ? (
           <span className="loading loading-spinner h-full w-2/3"></span>
         ) : (
-          <img className='h-full w-full object-scale-down' src={import.meta.env.VITE_BASE_URL + '/api/content' + props.image.url} />
+          <img className='h-full w-full object-scale-down' src={isURL(props.image.url) ? props.image.url : import.meta.env.VITE_BASE_URL + '/api/content' + props.image.url} />
           
 
         )}
