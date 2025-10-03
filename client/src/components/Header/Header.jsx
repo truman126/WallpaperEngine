@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import LightToggle from "./LightToggle";
 import { Navigation } from "./Navigation";
 
-function UserBar(props) {
+function Header(props) {
 
 
 
@@ -17,11 +17,11 @@ function UserBar(props) {
 
                     <LightToggle />
 
-                    <Navigation />
+                    <Navigation user={props.user}/>
                 </ul>
             </div>
         </div>
     );
 }
 
-export default UserBar;
+export default Header;

@@ -2,20 +2,22 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import AuthPage from "./pages/AuthPage";
 
-import Header from "./components/Header";
+import Header from "./components/Header/Header";
 
 import { useAuthContext } from "./hooks/useAuthContext";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./routes/ProtectedRoute";
+  
 
 function App() {
   const { user } = useAuthContext();
+  
   return (
     <div className="App h-screen flex flex-col">
 
       <BrowserRouter basename="/">
 
-        <Header />
+        <Header user={user} />
 
         <div className="flex-1 overflow-y-auto">
           <Routes>
