@@ -10,7 +10,8 @@ export function Navigation(props) {
     const { logout } = useLogout();
     
     function handleLogoutButtonClick(){
-        props.logout() || logout();
+        // props.logout() || logout();
+        logout();
     }
 
     const updateMedia = () => {

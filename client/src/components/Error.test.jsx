@@ -2,8 +2,6 @@ import { describe, it, expect } from 'vitest';
 import {render, screen} from '@testing-library/react';
 import {Error} from './Error'; // Assuming Error is the component being tested
 
-// // Import necessary modules
-
 // Test suite for the Error component
 describe('Error Component', () => {
     it('renders the error message', () => {
@@ -17,5 +15,3 @@ describe('Error Component', () => {
     });
 
 });
-
-// // We recommend installing an extension to run vitest tests.
